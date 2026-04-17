@@ -1,0 +1,384 @@
+"""Dataset samplers used by strict alignment configs."""
+
+from __future__ import annotations
+
+import math
+import random
+import json
+from typing import Iterator, Optional, Sized
+
+import torch
+from mmengine.dist import get_dist_info, sync_random_seed
+from mmengine.registry import DATA_SAMPLERS as MMENGINE_DATA_SAMPLERS
+from torch.utils.data import Sampler
+
+from baoiad.registry import DATA_SAMPLERS
+
+
+@DATA_SAMPLERS.register_module()
+@MMENGINE_DATA_SAMPLERS.register_module()
+class PersistentShuffleSampler(Sampler):
+    """Sampler that mirrors PyTorch ``RandomSampler`` epoch semantics.
+
+    ADer's non-distributed ViTAD training relies on ``DataLoader(shuffle=True)``,
+    which uses ``RandomSampler``. That sampler does not reuse one generator
+    directly for ``randperm``. Instead, every new iterator first samples an
+    epoch seed from a persistent RNG stream, then builds a fresh generator for
+    that epoch's permutation. MMEngine's ``DefaultSampler`` instead reseeds from
+    ``seed + epoch``. This sampler mirrors the former behavior while retaining
+    the same distributed slicing contract as ``DefaultSampler``.
+    """
+
+    def __init__(
+        self,
+        dataset: Sized,
+        shuffle: bool = True,
+        seed: Optional[int] = None,
+        round_up: bool = True,
+    ) -> None:
+        rank, world_size = get_dist_info()
+        self.rank = rank
+        self.world_size = world_size
+        self.dataset = dataset
+        self.shuffle = shuffle
+        if seed is None:
+            seed = sync_random_seed()
+        self.seed = int(seed)
+        self.round_up = round_up
+        if self.round_up:
+            self.num_samples = math.ceil(len(self.dataset) / world_size)
+            self.total_size = self.num_samples * self.world_size
+        else:
+            self.num_samples = math.ceil((len(self.dataset) - rank) / world_size)
+            self.total_size = len(self.dataset)
+
+    def __iter__(self) -> Iterator[int]:
+        if self.shuffle:
+            # Match torch.utils.data.RandomSampler(generator=None): sample an
+            # epoch seed from the *current global* torch RNG state, then build
+            # a fresh generator for this epoch's permutation.
+            epoch_seed = int(torch.empty((), dtype=torch.int64).random_().item())
+            generator = torch.Generator()
+            generator.manual_seed(epoch_seed)
+            indices = torch.randperm(len(self.dataset), generator=generator).tolist()
+        else:
+            indices = torch.arange(len(self.dataset)).tolist()
+
+        if self.round_up:
+            indices = (
+                indices
+                * int(self.total_size / len(indices) + 1)
+            )[:self.total_size]
+
+        indices = indices[self.rank:self.total_size:self.world_size]
+        return iter(indices)
+
+    def __len__(self) -> int:
+        return self.num_samples
+
+    def set_epoch(self, epoch: int) -> None:
+        """Keep API compatibility with sampler hooks without reseeding.
+
+        The epoch argument is intentionally ignored so the seed stream stays
+        decoupled from MMEngine's ``seed + epoch`` policy.
+        """
+        del epoch
+
+
+@DATA_SAMPLERS.register_module()
+@MMENGINE_DATA_SAMPLERS.register_module()
+class PythonShuffleSampler(Sampler):
+    """Sampler that mirrors ``random.shuffle(indices)`` with a fixed seed."""
+
+    def __init__(
+        self,
+        dataset: Sized,
+        shuffle: bool = True,
+        seed: Optional[int] = None,
+        round_up: bool = True,
+    ) -> None:
+        rank, world_size = get_dist_info()
+        self.rank = rank
+        self.world_size = world_size
+        self.dataset = dataset
+        self.shuffle = shuffle
+        if seed is None:
+            seed = sync_random_seed()
+        self.seed = int(seed)
+        self.round_up = round_up
+
+        if self.round_up:
+            self.num_samples = math.ceil(len(self.dataset) / world_size)
+            self.total_size = self.num_samples * self.world_size
+        else:
+            self.num_samples = math.ceil((len(self.dataset) - rank) / world_size)
+            self.total_size = len(self.dataset)
+
+    def __iter__(self) -> Iterator[int]:
+        indices = list(range(len(self.dataset)))
+        if self.shuffle:
+            random.Random(self.seed).shuffle(indices)
+
+        if self.round_up:
+            indices = (indices * int(self.total_size / len(indices) + 1))[:self.total_size]
+
+        indices = indices[self.rank:self.total_size:self.world_size]
+        return iter(indices)
+
+    def __len__(self) -> int:
+        return self.num_samples
+
+    def set_epoch(self, epoch: int) -> None:
+        del epoch
+
+
+@DATA_SAMPLERS.register_module()
+@MMENGINE_DATA_SAMPLERS.register_module()
+class OpenIADSubsetRandomSampler(Sampler):
+    """Sampler matching open-iad's ``random.shuffle + SubsetRandomSampler``.
+
+    open-iad's GraphCore data path first shuffles per-task indices with Python's
+    ``random.shuffle`` under a fixed seed, then feeds that list into
+    ``torch.utils.data.SubsetRandomSampler``. For the single-class MVTec
+    benchmark used by BaoIAD, this is equivalent to applying those two
+    permutations to the full dataset indices directly.
+    """
+
+    def __init__(
+        self,
+        dataset: Sized,
+        shuffle: bool = True,
+        seed: Optional[int] = None,
+        round_up: bool = True,
+    ) -> None:
+        rank, world_size = get_dist_info()
+        self.rank = rank
+        self.world_size = world_size
+        self.dataset = dataset
+        self.shuffle = shuffle
+        if seed is None:
+            seed = sync_random_seed()
+        self.seed = int(seed)
+        self.round_up = round_up
+
+        if self.round_up:
+            self.num_samples = math.ceil(len(self.dataset) / world_size)
+            self.total_size = self.num_samples * self.world_size
+        else:
+            self.num_samples = math.ceil((len(self.dataset) - rank) / world_size)
+            self.total_size = len(self.dataset)
+
+    def __iter__(self) -> Iterator[int]:
+        indices = list(range(len(self.dataset)))
+        if self.shuffle:
+            random.Random(self.seed).shuffle(indices)
+            generator = torch.Generator()
+            generator.manual_seed(self.seed)
+            order = torch.randperm(len(indices), generator=generator).tolist()
+            indices = [indices[idx] for idx in order]
+
+        if self.round_up:
+            indices = (indices * int(self.total_size / len(indices) + 1))[:self.total_size]
+
+        indices = indices[self.rank:self.total_size:self.world_size]
+        return iter(indices)
+
+    def __len__(self) -> int:
+        return self.num_samples
+
+    def set_epoch(self, epoch: int) -> None:
+        del epoch
+
+
+@DATA_SAMPLERS.register_module()
+@MMENGINE_DATA_SAMPLERS.register_module()
+class ExplicitOrderSampler(Sampler):
+    """Sampler that yields a fixed index order loaded from config or JSON."""
+
+    def __init__(
+        self,
+        dataset: Sized,
+        indices: Optional[list[int]] = None,
+        index_file: Optional[str] = None,
+        shuffle: bool = False,
+        seed: Optional[int] = None,
+        round_up: bool = False,
+    ) -> None:
+        rank, world_size = get_dist_info()
+        self.rank = rank
+        self.world_size = world_size
+        self.dataset = dataset
+        self.round_up = round_up
+        self.shuffle = shuffle
+        self.seed = seed
+
+        if indices is None:
+            if index_file is None:
+                raise ValueError('ExplicitOrderSampler requires either indices or index_file.')
+            with open(index_file, 'r', encoding='utf-8') as f:
+                payload = json.load(f)
+            indices = payload['indices'] if isinstance(payload, dict) else payload
+
+        self.indices = [int(i) for i in indices]
+        if self.round_up:
+            self.num_samples = math.ceil(len(self.indices) / world_size)
+            self.total_size = self.num_samples * self.world_size
+        else:
+            self.num_samples = math.ceil((len(self.indices) - rank) / world_size)
+            self.total_size = len(self.indices)
+
+    def __iter__(self) -> Iterator[int]:
+        indices = list(self.indices)
+        if self.round_up:
+            indices = (indices * int(self.total_size / len(indices) + 1))[:self.total_size]
+        indices = indices[self.rank:self.total_size:self.world_size]
+        return iter(indices)
+
+    def __len__(self) -> int:
+        return self.num_samples
+
+    def set_epoch(self, epoch: int) -> None:
+        del epoch
+
+
+@DATA_SAMPLERS.register_module()
+@MMENGINE_DATA_SAMPLERS.register_module()
+class PerEpochOrderSampler(Sampler):
+    """Sampler that replays a fixed list of indices for each epoch.
+
+    Intended for strict alignment diagnosis when the exact upstream dataloader
+    order has been dumped in advance.
+    """
+
+    def __init__(
+        self,
+        dataset: Sized,
+        epoch_orders: Optional[list[list[int]]] = None,
+        index_file: Optional[str] = None,
+        shuffle: bool = False,
+        seed: Optional[int] = None,
+        round_up: bool = False,
+    ) -> None:
+        del shuffle, seed
+        rank, world_size = get_dist_info()
+        self.rank = rank
+        self.world_size = world_size
+        self.dataset = dataset
+        self.round_up = round_up
+        self.epoch = 0
+
+        if epoch_orders is None:
+            if index_file is None:
+                raise ValueError('PerEpochOrderSampler requires either epoch_orders or index_file.')
+            with open(index_file, 'r', encoding='utf-8') as f:
+                payload = json.load(f)
+            epoch_orders = payload['epoch_orders'] if isinstance(payload, dict) else payload
+
+        self.epoch_orders = [[int(i) for i in order] for order in epoch_orders]
+        if not self.epoch_orders:
+            raise ValueError('PerEpochOrderSampler requires at least one epoch order.')
+
+        current = self.epoch_orders[0]
+        if self.round_up:
+            self.num_samples = math.ceil(len(current) / world_size)
+            self.total_size = self.num_samples * self.world_size
+        else:
+            self.num_samples = math.ceil((len(current) - rank) / world_size)
+            self.total_size = len(current)
+
+    def _current_indices(self) -> list[int]:
+        order = self.epoch_orders[min(self.epoch, len(self.epoch_orders) - 1)]
+        indices = list(order)
+        if self.round_up:
+            indices = (indices * int(self.total_size / len(indices) + 1))[:self.total_size]
+        return indices[self.rank:self.total_size:self.world_size]
+
+    def __iter__(self) -> Iterator[int]:
+        return iter(self._current_indices())
+
+    def __len__(self) -> int:
+        return self.num_samples
+
+    def set_epoch(self, epoch: int) -> None:
+        self.epoch = int(epoch)
+
+
+@DATA_SAMPLERS.register_module()
+@MMENGINE_DATA_SAMPLERS.register_module()
+class MemAEOfficialOrderSampler(PerEpochOrderSampler):
+    """Replay the exact epoch orders implied by the official MemAE script.
+
+    The original MemAE training path seeds the global torch RNG, initializes
+    the 3D MemAE weights on CPU, and then relies on ``DataLoader(shuffle=True)``
+    / ``RandomSampler`` for each epoch. In MMEngine, a generic shuffle sampler
+    runs after additional runner setup, so the global RNG state has typically
+    drifted before the first iterator is created.
+
+    This sampler precomputes the official epoch orders inside an isolated RNG
+    context so the per-epoch sample order is deterministic and independent of
+    unrelated runner-side RNG consumption.
+    """
+
+    def __init__(
+        self,
+        dataset: Sized,
+        epochs: int = 100,
+        seed: int = 1,
+        in_channels: int = 1,
+        mem_dim: int = 2000,
+        shrink_thres: float = 0.0025,
+        round_up: bool = False,
+        shuffle: bool = True,
+        index_file: Optional[str] = None,
+        epoch_orders: Optional[list[list[int]]] = None,
+    ) -> None:
+        del shuffle
+        if epoch_orders is None and index_file is None:
+            epoch_orders = self._generate_epoch_orders(
+                dataset_len=len(dataset),
+                epochs=epochs,
+                seed=seed,
+                in_channels=in_channels,
+                mem_dim=mem_dim,
+                shrink_thres=shrink_thres,
+            )
+        super().__init__(
+            dataset=dataset,
+            epoch_orders=epoch_orders,
+            index_file=index_file,
+            round_up=round_up,
+        )
+
+    @staticmethod
+    def _generate_epoch_orders(
+        *,
+        dataset_len: int,
+        epochs: int,
+        seed: int,
+        in_channels: int,
+        mem_dim: int,
+        shrink_thres: float,
+    ) -> list[list[int]]:
+        if epochs < 1:
+            raise ValueError('epochs must be >= 1 for MemAEOfficialOrderSampler.')
+
+        # Import lazily to avoid pulling detector modules into unrelated runs.
+        from baoiad.models.detectors.memae import AutoEncoderCov3DMem, _official_weights_init
+
+        epoch_orders: list[list[int]] = []
+        with torch.random.fork_rng(devices=[]):
+            torch.manual_seed(int(seed))
+            model = AutoEncoderCov3DMem(
+                in_channels=in_channels,
+                mem_dim=mem_dim,
+                shrink_thres=shrink_thres,
+            )
+            model.apply(_official_weights_init)
+
+            for _ in range(int(epochs)):
+                epoch_seed = int(torch.empty((), dtype=torch.int64).random_().item())
+                generator = torch.Generator()
+                generator.manual_seed(epoch_seed)
+                epoch_orders.append(torch.randperm(dataset_len, generator=generator).tolist())
+
+        return epoch_orders
