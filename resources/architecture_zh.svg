@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="header" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4A90D9"/>
+      <stop offset="100%" style="stop-color:#357ABD"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="620" rx="12" fill="#F8F9FA"/>
+
+  <!-- Title Bar -->
+  <rect x="0" y="0" width="960" height="50" rx="12" fill="url(#header)"/>
+  <rect x="0" y="25" width="960" height="25" fill="url(#header)"/>
+  <text x="480" y="33" text-anchor="middle" font-size="18" font-weight="bold" fill="white">BaoIAD 架构总览</text>
+
+  <!-- Row 1: 用户入口 -->
+  <text x="30" y="80" font-size="13" font-weight="bold" fill="#666">用户入口</text>
+
+  <rect x="30" y="90" width="180" height="50" rx="8" fill="#E8F4FD" stroke="#4A90D9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="120" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#357ABD">tools/train.py</text>
+  <text x="120" y="128" text-anchor="middle" font-size="10" fill="#666">训练入口</text>
+
+  <rect x="230" y="90" width="180" height="50" rx="8" fill="#E8F4FD" stroke="#4A90D9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="320" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#357ABD">tools/test.py</text>
+  <text x="320" y="128" text-anchor="middle" font-size="10" fill="#666">测试入口</text>
+
+  <rect x="430" y="90" width="180" height="50" rx="8" fill="#E8F4FD" stroke="#4A90D9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="520" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#357ABD">tools/benchmark.py</text>
+  <text x="520" y="128" text-anchor="middle" font-size="10" fill="#666">基准评测</text>
+
+  <rect x="630" y="90" width="300" height="50" rx="8" fill="#FFF8E1" stroke="#F5A623" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="780" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#D4940A">configs/</text>
+  <text x="780" y="128" text-anchor="middle" font-size="10" fill="#666">配置继承 + _base_</text>
+
+  <!-- Arrows -->
+  <line x1="120" y1="140" x2="320" y2="170" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+  <line x1="320" y1="140" x2="380" y2="170" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+  <line x1="520" y1="140" x2="440" y2="170" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+  <line x1="780" y1="140" x2="780" y2="170" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+
+  <!-- Row 2: MMEngine Runner -->
+  <rect x="180" y="170" width="600" height="50" rx="8" fill="#4A90D9" filter="url(#shadow)"/>
+  <text x="480" y="192" text-anchor="middle" font-size="14" font-weight="bold" fill="white">MMEngine Runner.from_cfg(cfg)</text>
+  <text x="480" y="210" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">注册表驱动装配：模型、数据集、优化器、调度器、钩子</text>
+
+  <line x1="780" y1="195" x2="870" y2="195" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="830" y="188" text-anchor="middle" font-size="9" fill="#999">scope=</text>
+  <text x="830" y="200" text-anchor="middle" font-size="9" fill="#999">'baoiad'</text>
+
+  <rect x="870" y="175" width="70" height="40" rx="6" fill="#FFF3E0" stroke="#F5A623" stroke-width="1"/>
+  <text x="905" y="192" text-anchor="middle" font-size="10" font-weight="bold" fill="#D4940A">注册表</text>
+  <text x="905" y="205" text-anchor="middle" font-size="8" fill="#999">13 个</text>
+
+  <!-- Row 3: 数据管线 -->
+  <text x="30" y="248" font-size="13" font-weight="bold" fill="#666">数据管线</text>
+
+  <rect x="30" y="258" width="280" height="80" rx="8" fill="white" stroke="#E0E0E0" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="170" y="278" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">数据集</text>
+  <text x="170" y="295" text-anchor="middle" font-size="9" fill="#666">BaseADDataset / DRAEMDataset /</text>
+  <text x="170" y="308" text-anchor="middle" font-size="9" fill="#666">NSADataset / RegADDataset / RealNetDataset</text>
+  <text x="170" y="325" text-anchor="middle" font-size="9" fill="#999">ADDataSample (gt_label, gt_mask, cls_name, ...)</text>
+
+  <line x1="310" y1="298" x2="390" y2="298" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+  <text x="350" y="292" text-anchor="middle" font-size="8" fill="#999">DataLoader</text>
+
+  <!-- Row 3: 模型管线 -->
+  <rect x="390" y="240" width="540" height="140" rx="10" fill="white" stroke="#4A90D9" stroke-width="2" filter="url(#shadow)"/>
+  <text x="660" y="260" text-anchor="middle" font-size="13" font-weight="bold" fill="#357ABD">BaseADModel — 三模式前向管线</text>
+
+  <rect x="410" y="270" width="80" height="24" rx="4" fill="#4CAF50"/>
+  <text x="450" y="286" text-anchor="middle" font-size="10" font-weight="bold" fill="white">loss()</text>
+  <rect x="500" y="270" width="80" height="24" rx="4" fill="#FF9800"/>
+  <text x="540" y="286" text-anchor="middle" font-size="10" font-weight="bold" fill="white">predict()</text>
+  <rect x="590" y="270" width="80" height="24" rx="4" fill="#9C27B0"/>
+  <text x="630" y="286" text-anchor="middle" font-size="10" font-weight="bold" fill="white">_forward()</text>
+
+  <rect x="420" y="305" width="140" height="30" rx="6" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1"/>
+  <text x="490" y="324" text-anchor="middle" font-size="10" fill="#1565C0">Backbone (冻结)</text>
+
+  <text x="570" y="324" font-size="14" fill="#999">→</text>
+
+  <rect x="585" y="305" width="100" height="30" rx="6" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="635" y="324" text-anchor="middle" font-size="10" fill="#2E7D32">Neck (可选)</text>
+
+  <text x="695" y="324" font-size="14" fill="#999">→</text>
+
+  <rect x="710" y="305" width="100" height="30" rx="6" fill="#FFF3E0" stroke="#FFCC80" stroke-width="1"/>
+  <text x="760" y="324" text-anchor="middle" font-size="10" fill="#E65100">Head / 评分</text>
+
+  <text x="660" y="360" text-anchor="middle" font-size="9" fill="#999">TIMMBackbone | OpenCLIPBackbone | DINOv2Backbone | CSFlowFeatureExtractor | ...</text>
+
+  <line x1="660" y1="380" x2="660" y2="408" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+
+  <!-- Row 4: 评估 -->
+  <text x="30" y="400" font-size="13" font-weight="bold" fill="#666">评估</text>
+
+  <rect x="390" y="408" width="540" height="55" rx="8" fill="white" stroke="#4CAF50" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="660" y="430" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E7D32">AnomalyDetectionMetric</text>
+  <text x="660" y="450" text-anchor="middle" font-size="9" fill="#666">图像级：AUROC, F1-max, AP, ECE, FPR@95TPR | 像素级：AUROC, F1-max, AP, AUPRO, AUPIMO, ECE</text>
+
+  <!-- Row 5: 方法分类 -->
+  <text x="30" y="490" font-size="13" font-weight="bold" fill="#666">50+ 检测方法</text>
+
+  <rect x="30" y="502" width="145" height="55" rx="6" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1"/>
+  <text x="102" y="520" text-anchor="middle" font-size="10" font-weight="bold" fill="#1565C0">Memory Bank</text>
+  <text x="102" y="535" text-anchor="middle" font-size="8" fill="#666">PatchCore, SPADE,</text>
+  <text x="102" y="548" text-anchor="middle" font-size="8" fill="#666">PaDiM, RegAD, DFM...</text>
+
+  <rect x="185" y="502" width="145" height="55" rx="6" fill="#FCE4EC" stroke="#F48FB1" stroke-width="1"/>
+  <text x="257" y="520" text-anchor="middle" font-size="10" font-weight="bold" fill="#C2185B">知识蒸馏</text>
+  <text x="257" y="535" text-anchor="middle" font-size="8" fill="#666">RD, RD++, STFPM,</text>
+  <text x="257" y="548" text-anchor="middle" font-size="8" fill="#666">EfficientAD, Dinomaly</text>
+
+  <rect x="340" y="502" width="145" height="55" rx="6" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="412" y="520" text-anchor="middle" font-size="10" font-weight="bold" fill="#2E7D32">归一化流</text>
+  <text x="412" y="535" text-anchor="middle" font-size="8" fill="#666">CSFlow, FastFlow,</text>
+  <text x="412" y="548" text-anchor="middle" font-size="8" fill="#666">CFlow, UFlow, DifferNet</text>
+
+  <rect x="495" y="502" width="145" height="55" rx="6" fill="#FFF3E0" stroke="#FFCC80" stroke-width="1"/>
+  <text x="567" y="520" text-anchor="middle" font-size="10" font-weight="bold" fill="#E65100">重建方法</text>
+  <text x="567" y="535" text-anchor="middle" font-size="8" fill="#666">DRAEM, MemSeg, DSR,</text>
+  <text x="567" y="548" text-anchor="middle" font-size="8" fill="#666">GANomaly, FRE...</text>
+
+  <rect x="650" y="502" width="145" height="55" rx="6" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1"/>
+  <text x="722" y="520" text-anchor="middle" font-size="10" font-weight="bold" fill="#7B1FA2">视觉语言</text>
+  <text x="722" y="535" text-anchor="middle" font-size="8" fill="#666">WinCLIP, AnomalyCLIP,</text>
+  <text x="722" y="548" text-anchor="middle" font-size="8" fill="#666">MuSc, AdaCLIP...</text>
+
+  <rect x="805" y="502" width="125" height="55" rx="6" fill="#ECEFF1" stroke="#90A4AE" stroke-width="1"/>
+  <text x="867" y="520" text-anchor="middle" font-size="10" font-weight="bold" fill="#455A64">其他</text>
+  <text x="867" y="535" text-anchor="middle" font-size="8" fill="#666">SimpleNet, InvAD,</text>
+  <text x="867" y="548" text-anchor="middle" font-size="8" fill="#666">ViTAD, MambaAD...</text>
+
+  <!-- Row 6: 数据集 -->
+  <text x="30" y="585" font-size="13" font-weight="bold" fill="#666">数据集</text>
+
+  <g transform="translate(30, 590)">
+    <rect x="0" y="0" width="75" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="37" y="15" text-anchor="middle" font-size="9" fill="#357ABD">MVTec AD</text>
+    <rect x="85" y="0" width="55" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="112" y="15" text-anchor="middle" font-size="9" fill="#357ABD">VisA</text>
+    <rect x="150" y="0" width="60" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="180" y="15" text-anchor="middle" font-size="9" fill="#357ABD">BTech</text>
+    <rect x="220" y="0" width="90" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="265" y="15" text-anchor="middle" font-size="9" fill="#357ABD">MVTec 3D AD</text>
+    <rect x="320" y="0" width="85" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="362" y="15" text-anchor="middle" font-size="9" fill="#357ABD">MVTec LOCO</text>
+    <rect x="415" y="0" width="60" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="445" y="15" text-anchor="middle" font-size="9" fill="#357ABD">MPDD</text>
+    <rect x="485" y="0" width="90" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="530" y="15" text-anchor="middle" font-size="9" fill="#357ABD">MVTec AD 2</text>
+    <rect x="585" y="0" width="75" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="622" y="15" text-anchor="middle" font-size="9" fill="#357ABD">Kolektor</text>
+    <rect x="670" y="0" width="55" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="697" y="15" text-anchor="middle" font-size="9" fill="#357ABD">VAD</text>
+    <rect x="735" y="0" width="70" height="22" rx="4" fill="#E8F4FD" stroke="#4A90D9" stroke-width="0.8"/>
+    <text x="770" y="15" text-anchor="middle" font-size="9" fill="#357ABD">RealIAD</text>
+  </g>
+</svg>

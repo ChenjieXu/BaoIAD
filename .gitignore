@@ -56,3 +56,15 @@ package-lock.json
 
 # Logs
 *.log
+
+# Sphinx build
+docs/en/_build/
+docs/zh_cn/_build/
+
+# IADBench sync artifacts
+docs/alignment/
+docs/paper/
+tools/run_visa_*.sh
+
+# Dev
+CLAUDE.md
