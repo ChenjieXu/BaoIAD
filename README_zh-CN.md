@@ -6,9 +6,11 @@
   [![python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
   [![pytorch](https://img.shields.io/badge/pytorch-2.0%2B-orange)](https://pytorch.org/)
   [![methods](https://img.shields.io/badge/methods-50%2B-purple)](docs/en/model_zoo.md)
-  [![paper](https://img.shields.io/badge/paper-under%20review-yellow)](https://github.com/ChenjieXu/BaoIAD)
+  [![paper](https://img.shields.io/badge/NeurIPS%202026-Under%20E%26D%20Review-red)](https://github.com/ChenjieXu/BaoIAD)
 
   [English](README.md) | 简体中文
+
+> **📢 BaoIAD 目前正在 NeurIPS 2026 Evaluations and Datasets Track 审稿中。**
 
   [📘 文档](https://baoiad.readthedocs.io/en/latest/) |
   [🛠️ 安装](docs/en/get_started.md) |
@@ -18,10 +20,6 @@
 </div>
 
 <br>
-
-<div align="center">
-  <img src="resources/architecture_zh.svg" width="100%" alt="BaoIAD 架构"/>
-</div>
 
 ## 简介
 
@@ -135,11 +133,12 @@ python tools/test.py <config> <checkpoint> \
 如果您在研究中使用了本工具箱或基准评测，请引用本项目。
 
 ```bibtex
-@article{baoiad2025,
-  title={BaoIAD: A Unified Benchmark for Industrial Anomaly Detection},
+@article{xu2026baoiad,
+  title={BaoIAD: Towards Trustworthy and Reproducible Benchmarking for Industrial Anomaly Detection},
   author={Chenjie Xu},
-  journal={arXiv preprint},
-  year={2025}
+  journal={GitHub repository},
+  year={2026},
+  howpublished={\url{https://github.com/ChenjieXu/BaoIAD}}
 }
 ```
 
