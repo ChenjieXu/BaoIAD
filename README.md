@@ -111,6 +111,21 @@ python tools/benchmark.py --data_root data/mvtec_ad --methods patchcore rd --cat
     --output runs/benchmark_results.json
 ```
 
+## Visualization
+
+BaoIAD provides built-in visualization for anomaly detection results. Enable it during testing:
+
+```bash
+python tools/test.py <config> <checkpoint> \
+    --cfg-options default_hooks.visualization.enable=True
+```
+
+<div align="center">
+<img src="resources/vis_examples/anomaly_detection_results.png" width="100%" alt="Anomaly detection visualization">
+
+*Examples: PatchCore, PaDiM, and SPADE (WideResNet-50) on MVTec AD*
+</div>
+
 ## Contributing
 
 We appreciate all contributions to improve BaoIAD. Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) for the contributing guideline.

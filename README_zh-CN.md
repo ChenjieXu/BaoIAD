@@ -111,6 +111,21 @@ python tools/benchmark.py --data_root data/mvtec_ad --methods patchcore rd --cat
     --output runs/benchmark_results.json
 ```
 
+## 可视化
+
+BaoIAD 内置异常检测结果可视化功能，测试时启用即可：
+
+```bash
+python tools/test.py <config> <checkpoint> \
+    --cfg-options default_hooks.visualization.enable=True
+```
+
+<div align="center">
+<img src="resources/vis_examples/anomaly_detection_results.png" width="100%" alt="异常检测结果可视化">
+
+*示例：PatchCore、PaDiM 和 SPADE (WideResNet-50) 在 MVTec AD 数据集上的检测结果*
+</div>
+
 ## 贡献
 
 我们欢迎所有对 BaoIAD 的贡献。请参考 [CONTRIBUTING.md](CONTRIBUTING.md) 了解贡献指南。
