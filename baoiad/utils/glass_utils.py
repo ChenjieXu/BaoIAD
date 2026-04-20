@@ -20,39 +20,13 @@ import cv2
 import numpy as np
 import torch
 
+from baoiad.utils.compat import ensure_legacy_imgaug_compat
 from baoiad.utils.dtd import download_dtd as _download_dtd
 
 logger = logging.getLogger(__name__)
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
-
-
-def ensure_imgaug_numpy_compat() -> None:
-    """Provide the NumPy and collections shims required by imgaug on modern Python."""
-    import collections
-    import collections.abc
-
-    # collections shims for Python 3.10+ (deprecated in 3.9, removed in 3.10)
-    if not hasattr(collections, 'Iterable'):
-        collections.Iterable = collections.abc.Iterable  # type: ignore[attr-defined]
-    if not hasattr(collections, 'Mapping'):
-        collections.Mapping = collections.abc.Mapping  # type: ignore[attr-defined]
-    if not hasattr(collections, 'MutableMapping'):
-        collections.MutableMapping = collections.abc.MutableMapping  # type: ignore[attr-defined]
-    if not hasattr(collections, 'Sequence'):
-        collections.Sequence = collections.abc.Sequence  # type: ignore[attr-defined]
-
-    # NumPy shims for NumPy 2.0
-    if not hasattr(np, 'sctypes'):
-        np.sctypes = {  # type: ignore[attr-defined]
-            'int': [np.int8, np.int16, np.int32, np.int64],
-            'uint': [np.uint8, np.uint16, np.uint32, np.uint64],
-            'float': [np.float16, np.float32, np.float64],
-            'complex': [np.complex64, np.complex128],
-            'others': [np.bool_, np.object_, np.str_, np.bytes_],
-        }
-
 
 def resolve_dtd_texture_paths(dtd_path: Optional[str]) -> list[str]:
     """Resolve DTD texture image paths for GLASS-style augmentation."""
@@ -88,7 +62,7 @@ def resolve_dtd_texture_paths(dtd_path: Optional[str]) -> list[str]:
 
 def build_rotation_augmenter():
     """Build the imgaug rotation augmenter used by the official Perlin helper."""
-    ensure_imgaug_numpy_compat()
+    ensure_legacy_imgaug_compat()
     import imgaug.augmenters as iaa
 
     return iaa.Sequential([iaa.Affine(rotate=(-90, 90))])

@@ -11,22 +11,41 @@ import numpy as np
 from scipy.integrate import trapezoid
 
 
+def _coerce_pimo_inputs(
+    gt_masks: np.ndarray | list[np.ndarray],
+    pred_maps: np.ndarray | list[np.ndarray],
+) -> tuple[list[np.ndarray], list[np.ndarray]]:
+    """Normalize PIMO inputs into aligned 2D per-image arrays."""
+    if isinstance(gt_masks, np.ndarray) and gt_masks.ndim == 3:
+        gt_list = [np.asarray(mask) for mask in gt_masks]
+    else:
+        gt_list = [np.asarray(mask) for mask in gt_masks]
+
+    if isinstance(pred_maps, np.ndarray) and pred_maps.ndim == 3:
+        pred_list = [np.asarray(pred_map, dtype=np.float64) for pred_map in pred_maps]
+    else:
+        pred_list = [np.asarray(pred_map, dtype=np.float64) for pred_map in pred_maps]
+
+    if len(gt_list) != len(pred_list):
+        raise ValueError(f'Length mismatch: {len(gt_list)} gt masks vs {len(pred_list)} pred maps')
+    for gt_mask, pred_map in zip(gt_list, pred_list):
+        if gt_mask.shape != pred_map.shape:
+            raise ValueError(f'Shape mismatch: gt_mask {gt_mask.shape} vs pred_map {pred_map.shape}')
+        if gt_mask.ndim != 2:
+            raise ValueError(
+                f'AUPIMO expects 2D per-image masks, got gt_mask.ndim={gt_mask.ndim}.'
+            )
+    return gt_list, pred_list
+
+
 def _validate_pimo_inputs(
-    gt_masks: np.ndarray,
-    pred_maps: np.ndarray,
+    gt_masks: np.ndarray | list[np.ndarray],
+    pred_maps: np.ndarray | list[np.ndarray],
     fpr_bounds: tuple[float, float],
     num_thresholds: int,
-) -> tuple[np.ndarray, np.ndarray]:
+) -> tuple[list[np.ndarray], list[np.ndarray]]:
     """Validate common AUPIMO inputs."""
-    gt_masks = np.asarray(gt_masks)
-    pred_maps = np.asarray(pred_maps, dtype=np.float64)
-
-    if gt_masks.shape != pred_maps.shape:
-        raise ValueError(f'Shape mismatch: gt_masks {gt_masks.shape} vs pred_maps {pred_maps.shape}')
-    if gt_masks.ndim != 3:
-        raise ValueError(
-            f'AUPIMO expects (N, H, W) inputs, got gt_masks.ndim={gt_masks.ndim}.'
-        )
+    gt_masks, pred_maps = _coerce_pimo_inputs(gt_masks, pred_maps)
 
     fpr_lo, fpr_hi = fpr_bounds
     if not (0.0 < fpr_lo < fpr_hi <= 1.0):
@@ -53,12 +72,14 @@ def _build_normal_only_thresholds(
     return np.linspace(min_score, max_score, num_thresholds, dtype=np.float64)
 
 
-def _compute_shared_fprs(pred_maps: np.ndarray, normal_idx: list[int], thresholds: np.ndarray) -> np.ndarray:
+def _compute_shared_fprs(pred_maps: list[np.ndarray], normal_idx: list[int], thresholds: np.ndarray) -> np.ndarray:
     """Compute shared FPR values for a threshold grid."""
-    normal_maps = pred_maps[normal_idx]
     shared_fprs = []
     for threshold in thresholds:
-        image_fprs = (normal_maps >= threshold).mean(axis=(1, 2))
+        image_fprs = [
+            float((pred_maps[index] >= threshold).mean())
+            for index in normal_idx
+        ]
         shared_fprs.append(float(image_fprs.mean()))
     return np.asarray(shared_fprs, dtype=np.float64)
 
@@ -118,8 +139,8 @@ def _integrate_curve_in_log_fpr(
 
 
 def _prepare_pimo_curves(
-    gt_masks: np.ndarray,
-    pred_maps: np.ndarray,
+    gt_masks: np.ndarray | list[np.ndarray],
+    pred_maps: np.ndarray | list[np.ndarray],
     fpr_bounds: tuple[float, float],
     num_thresholds: int,
 ) -> tuple[np.ndarray, list[int], np.ndarray, np.ndarray] | tuple[None, list[int], None, None]:
@@ -132,7 +153,7 @@ def _prepare_pimo_curves(
     if not normal_idx or not anomalous_idx:
         return None, anomalous_idx, None, None
 
-    normal_scores_flat = pred_maps[normal_idx].reshape(-1)
+    normal_scores_flat = np.concatenate([pred_maps[index].reshape(-1) for index in normal_idx])
     thresholds = _build_normal_only_thresholds(normal_scores_flat, fpr_bounds, num_thresholds)
     if thresholds.size < 2:
         return None, anomalous_idx, None, None
@@ -158,8 +179,8 @@ def _prepare_pimo_curves(
 
 
 def compute_pimo(
-    gt_masks: np.ndarray,
-    pred_maps: np.ndarray,
+    gt_masks: np.ndarray | list[np.ndarray],
+    pred_maps: np.ndarray | list[np.ndarray],
     fpr_bounds: tuple[float, float] = (1e-5, 1e-4),
     num_thresholds: int = 300,
 ) -> float:
@@ -201,8 +222,8 @@ def compute_pimo(
 
 
 def compute_pimo_per_image(
-    gt_masks: np.ndarray,
-    pred_maps: np.ndarray,
+    gt_masks: np.ndarray | list[np.ndarray],
+    pred_maps: np.ndarray | list[np.ndarray],
     fpr_bounds: tuple[float, float] = (1e-5, 1e-4),
     num_thresholds: int = 300,
 ) -> tuple[np.ndarray, list[int]]:

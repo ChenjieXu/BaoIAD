@@ -89,6 +89,58 @@ class MemoryBankHead(BaseModule):
         # Buffer to collect training features
         self._train_features: List[np.ndarray] = []
 
+        # Persist the memory bank inside state_dict so that checkpoints round-trip
+        # correctly. The FAISS / sklearn index is rebuilt on load from the bank.
+        self._register_state_dict_hook(self._save_memory_bank_to_state_dict)
+        self._register_load_state_dict_pre_hook(self._load_memory_bank_from_state_dict)
+
+    @staticmethod
+    def _save_memory_bank_to_state_dict(module, state_dict, prefix, local_metadata):
+        if module.memory_bank is not None:
+            state_dict[prefix + 'memory_bank'] = torch.from_numpy(
+                np.ascontiguousarray(module.memory_bank.astype(np.float32))
+            )
+        return state_dict
+
+    def _load_memory_bank_from_state_dict(
+        self, state_dict, prefix, local_metadata,
+        strict, missing_keys, unexpected_keys, error_msgs,
+    ):
+        key = prefix + 'memory_bank'
+        if key in state_dict:
+            tensor = state_dict.pop(key)
+            self.memory_bank = tensor.detach().cpu().numpy().astype(np.float32)
+            self._build_nn_index_from_bank()
+
+    def _build_nn_index_from_bank(self) -> None:
+        if self.memory_bank is None:
+            return
+        data = np.ascontiguousarray(self.memory_bank.astype(np.float32))
+        if HAS_FAISS:
+            dim = data.shape[1]
+            self._nn_index = faiss.IndexFlatL2(dim)
+            if self.faiss_on_gpu and HAS_FAISS_GPU:
+                try:
+                    self._faiss_resources = faiss.StandardGpuResources()
+                    self._nn_index = faiss.index_cpu_to_gpu(
+                        self._faiss_resources, self.faiss_gpu_id, self._nn_index)
+                except Exception as exc:
+                    warnings.warn(
+                        f'Failed to initialize GPU FAISS index on load: {exc}. '
+                        'Falling back to CPU IndexFlatL2.',
+                        RuntimeWarning,
+                    )
+                    self._nn_index = faiss.IndexFlatL2(dim)
+                    self._faiss_resources = None
+            self._nn_index.add(data)
+        else:
+            self._nn_index = NearestNeighbors(
+                n_neighbors=self.num_neighbors,
+                metric='euclidean',
+                algorithm='auto',
+            )
+            self._nn_index.fit(data)
+
     def _patchify_and_aggregate(self, concat: Tensor) -> Tensor:
         """Apply patchsize-neighborhood aggregation (PatchCore paper, patchsize=3).
 
@@ -171,42 +223,13 @@ class MemoryBankHead(BaseModule):
         else:
             self.memory_bank = coreset_source
 
-        # Build kNN index
-        data = np.ascontiguousarray(self.memory_bank.astype(np.float32))
-        if HAS_FAISS:
-            dim = data.shape[1]
-            self._nn_index = faiss.IndexFlatL2(dim)
-            if self.faiss_on_gpu:
-                if not HAS_FAISS_GPU:
-                    warnings.warn(
-                        'faiss_on_gpu=True but GPU FAISS symbols are unavailable; '
-                        'falling back to CPU IndexFlatL2.',
-                        RuntimeWarning,
-                    )
-                else:
-                    try:
-                        self._faiss_resources = faiss.StandardGpuResources()
-                        self._nn_index = faiss.index_cpu_to_gpu(
-                            self._faiss_resources,
-                            self.faiss_gpu_id,
-                            self._nn_index,
-                        )
-                    except Exception as exc:
-                        warnings.warn(
-                            f'Failed to initialize GPU FAISS index: {exc}. '
-                            'Falling back to CPU IndexFlatL2.',
-                            RuntimeWarning,
-                        )
-                        self._nn_index = faiss.IndexFlatL2(dim)
-                        self._faiss_resources = None
-            self._nn_index.add(data)
-        else:
-            self._nn_index = NearestNeighbors(
-                n_neighbors=self.num_neighbors,
-                metric='euclidean',
-                algorithm='auto',
+        if self.faiss_on_gpu and HAS_FAISS and not HAS_FAISS_GPU:
+            warnings.warn(
+                'faiss_on_gpu=True but GPU FAISS symbols are unavailable; '
+                'falling back to CPU IndexFlatL2.',
+                RuntimeWarning,
             )
-            self._nn_index.fit(data)
+        self._build_nn_index_from_bank()
 
     @staticmethod
     def _coreset_sampling(features: np.ndarray, n_samples: int) -> np.ndarray:

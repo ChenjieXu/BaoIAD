@@ -269,18 +269,48 @@ class TestAnomalyDetectionMetric:
 
     def test_normalize_pred_maps_batch_broadcast_matches_reference_formula(self):
         metric = AnomalyDetectionMetric(metrics=['pixel_auroc'], normalize_pred_maps='batch_broadcast')
-        pred_maps = np.array([
-            [[1.0, 3.0], [1.0, 3.0]],
-            [[10.0, 14.0], [10.0, 14.0]],
-        ])
+        pred_maps = [
+            np.array([[1.0, 3.0], [1.0, 3.0]]),
+            np.array([[10.0, 14.0], [10.0, 14.0]]),
+        ]
 
         normalized = metric._normalize_pred_maps_2d(pred_maps, 'batch_broadcast')
         expected = (
-            (pred_maps - 1.0) / 2.0 +
-            (pred_maps - 10.0) / 4.0
+            (np.array(pred_maps) - 1.0) / 2.0 +
+            (np.array(pred_maps) - 10.0) / 4.0
         ) / 2.0
 
         assert np.allclose(normalized, expected)
+
+    def test_pixel_metrics_support_mixed_spatial_shapes_within_one_class(self):
+        metric = AnomalyDetectionMetric(
+            metrics=['pixel_auroc', 'pixel_ap', 'pixel_ece', 'aupro', 'aupimo']
+        )
+
+        good = ADDataSample()
+        good.pred_score = 0.1
+        good.gt_label = 0
+        good.cls_name = 'bottle'
+        good.gt_mask = torch.zeros(8, 8)
+        good.pred_anomaly_map = torch.full((8, 8), 0.1)
+
+        bad = ADDataSample()
+        bad.pred_score = 0.9
+        bad.gt_label = 1
+        bad.cls_name = 'bottle'
+        bad.gt_mask = torch.zeros(6, 10)
+        bad.gt_mask[1:5, 3:7] = 1.0
+        bad.pred_anomaly_map = torch.zeros(6, 10)
+        bad.pred_anomaly_map[1:5, 3:7] = 0.9
+
+        metric.process({}, [good, bad])
+        result = metric.compute_metrics(metric.results)
+
+        assert result['pixel_auroc'] > 0.99
+        assert result['pixel_ap'] > 0.99
+        assert 0.0 <= result['pixel_ece'] <= 1.0
+        assert 0.0 <= result['aupro'] <= 1.0
+        assert 0.0 <= result['aupimo'] <= 1.0
 
     def test_flip_auroc_if_below_half_matches_official_behavior(self):
         good = ADDataSample()

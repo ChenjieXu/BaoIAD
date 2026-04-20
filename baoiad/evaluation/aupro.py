@@ -3,6 +3,8 @@
 Implementation aligned with anomalib's global sorting method for better accuracy.
 """
 
+from typing import Sequence
+
 import numpy as np
 from scipy.ndimage import label as connected_components
 from sklearn.metrics import auc
@@ -34,7 +36,32 @@ def _make_global_region_labels(cca: np.ndarray) -> np.ndarray:
     return cca_off
 
 
-def compute_aupro(gt_masks: np.ndarray, pred_maps: np.ndarray, max_fpr: float = 0.3) -> float:
+def _coerce_mask_map_sequence(
+    gt_masks: np.ndarray | Sequence[np.ndarray],
+    pred_maps: np.ndarray | Sequence[np.ndarray],
+) -> tuple[list[np.ndarray], list[np.ndarray]]:
+    """Normalize batched or per-sample mask/map inputs into aligned lists."""
+    if isinstance(gt_masks, np.ndarray) and gt_masks.ndim == 3:
+        gt_list = [np.asarray(mask) for mask in gt_masks]
+    else:
+        gt_list = [np.asarray(mask) for mask in gt_masks]
+
+    if isinstance(pred_maps, np.ndarray) and pred_maps.ndim == 3:
+        pred_list = [np.asarray(pred_map, dtype=np.float64) for pred_map in pred_maps]
+    else:
+        pred_list = [np.asarray(pred_map, dtype=np.float64) for pred_map in pred_maps]
+
+    if len(gt_list) != len(pred_list):
+        raise ValueError(f'Length mismatch: {len(gt_list)} gt masks vs {len(pred_list)} pred maps')
+    for gt_mask, pred_map in zip(gt_list, pred_list):
+        if gt_mask.shape != pred_map.shape:
+            raise ValueError(f'Shape mismatch: gt_mask {gt_mask.shape} vs pred_map {pred_map.shape}')
+        if gt_mask.ndim != 2:
+            raise ValueError(f'AUPRO expects 2D per-image masks, got gt_mask.ndim={gt_mask.ndim}.')
+    return gt_list, pred_list
+
+
+def compute_aupro(gt_masks: np.ndarray | Sequence[np.ndarray], pred_maps: np.ndarray | Sequence[np.ndarray], max_fpr: float = 0.3) -> float:
     """Compute AUPRO using global sorting method (anomalib-aligned).
 
     This implementation uses a global sorting approach which is:
@@ -49,22 +76,22 @@ def compute_aupro(gt_masks: np.ndarray, pred_maps: np.ndarray, max_fpr: float = 
     Returns:
         AUPRO value (normalized to [0, 1]).
     """
-    if gt_masks.shape != pred_maps.shape:
-        raise ValueError(f"Shape mismatch: gt_masks {gt_masks.shape} vs pred_maps {pred_maps.shape}")
+    gt_list, pred_list = _coerce_mask_map_sequence(gt_masks, pred_maps)
 
     # Step 1: Connected Component Analysis
-    cca = np.zeros_like(gt_masks, dtype=np.int32)
-    for i in range(len(gt_masks)):
-        if gt_masks[i].max() > 0:
-            labeled, _ = connected_components(gt_masks[i])
-            cca[i] = labeled
+    cca = []
+    for gt_mask in gt_list:
+        labeled = np.zeros_like(gt_mask, dtype=np.int32)
+        if gt_mask.max() > 0:
+            labeled, _ = connected_components(gt_mask)
+        cca.append(labeled)
 
     # Make labels unique across batch
-    cca = _make_global_region_labels(cca)
+    cca = _make_global_region_labels(np.asarray(cca, dtype=object))
 
     # Step 2: Flatten
-    labels = cca.reshape(-1)
-    preds_flat = pred_maps.reshape(-1).astype(np.float64)
+    labels = np.concatenate([np.asarray(item).reshape(-1) for item in cca])
+    preds_flat = np.concatenate([pred_map.reshape(-1).astype(np.float64) for pred_map in pred_list])
 
     # Step 3: Compute contributions
     background = (labels == 0)

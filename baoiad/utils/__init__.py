@@ -1,4 +1,5 @@
 """Utility modules for BaoIAD."""
+from baoiad.utils.compat import ensure_legacy_imgaug_compat, patch_numpy_sctypes  # noqa: F401
 from baoiad.utils.image import save_tensor_image  # noqa: F401
 from baoiad.utils.resad_official import (  # noqa: F401
     build_official_namespace,
@@ -9,7 +10,6 @@ from baoiad.utils.resad_official import (  # noqa: F401
     load_official_main,
     patch_official_dataloader_num_workers,
     patch_official_train_reference_tensor_cache,
-    patch_numpy_sctypes,
     patch_timm_legacy_imports,
     prepare_reference_features,
     prepare_official_resad_import,
@@ -35,6 +35,7 @@ __all__ = [
     'assign_fine_to_coarse_torch',
     'compose_labeled_mask',
     'decompose_image_path',
+    'ensure_legacy_imgaug_compat',
     'ensure_visa_split_csv',
     'ensure_resad_few_shot_dir',
     'get_reference_feature_class_names',

@@ -51,3 +51,34 @@ class TestSPADEDetector(TestCase):
         out = model(torch.randn(2, 3, 64, 64), data_samples, mode='predict')
         assert isinstance(out, list)
         assert len(out) == 2
+
+    def test_predict_raises_before_memory_banks_are_built(self):
+        model = MODELS.build(self.cfg)
+        model.eval()
+        with pytest.raises(RuntimeError, match='memory banks are not built'):
+            model(torch.randn(1, 3, 64, 64), _make_data_samples(1, 64, 64), mode='predict')
+
+    def test_feature_caches_round_trip_through_state_dict(self):
+        model = MODELS.build(self.cfg)
+        model.train()
+        model(torch.randn(2, 3, 64, 64), _make_data_samples(2, 64, 64), mode='loss')
+        assert model._layer_features[0]
+        assert model._gap_features
+
+        restored = MODELS.build(self.cfg)
+        restored.load_state_dict(model.state_dict(), strict=False)
+
+        assert len(restored._layer_features[0]) == 1
+        assert len(restored._gap_features) == 1
+        assert torch.allclose(restored._layer_features[0][0], model._layer_features[0][0])
+        assert torch.allclose(restored._gap_features[0], model._gap_features[0])
+
+    def test_knn_kth_distance_matches_full_cdist_when_memory_is_chunked(self):
+        model = MODELS.build(dict(**self.cfg, knn_chunk_size=2, knn_memory_chunk_size=3))
+        queries = torch.randn(4, 8)
+        memory = torch.randn(7, 8)
+
+        actual = model._knn_kth_distance(queries, memory, k=3)
+
+        expected = torch.cdist(queries, memory).topk(3, dim=1, largest=False).values[:, -1]
+        assert torch.allclose(actual, expected, atol=1e-6)

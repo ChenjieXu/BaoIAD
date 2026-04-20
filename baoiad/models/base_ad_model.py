@@ -142,16 +142,14 @@ class MemoryBankADModel(BaseADModel):
     def _clear_memory_bank(self) -> None:
         self._memory_bank.clear()
 
+    # Canonical entry point invoked by MemoryBankHook after training. Subclasses
+    # override this. `fit()` is provided as a backward-compatible alias and must
+    # NOT be overridden to call back into `build_memory_bank` to avoid recursion.
+    def build_memory_bank(self) -> None:
+        return None
+
     def fit(self) -> None:
         self.build_memory_bank()
-
-    def build_memory_bank(self) -> None:
-        if self._memory_bank:
-            self._fit_from_bank(self._memory_bank)
-            self._clear_memory_bank()
-
-    def _fit_from_bank(self, features: List[Tensor]) -> None:
-        raise NotImplementedError
 
 
 class KnowledgeDistillationADModel(BaseADModel):

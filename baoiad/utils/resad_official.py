@@ -21,6 +21,7 @@ from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms as T
 
+from baoiad.utils.compat import patch_numpy_sctypes
 from baoiad.utils.freia import patch_freia_soft_permutation_rvs
 
 _RESAD_DATASET_CLASS_NAMES = {
@@ -45,21 +46,6 @@ _RESAD_DATASET_CLASS_NAMES = {
 
 _IMAGENET_MEAN = [0.485, 0.456, 0.406]
 _IMAGENET_STD = [0.229, 0.224, 0.225]
-
-
-def patch_numpy_sctypes() -> None:
-    """Restore ``np.sctypes`` for legacy imgaug-based official code."""
-    if hasattr(np, 'sctypes'):
-        return
-
-    np.sctypes = {  # type: ignore[attr-defined]
-        'int': [np.int8, np.int16, np.int32, np.int64],
-        'uint': [np.uint8, np.uint16, np.uint32, np.uint64],
-        'float': [np.float16, np.float32, np.float64],
-        'complex': [np.complex64, np.complex128],
-        'others': [np.bool_, np.object_, np.str_, np.bytes_],
-    }
-
 
 def patch_timm_legacy_imports() -> None:
     """Alias legacy timm import paths used by upstream ResAD."""

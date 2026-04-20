@@ -344,17 +344,21 @@ def MSM(Z: torch.Tensor, device, topmin_min: float = 0, topmin_max: float = 0.3)
     """
     N, L, C = Z.shape
     Z = Z.to(device)
+    if N <= 1:
+        return torch.zeros(N, L, device=device, dtype=torch.float64)
 
     # Pre-compute k values for topmin
-    k_max = int(N * topmin_max) if topmin_max < 1 else int(topmin_max)
-    k_min = int(N * topmin_min) if topmin_min < 1 else int(topmin_min)
+    reference_count = N - 1
+    k_max = int(reference_count * topmin_max) if topmin_max < 1 else int(topmin_max)
+    k_min = int(reference_count * topmin_min) if topmin_min < 1 else int(topmin_min)
     if k_max < k_min:
         k_max, k_min = k_min, k_max
-    if k_max == 0:
-        k_max = 1
+    k_max = min(max(k_max, 1), reference_count)
+    k_min = min(max(k_min, 0), k_max - 1)
+    selected_count = max(k_max - k_min, 1)
 
     # Chunk size for reference processing (balance memory vs speed)
-    chunk_size = min(32, N - 1)
+    chunk_size = min(32, reference_count)
 
     anomaly_scores_matrix = torch.zeros(N, L, device=device, dtype=torch.float64)
 
@@ -403,7 +407,7 @@ def MSM(Z: torch.Tensor, device, topmin_min: float = 0, topmin_max: float = 0.3)
 
         # Topmin scoring
         vals, _ = torch.topk(patch2image.float(), k_max, largest=False, sorted=True)
-        vals, _ = torch.topk(vals.float(), k_max - k_min, largest=True, sorted=True)
+        vals, _ = torch.topk(vals.float(), selected_count, largest=True, sorted=True)
         anomaly_scores_matrix[i] = vals.mean(dim=1)
 
     return anomaly_scores_matrix
@@ -428,15 +432,27 @@ def MMO(W: torch.Tensor, score: torch.Tensor, k_list: List[int] = None):
     if k_list is None:
         k_list = [1, 2, 3]
 
-    S_list = []
+    n = W.shape[-1]
+    if n <= 1:
+        return score.clone().float()
+
+    valid_k_list = []
     for k in k_list:
+        k = int(k)
+        if 0 <= k < n:
+            valid_k_list.append(k)
+    if not valid_k_list:
+        return score.clone().float()
+
+    S_list = []
+    for k in valid_k_list:
         # Top-k smallest similarities (most different images)
-        _, topk_matrix = torch.topk(W.float(), W.shape[0] - k, largest=False, sorted=True)
+        keep_count = n - k
+        _, topk_matrix = torch.topk(W.float(), keep_count, largest=False, sorted=True)
         W_mask = W.clone()
-        for i in range(W.shape[0]):
+        for i in range(n):
             W_mask[i, topk_matrix[i]] = 0
 
-        n = W.shape[-1]
         D_ = torch.zeros_like(W).float()
         for i in range(n):
             D_[i, i] = 1 / (W_mask[i, :].sum() + 1e-8)

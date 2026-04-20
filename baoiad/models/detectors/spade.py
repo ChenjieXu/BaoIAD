@@ -30,7 +30,8 @@ class SPADEDetector(MemoryBankADModel):
     """
 
     def __init__(self, backbone='wide_resnet50_2', k=5,
-                 max_memory_bank_size=200000,
+                 max_memory_bank_size=200000, knn_chunk_size=256,
+                 knn_memory_chunk_size=8192,
                  data_preprocessor=None, init_cfg=None, **kwargs):
         super().__init__(data_preprocessor=data_preprocessor, init_cfg=init_cfg)
         # Normalize backbone to FeatureExtractor config
@@ -45,6 +46,8 @@ class SPADEDetector(MemoryBankADModel):
         self.feature_extractor = MODELS.build(backbone)
         self.k = k
         self.max_memory_bank_size = max_memory_bank_size
+        self.knn_chunk_size = knn_chunk_size
+        self.knn_memory_chunk_size = knn_memory_chunk_size
 
         # Per-layer memory banks for pixel-level scoring
         # memory_banks[i]: (N*H*W, C_i)
@@ -56,8 +59,37 @@ class SPADEDetector(MemoryBankADModel):
         # memory_bank_gap: (N, C_total) - concatenated GAP features
         self.register_buffer('memory_bank_gap', None)
 
+        # Runtime-only feature caches: NOT serialized in state_dict. Resuming
+        # from a mid-training checkpoint should preserve the partially collected
+        # features so fit() can still build the banks without a full replay.
         self._layer_features = [[], [], []]  # per-layer patch features
         self._gap_features = []  # GAP features for image-level scoring
+        self._register_state_dict_hook(self._save_feature_cache_to_state_dict)
+        self._register_load_state_dict_pre_hook(self._load_feature_cache_from_state_dict)
+
+    @staticmethod
+    def _save_feature_cache_to_state_dict(module, state_dict, prefix, local_metadata):
+        for layer_idx, features in enumerate(module._layer_features):
+            if not features:
+                continue
+            state_dict[f'{prefix}_layer_feature_cache_{layer_idx}'] = torch.cat(features, dim=0)
+        if module._gap_features:
+            state_dict[prefix + '_gap_feature_cache'] = torch.cat(module._gap_features, dim=0)
+        return state_dict
+
+    def _load_feature_cache_from_state_dict(
+        self, state_dict, prefix, local_metadata,
+        strict, missing_keys, unexpected_keys, error_msgs,
+    ):
+        self._layer_features = [[], [], []]
+        for layer_idx in range(3):
+            key = f'{prefix}_layer_feature_cache_{layer_idx}'
+            if key in state_dict:
+                self._layer_features[layer_idx] = [state_dict.pop(key).detach().cpu()]
+        gap_key = prefix + '_gap_feature_cache'
+        self._gap_features = []
+        if gap_key in state_dict:
+            self._gap_features = [state_dict.pop(gap_key).detach().cpu()]
 
     @torch.no_grad()
     def extract_features(self, x):
@@ -90,24 +122,38 @@ class SPADEDetector(MemoryBankADModel):
             logger.info(f'SPADE: built GAP memory bank with shape {self.memory_bank_gap.shape}')
             self._gap_features = []
 
-    def _knn_kth_distance(self, queries, memory, k, chunk_size=1024):
+    def _knn_kth_distance(self, queries, memory, k, chunk_size=None):
         """Compute K-th nearest neighbor distance (paper uses K-th, not mean).
 
         Args:
             queries: (Q, C) query features
             memory: (M, C) memory bank features
             k: number of neighbors
+            chunk_size: query batch size for cdist; defaults to ``self.knn_chunk_size``.
 
         Returns:
             dists: (Q,) K-th NN distance for each query
         """
+        if chunk_size is None:
+            chunk_size = self.knn_chunk_size
         dists = []
         for start in range(0, queries.shape[0], chunk_size):
             end = min(start + chunk_size, queries.shape[0])
             q = queries[start:end]
-            d = torch.cdist(q, memory)  # (chunk, M)
-            topk_d, _ = d.topk(k, dim=1, largest=False)
-            dists.append(topk_d[:, -1])  # K-th distance (last of top-K)
+            best_dists = None
+            memory_chunk_size = min(self.knn_memory_chunk_size, memory.shape[0])
+            for mem_start in range(0, memory.shape[0], memory_chunk_size):
+                mem_end = min(mem_start + memory_chunk_size, memory.shape[0])
+                d = torch.cdist(q, memory[mem_start:mem_end])  # (chunk, mem_chunk)
+                local_k = min(k, d.shape[1])
+                local_topk, _ = d.topk(local_k, dim=1, largest=False)
+                if best_dists is None:
+                    best_dists = local_topk
+                else:
+                    merged = torch.cat([best_dists, local_topk], dim=1)
+                    merged_k = min(k, merged.shape[1])
+                    best_dists, _ = merged.topk(merged_k, dim=1, largest=False)
+            dists.append(best_dists[:, -1])  # K-th distance (last of top-K)
         return torch.cat(dists, dim=0)
 
     def build_memory_bank(self):
@@ -142,6 +188,12 @@ class SPADEDetector(MemoryBankADModel):
             return {'loss': torch.tensor(0.0, device=inputs.device, requires_grad=True)}
 
         elif mode == 'predict':
+            if self.memory_bank_0 is None:
+                raise RuntimeError(
+                    'SPADE memory banks are not built. '
+                    'Call build_memory_bank()/fit() before predict.'
+                )
+
             B = inputs.shape[0]
             target_h, target_w = feats[0].shape[2], feats[0].shape[3]
             input_h, input_w = inputs.shape[-2], inputs.shape[-1]
@@ -166,8 +218,18 @@ class SPADEDetector(MemoryBankADModel):
                                              mode='bilinear', align_corners=False)
                 combined_map = combined_map + layer_map_up
 
-            # Image score: max(anomaly_map) as in the original SPADE paper
-            img_scores = combined_map.amax(dim=(2, 3)).squeeze(1)
+            # Image score: GAP-kNN distance against the GAP memory bank (SPADE paper);
+            # falls back to anomaly-map max when GAP bank is unavailable.
+            if self.memory_bank_gap is not None:
+                gap_q = torch.cat(
+                    [F.adaptive_avg_pool2d(fm, (1, 1)).flatten(1) for fm in feats],
+                    dim=1,
+                )
+                gap_memory = self.memory_bank_gap.to(gap_q.device)
+                k_gap = min(self.k, gap_memory.shape[0])
+                img_scores = self._knn_kth_distance(gap_q, gap_memory, k_gap)
+            else:
+                img_scores = combined_map.amax(dim=(2, 3)).squeeze(1)
 
             return build_predict_results(data_samples, img_scores, combined_map)
 

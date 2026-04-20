@@ -236,6 +236,18 @@ class TestSAADetectorBehavior:
         assert detector._resolve_runtime_box_area_tolerance('pill') == pytest.approx(0.003)
         assert detector._resolve_runtime_box_area_tolerance('bottle') == pytest.approx(0.0)
 
+    def test_resolve_runtime_overrides_preserve_explicit_zero_values(self, monkeypatch):
+        detector = _build_saa_detector(
+            monkeypatch,
+            defect_area_threshold=0.5,
+            defect_area_threshold_overrides=dict(pill=0.0),
+            box_area_tolerance=0.2,
+            box_area_tolerance_overrides=dict(pill=0.0),
+        )
+
+        assert detector._resolve_runtime_defect_area_threshold('pill') == pytest.approx(0.0)
+        assert detector._resolve_runtime_box_area_tolerance('pill') == pytest.approx(0.0)
+
     def test_denormalize_shape_range_and_bgr_order(self):
         from baoiad.models.detectors.saa import SAADetector
 

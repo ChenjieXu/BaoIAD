@@ -63,7 +63,28 @@ class PaDiMDetector(MemoryBankADModel):
         # Buffers for Gaussian stats (will be set by fit())
         self.register_buffer('mean', None)
         self.register_buffer('cov_inv', None)
+        # Runtime-only feature cache: NOT serialized in state_dict. Resuming
+        # from a mid-training checkpoint should preserve this cache so fit() can
+        # still finalize the Gaussian statistics without re-running warmup.
         self._features = []
+        self._register_state_dict_hook(self._save_feature_cache_to_state_dict)
+        self._register_load_state_dict_pre_hook(self._load_feature_cache_from_state_dict)
+
+    @staticmethod
+    def _save_feature_cache_to_state_dict(module, state_dict, prefix, local_metadata):
+        if module._features:
+            state_dict[prefix + '_feature_cache'] = torch.stack(module._features, dim=0)
+        return state_dict
+
+    def _load_feature_cache_from_state_dict(
+        self, state_dict, prefix, local_metadata,
+        strict, missing_keys, unexpected_keys, error_msgs,
+    ):
+        key = prefix + '_feature_cache'
+        if key not in state_dict:
+            return
+        tensor = state_dict.pop(key)
+        self._features = [feature.detach().cpu() for feature in tensor]
 
     @torch.no_grad()
     def extract_features(self, x):
@@ -90,11 +111,15 @@ class PaDiMDetector(MemoryBankADModel):
         mean = all_feats.mean(dim=1)  # H*W, d
         diff = all_feats - mean.unsqueeze(1)  # H*W, N, d
         cov = torch.bmm(diff.transpose(1, 2), diff) / max(N - 1, 1)  # H*W, d, d
-        cov += self.eps * torch.eye(d, device=cov.device).unsqueeze(0)
-        cov_inv = torch.linalg.inv(cov)  # H*W, d, d
+        cov = cov + self.eps * torch.eye(d, device=cov.device).unsqueeze(0)
+        # Cholesky-based inversion is more numerically stable than torch.linalg.inv
+        # for symmetric positive-definite covariance matrices.
+        cov_inv = torch.cholesky_inverse(torch.linalg.cholesky(cov))  # H*W, d, d
 
-        # Move to model device (features are collected on CPU but model may be on GPU)
-        device = next(self.parameters()).device
+        # Move to model device (features are collected on CPU but model may be on GPU);
+        # use the always-present `idx` buffer instead of `next(self.parameters())`,
+        # which raises StopIteration when the model has no trainable parameters.
+        device = self.idx.device
         self.register_buffer('mean', mean.to(device))
         self.register_buffer('cov_inv', cov_inv.to(device))
         self._features = []

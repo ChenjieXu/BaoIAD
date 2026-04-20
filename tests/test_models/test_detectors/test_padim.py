@@ -75,3 +75,15 @@ class TestPaDiMDetector(TestCase):
         outputs = model(torch.randn(1, 3, 64, 64), _make_data_samples(1, 64, 64), mode='predict')
         assert outputs[0].pred_anomaly_map.shape == (1, 64, 64)
         assert torch.isfinite(outputs[0].pred_anomaly_map).all()
+
+    def test_feature_cache_round_trips_through_state_dict(self):
+        model = MODELS.build(self.cfg)
+        model.train()
+        model(torch.randn(2, 3, 64, 64), _make_data_samples(2, 64, 64), mode='loss')
+        assert model._features
+
+        restored = MODELS.build(self.cfg)
+        restored.load_state_dict(model.state_dict(), strict=False)
+
+        assert len(restored._features) == len(model._features)
+        assert torch.allclose(restored._features[0], model._features[0])

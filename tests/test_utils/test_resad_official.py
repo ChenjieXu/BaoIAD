@@ -14,6 +14,7 @@ import torch
 from PIL import Image
 
 import baoiad.utils.freia as freia_utils
+from baoiad.utils.compat import ensure_legacy_imgaug_compat
 from baoiad.utils.resad_official import (
     build_reference_feature_manifest,
     build_official_namespace,
@@ -44,6 +45,24 @@ def test_patch_numpy_sctypes_restores_legacy_attribute(monkeypatch):
     patch_numpy_sctypes()
     assert hasattr(np, 'sctypes')
     assert np.float32 in np.sctypes['float']
+
+
+def test_ensure_legacy_imgaug_compat_restores_numpy_and_collections(monkeypatch):
+    import collections
+
+    monkeypatch.delattr(np, 'sctypes', raising=False)
+    monkeypatch.delattr(collections, 'Iterable', raising=False)
+    monkeypatch.delattr(collections, 'Mapping', raising=False)
+    monkeypatch.delattr(collections, 'MutableMapping', raising=False)
+    monkeypatch.delattr(collections, 'Sequence', raising=False)
+
+    ensure_legacy_imgaug_compat()
+
+    assert hasattr(np, 'sctypes')
+    assert hasattr(collections, 'Iterable')
+    assert hasattr(collections, 'Mapping')
+    assert hasattr(collections, 'MutableMapping')
+    assert hasattr(collections, 'Sequence')
 
 
 def test_patch_timm_legacy_imports_registers_old_module_names():

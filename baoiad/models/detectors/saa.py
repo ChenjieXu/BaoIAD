@@ -345,32 +345,31 @@ class SAADetector(BaseADModel):
     @staticmethod
     def _resolve_class_override(mapping: Dict[str, Union[int, float]], cls_name: str):
         """Resolve a per-class override using canonicalized class names."""
-        return (
-            mapping.get(cls_name)
-            or mapping.get(cls_name.lower().replace(' ', '_'))
-        )
+        if cls_name in mapping:
+            return mapping[cls_name]
+        canonical_name = cls_name.lower().replace(' ', '_')
+        if canonical_name in mapping:
+            return mapping[canonical_name]
+        return None
 
     def _resolve_runtime_k_mask(self, cls_name: str) -> int:
         """Resolve the effective mask count for inference."""
         if self.mode != 'saa':
             return self.k_mask
-        return self._resolve_class_override(self.k_mask_overrides, cls_name) or self.k_mask
+        override = self._resolve_class_override(self.k_mask_overrides, cls_name)
+        return self.k_mask if override is None else override
 
     def _resolve_runtime_defect_area_threshold(self, cls_name: str) -> float:
         """Resolve the effective defect-area threshold for inference."""
         if self.mode != 'saa':
             return self.defect_area_threshold
-        return (
-            self._resolve_class_override(self.defect_area_threshold_overrides, cls_name)
-            or self.defect_area_threshold
-        )
+        override = self._resolve_class_override(self.defect_area_threshold_overrides, cls_name)
+        return self.defect_area_threshold if override is None else override
 
     def _resolve_runtime_box_area_tolerance(self, cls_name: str) -> float:
         """Resolve the effective bbox max-area tolerance for inference."""
-        return (
-            self._resolve_class_override(self.box_area_tolerance_overrides, cls_name)
-            or self.box_area_tolerance
-        )
+        override = self._resolve_class_override(self.box_area_tolerance_overrides, cls_name)
+        return self.box_area_tolerance if override is None else override
 
     def _resolve_gdino_config(self, path: str) -> str:
         """Resolve GroundingDINO config path, auto-finding from pip package."""

@@ -56,6 +56,16 @@ def compute_ece(gt_labels: np.ndarray, pred_scores: np.ndarray, n_bins: int = 15
     return float(ece)
 
 
-def compute_pixel_ece(gt_masks: np.ndarray, pred_maps: np.ndarray, n_bins: int = 15) -> float:
+def compute_pixel_ece(gt_masks: np.ndarray | list[np.ndarray], pred_maps: np.ndarray | list[np.ndarray], n_bins: int = 15) -> float:
     """Compute pixel-level ECE for probability maps."""
-    return compute_ece(gt_masks.ravel(), pred_maps.ravel(), n_bins)
+    if isinstance(gt_masks, np.ndarray):
+        gt_flat = gt_masks.ravel()
+    else:
+        gt_flat = np.concatenate([np.asarray(mask).reshape(-1) for mask in gt_masks])
+
+    if isinstance(pred_maps, np.ndarray):
+        pred_flat = pred_maps.ravel()
+    else:
+        pred_flat = np.concatenate([np.asarray(pred_map).reshape(-1) for pred_map in pred_maps])
+
+    return compute_ece(gt_flat, pred_flat, n_bins)

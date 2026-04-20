@@ -25,7 +25,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageOps
 
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
@@ -33,22 +33,6 @@ from baoiad.models.base_ad_model import ReconstructionADModel
 from baoiad.utils.dtd import download_dtd as _download_dtd
 
 logger = logging.getLogger(__name__)
-
-_AUGMENT_BACKEND = None
-_AUGMENT_IMPORT_ERROR = None
-
-
-def _set_torchvision_augment_backend(exc: Exception | None = None) -> None:
-    """Force the augmentation backend to torchvision fallback."""
-    global _AUGMENT_BACKEND, _AUGMENT_IMPORT_ERROR
-    _AUGMENT_BACKEND = ('torchvision', None)
-    _AUGMENT_IMPORT_ERROR = exc
-    if exc is not None:
-        logger.warning(
-            'MemSeg: falling back to torchvision augmentations because imgaug is unavailable: %s',
-            exc,
-        )
-
 
 # ==================== Perlin Noise ====================
 
@@ -442,83 +426,108 @@ ANOMALY_MASK_SETTINGS = {
 def rand_augment(force_torchvision: bool = False):
     """Random augmentations for structure anomaly generation.
 
-    Uses torchvision transforms as fallback when imgaug is not available.
+    The original implementation used imgaug. BaoIAD keeps a local equivalent
+    augmenter set so the training path no longer depends on imgaug at runtime.
     """
-    global _AUGMENT_BACKEND, _AUGMENT_IMPORT_ERROR
-
-    if force_torchvision:
-        _set_torchvision_augment_backend()
-
-    if _AUGMENT_BACKEND is None:
-        try:
-            import imgaug.augmenters as iaa  # noqa: PLC0415
-
-            _AUGMENT_BACKEND = ('imgaug', iaa)
-        except Exception as exc:  # noqa: BLE001 - imgaug is incompatible with NumPy 2.x in some envs
-            _set_torchvision_augment_backend(exc)
-
-    backend, payload = _AUGMENT_BACKEND
-    if backend == 'imgaug':
-        iaa = payload
-        augmenters = [
-            iaa.GammaContrast((0.5, 2.0), per_channel=True),
-            iaa.MultiplyAndAddToBrightness(mul=(0.8, 1.2), add=(-30, 30)),
-            iaa.pillike.EnhanceSharpness(),
-            iaa.AddToHueAndSaturation((-50, 50), per_channel=True),
-            iaa.Solarize(0.5, threshold=(32, 128)),
-            iaa.Posterize(),
-            iaa.Invert(),
-            iaa.pillike.Autocontrast(),
-            iaa.pillike.Equalize(),
-            iaa.Affine(rotate=(-45, 45))
-        ]
-        aug_idx = np.random.choice(np.arange(len(augmenters)), 3, replace=False)
-        aug = iaa.Sequential([
-            augmenters[aug_idx[0]],
-            augmenters[aug_idx[1]],
-            augmenters[aug_idx[2]]
-        ])
-        return aug
-
-    import torchvision.transforms.functional as TF  # noqa: PLC0415
     from PIL import Image  # noqa: PLC0415
 
-    class TorchvisionAugment:
-        def __call__(self, image):
-            # Convert to PIL if numpy
-            is_float = False
-            if isinstance(image, np.ndarray):
-                # Check if float image
-                if image.dtype == np.float32 or image.dtype == np.float64:
-                    is_float = True
-                    # Normalize to 0-255 for PIL
-                    image_uint8 = (image).astype(np.uint8)
-                else:
-                    image_uint8 = image
-                pil_img = Image.fromarray(image_uint8)
-            else:
-                pil_img = image
+    del force_torchvision
 
-            # Random augmentations
-            if np.random.rand() > 0.5:
-                pil_img = TF.adjust_brightness(pil_img, np.random.uniform(0.5, 1.5))
-            if np.random.rand() > 0.5:
-                pil_img = TF.adjust_contrast(pil_img, np.random.uniform(0.5, 2.0))
-            if np.random.rand() > 0.5:
-                pil_img = TF.adjust_saturation(pil_img, np.random.uniform(0.5, 1.5))
-            if np.random.rand() > 0.5:
-                pil_img = TF.adjust_hue(pil_img, np.random.uniform(-0.1, 0.1))
-            if np.random.rand() > 0.5:
-                angle = np.random.uniform(-45, 45)
-                pil_img = TF.rotate(pil_img, angle)
+    def _as_uint8(image: np.ndarray) -> np.ndarray:
+        if image.dtype != np.uint8:
+            image = np.clip(image, 0, 255).astype(np.uint8)
+        return image
 
-            # Convert back to numpy
-            result = np.array(pil_img)
-            if is_float:
-                result = result.astype(np.float32)
-            return result
+    class _CallableAugmenter:
+        def __init__(self, fn):
+            self.fn = fn
 
-    return TorchvisionAugment()
+        def __call__(self, image=None, **kwargs):
+            if image is None:
+                image = kwargs['image']
+            return self.fn(np.asarray(image))
+
+    def _gamma_contrast(image: np.ndarray) -> np.ndarray:
+        image = _as_uint8(image).astype(np.float32) / 255.0
+        gamma = float(np.random.uniform(0.5, 2.0))
+        adjusted = np.power(np.clip(image, 0.0, 1.0), gamma)
+        return np.clip(adjusted * 255.0, 0.0, 255.0).astype(np.uint8)
+
+    def _multiply_add_brightness(image: np.ndarray) -> np.ndarray:
+        image = _as_uint8(image).astype(np.float32)
+        mul = float(np.random.uniform(0.8, 1.2))
+        add = float(np.random.uniform(-30.0, 30.0))
+        return np.clip(image * mul + add, 0.0, 255.0).astype(np.uint8)
+
+    def _enhance_sharpness(image: np.ndarray) -> np.ndarray:
+        pil_img = Image.fromarray(_as_uint8(image))
+        factor = float(np.random.uniform(0.0, 2.0))
+        return np.asarray(Image.ImageEnhance.Sharpness(pil_img).enhance(factor), dtype=np.uint8)
+
+    def _add_hue_saturation(image: np.ndarray) -> np.ndarray:
+        hsv = cv2.cvtColor(_as_uint8(image), cv2.COLOR_RGB2HSV).astype(np.int16)
+        hue_delta = int(np.random.randint(-25, 26))
+        sat_delta = int(np.random.randint(-50, 51))
+        hsv[..., 0] = np.mod(hsv[..., 0] + hue_delta, 180)
+        hsv[..., 1] = np.clip(hsv[..., 1] + sat_delta, 0, 255)
+        return cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2RGB)
+
+    def _solarize(image: np.ndarray) -> np.ndarray:
+        pil_img = Image.fromarray(_as_uint8(image))
+        threshold = int(np.random.randint(32, 129))
+        return np.asarray(Image.eval(pil_img, lambda value: value if value < threshold else 255 - value), dtype=np.uint8)
+
+    def _posterize(image: np.ndarray) -> np.ndarray:
+        pil_img = Image.fromarray(_as_uint8(image))
+        bits = int(np.random.randint(4, 9))
+        return np.asarray(ImageOps.posterize(pil_img, bits=bits), dtype=np.uint8)
+
+    def _invert(image: np.ndarray) -> np.ndarray:
+        return 255 - _as_uint8(image)
+
+    def _autocontrast(image: np.ndarray) -> np.ndarray:
+        return np.asarray(ImageOps.autocontrast(Image.fromarray(_as_uint8(image))), dtype=np.uint8)
+
+    def _equalize(image: np.ndarray) -> np.ndarray:
+        return np.asarray(ImageOps.equalize(Image.fromarray(_as_uint8(image))), dtype=np.uint8)
+
+    def _affine_rotate(image: np.ndarray) -> np.ndarray:
+        image = _as_uint8(image)
+        angle = float(np.random.uniform(-45.0, 45.0))
+        h, w = image.shape[:2]
+        matrix = cv2.getRotationMatrix2D((w / 2.0, h / 2.0), angle, 1.0)
+        return cv2.warpAffine(
+            image,
+            matrix,
+            (w, h),
+            flags=cv2.INTER_LINEAR,
+            borderMode=cv2.BORDER_REFLECT_101,
+        )
+
+    augmenters = [
+        _CallableAugmenter(_gamma_contrast),
+        _CallableAugmenter(_multiply_add_brightness),
+        _CallableAugmenter(_enhance_sharpness),
+        _CallableAugmenter(_add_hue_saturation),
+        _CallableAugmenter(_solarize),
+        _CallableAugmenter(_posterize),
+        _CallableAugmenter(_invert),
+        _CallableAugmenter(_autocontrast),
+        _CallableAugmenter(_equalize),
+        _CallableAugmenter(_affine_rotate),
+    ]
+
+    class _SequentialAugment:
+        def __call__(self, image=None, **kwargs):
+            if image is None:
+                image = kwargs['image']
+            selected = np.random.choice(np.arange(len(augmenters)), 3, replace=False)
+            output = np.asarray(image)
+            for index in selected:
+                output = augmenters[int(index)](image=output)
+            return output
+
+    return _SequentialAugment()
 
 
 class AnomalyGenerator:
@@ -596,28 +605,17 @@ class AnomalyGenerator:
         perlin_scaley = 2 ** int(torch.randint(self.min_perlin_scale, self.perlin_scale, (1,)).item())
 
         perlin_noise = rand_perlin_2d_np(img_size, (perlin_scalex, perlin_scaley))
-
-        if self.use_imgaug:
-            try:
-                import imgaug.augmenters as iaa  # noqa: PLC0415
-
-                perlin_noise = iaa.Affine(rotate=(-90, 90))(image=perlin_noise)
-            except Exception as exc:  # noqa: BLE001 - runtime fallback should remain available
-                _set_torchvision_augment_backend(exc)
-                self.use_imgaug = False
-
-        if not self.use_imgaug:
-            angle = np.random.uniform(-90, 90)
-            h, w = img_size
-            center = (w // 2, h // 2)
-            M = cv2.getRotationMatrix2D(center, angle, 1.0)
-            perlin_noise = cv2.warpAffine(
-                perlin_noise.astype(np.float32),
-                M,
-                (w, h),
-                flags=cv2.INTER_LINEAR,
-                borderMode=cv2.BORDER_REFLECT,
-            )
+        angle = np.random.uniform(-90, 90)
+        h, w = img_size
+        center = (w // 2, h // 2)
+        M = cv2.getRotationMatrix2D(center, angle, 1.0)
+        perlin_noise = cv2.warpAffine(
+            perlin_noise.astype(np.float32),
+            M,
+            (w, h),
+            flags=cv2.INTER_LINEAR,
+            borderMode=cv2.BORDER_REFLECT,
+        )
 
         # Threshold
         mask_noise = np.where(
@@ -641,16 +639,7 @@ class AnomalyGenerator:
 
     def _structure_source(self, img: np.ndarray) -> np.ndarray:
         """Generate structure anomaly by shuffling image patches."""
-        augment = rand_augment(force_torchvision=not self.use_imgaug)
-        try:
-            structure_source_img = augment(image=img)
-        except Exception as exc:  # noqa: BLE001 - runtime imgaug failures should degrade gracefully
-            if self.use_imgaug:
-                _set_torchvision_augment_backend(exc)
-                self.use_imgaug = False
-                structure_source_img = rand_augment(force_torchvision=True)(image=img)
-            else:
-                raise
+        structure_source_img = rand_augment(force_torchvision=not self.use_imgaug)(image=img)
 
         img_size = img.shape[:-1]
         grid_w = img_size[1] // self.structure_grid_size

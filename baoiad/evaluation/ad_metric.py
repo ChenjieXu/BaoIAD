@@ -226,13 +226,19 @@ class AnomalyDetectionMetric(BaseMetric):
             }
         image_scores = pred_scores_by_field[self.image_score_field]
 
-        # For pixel-level: need 2D arrays for AUPRO/AUPIMO
-        # Use saved original shape if available, otherwise guess square
-        spatial_shape = samples[0].get('gt_mask_shape')
-        if spatial_shape is None:
-            n_pixels = len(samples[0]['gt_mask'])
-            side = int(np.sqrt(n_pixels))
-            spatial_shape = (side, side)
+        # For pixel-level: need per-sample 2D arrays for AUPRO/AUPIMO.
+        gt_masks_2d = []
+        pred_maps_2d = []
+        for sample in samples:
+            spatial_shape = sample.get('gt_mask_shape')
+            if spatial_shape is None:
+                n_pixels = len(sample['gt_mask'])
+                side = int(np.sqrt(n_pixels))
+                spatial_shape = (side, side)
+            h, w = spatial_shape
+            gt_masks_2d.append(np.asarray(sample['gt_mask']).reshape(h, w))
+            pred_maps_2d.append(np.asarray(sample['pred_anomaly_map']).reshape(h, w))
+
         gt_masks_flat = np.concatenate([s['gt_mask'] for s in samples])
         # Some reference pipelines resize grayscale masks bilinearly, which
         # produces fractional edge pixels. Official metric code bins those
@@ -240,13 +246,10 @@ class AnomalyDetectionMetric(BaseMetric):
         gt_masks_flat_binary = gt_masks_flat.astype(np.uint8)
 
         # 2D versions for region-based metrics
-        h, w = spatial_shape
-        gt_masks_2d = np.array([s['gt_mask'].reshape(h, w) for s in samples])
-        pred_maps_2d = np.array([s['pred_anomaly_map'].reshape(h, w) for s in samples])
+        gt_masks_2d_binary = [gt_mask.astype(np.uint8) for gt_mask in gt_masks_2d]
         if self.normalize_pred_maps is not None:
             pred_maps_2d = self._normalize_pred_maps_2d(pred_maps_2d, self.normalize_pred_maps)
-        pred_maps_flat = pred_maps_2d.reshape(-1)
-        gt_masks_2d_binary = gt_masks_2d.astype(np.uint8)
+        pred_maps_flat = np.concatenate([pred_map.reshape(-1) for pred_map in pred_maps_2d])
 
         result: Dict[str, float] = {}
 
@@ -296,24 +299,26 @@ class AnomalyDetectionMetric(BaseMetric):
         return (y_score - min_score) / (max_score - min_score)
 
     @staticmethod
-    def _normalize_pred_maps_2d(pred_maps: np.ndarray, mode: str) -> np.ndarray:
-        pred_maps = pred_maps.astype(np.float64, copy=True)
-        mins = pred_maps.reshape(len(pred_maps), -1).min(axis=1)
-        maxs = pred_maps.reshape(len(pred_maps), -1).max(axis=1)
+    def _normalize_pred_maps_2d(pred_maps: Sequence[np.ndarray], mode: str) -> List[np.ndarray]:
+        pred_maps = [np.asarray(pred_map, dtype=np.float64).copy() for pred_map in pred_maps]
+        mins = np.array([pred_map.reshape(-1).min() for pred_map in pred_maps], dtype=np.float64)
+        maxs = np.array([pred_map.reshape(-1).max() for pred_map in pred_maps], dtype=np.float64)
 
         if mode == 'per_image':
-            normalized = np.zeros_like(pred_maps, dtype=np.float64)
+            normalized = []
             for index, (min_score, max_score) in enumerate(zip(mins, maxs)):
                 denom = max(float(max_score - min_score), 1e-2)
-                normalized[index] = (pred_maps[index] - min_score) / denom
+                normalized.append((pred_maps[index] - min_score) / denom)
             return normalized
 
         if mode == 'batch_broadcast':
-            normalized = np.zeros_like(pred_maps, dtype=np.float64)
+            normalized = [np.zeros_like(pred_map, dtype=np.float64) for pred_map in pred_maps]
             for min_score, max_score in zip(mins, maxs):
                 denom = max(float(max_score - min_score), 1e-2)
-                normalized += (pred_maps - min_score) / denom
-            return normalized / max(len(pred_maps), 1)
+                for index, pred_map in enumerate(pred_maps):
+                    normalized[index] += (pred_map - min_score) / denom
+            scale = max(len(pred_maps), 1)
+            return [pred_map / scale for pred_map in normalized]
 
         raise ValueError(f'Unsupported pred map normalization mode: {mode}')
 

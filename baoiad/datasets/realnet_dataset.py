@@ -24,32 +24,13 @@ from PIL import Image, ImageEnhance, ImageOps
 from skimage import morphology
 
 from baoiad.registry import DATASETS
+from baoiad.utils.compat import ensure_legacy_imgaug_compat
 from baoiad.utils.dtd import download_dtd as _download_dtd
 
 logger = logging.getLogger(__name__)
 
-
-def _ensure_imgaug_compat() -> None:
-    """Provide minimal NumPy and collections compatibility for imgaug on NumPy 2.x and Python 3.10+."""
-    import collections
-
-    if not hasattr(np, 'sctypes'):
-        np.sctypes = {  # type: ignore[attr-defined]
-            'int': [np.int8, np.int16, np.int32, np.int64],
-            'uint': [np.uint8, np.uint16, np.uint32, np.uint64],
-            'float': [np.float16, np.float32, np.float64],
-            'complex': [np.complex64, np.complex128],
-            'others': [np.bool_, np.object_, np.str_, np.bytes_],
-        }
-
-    # Python 3.10+ moved Iterable to collections.abc
-    if not hasattr(collections, 'Iterable'):
-        import collections.abc
-        collections.Iterable = collections.abc.Iterable  # type: ignore[attr-defined]
-
-
 def _import_imgaug():
-    _ensure_imgaug_compat()
+    ensure_legacy_imgaug_compat()
     import imgaug.augmenters as iaa
 
     return iaa

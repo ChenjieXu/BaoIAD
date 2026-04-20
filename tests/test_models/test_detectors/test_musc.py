@@ -11,6 +11,7 @@ from mmengine.model import BaseModule
 import baoiad  # noqa: F401
 from baoiad.models.backbones import musc_clip_backbone as musc_clip_backbone_module
 from baoiad.models.backbones.musc_clip_backbone import MuScCLIPBackbone
+from baoiad.models.detectors.musc import MMO, MSM
 from baoiad.registry import MODELS
 from baoiad.structures import ADDataSample
 
@@ -139,6 +140,44 @@ def test_musc_score_all_updates_placeholder_predictions():
         assert tuple(sample.pred_anomaly_map.shape) == (1, 8, 8)
         assert torch.isfinite(sample.pred_anomaly_map).all()
     assert torch.count_nonzero(finalized[0].pred_anomaly_map) > 0
+
+
+def test_msm_handles_single_image_without_crashing():
+    scores = MSM(torch.randn(1, 4, 3), torch.device('cpu'), topmin_min=0.0, topmin_max=0.3)
+    assert scores.shape == (1, 4)
+    assert torch.count_nonzero(scores) == 0
+
+
+def test_mmo_skips_invalid_k_values_for_small_batches():
+    similarity = torch.eye(2)
+    score = torch.tensor([0.2, 0.8], dtype=torch.float32)
+    refined = MMO(similarity, score, [1, 2, 3])
+    assert refined.shape == score.shape
+    assert torch.isfinite(refined).all()
+
+
+def test_musc_score_all_handles_default_small_batch_hyperparameters():
+    model = MODELS.build(dict(
+        type='MuScDetector',
+        backbone=dict(type='ToyMuScBackbone', feature_layers=[1, 2], width=4),
+        feature_layers=[1, 2],
+        r_list=[1],
+        image_size=8,
+        topmin_min=0.0,
+        topmin_max=0.3,
+        k_list=[1, 2, 3],
+    ))
+    model.eval()
+
+    data_samples = _make_data_samples(1, height=8, width=8)
+    placeholders = model(torch.randn(1, 3, 8, 8), data_samples, mode='predict')
+    assert len(placeholders) == 1
+
+    finalized = model.score_all()
+    assert len(finalized) == 1
+    assert math.isfinite(float(finalized[0].pred_score))
+    assert tuple(finalized[0].pred_anomaly_map.shape) == (1, 8, 8)
+    assert torch.isfinite(finalized[0].pred_anomaly_map).all()
 
 
 def test_musc_clip_backbone_uses_reference_layer_offset(monkeypatch):
