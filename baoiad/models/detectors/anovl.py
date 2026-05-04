@@ -577,7 +577,7 @@ def _augment_views(images):
 # AnoVL Detector
 # ---------------------------------------------------------------------------
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class AnoVLDetector(VisionLanguageADModel):
     """AnoVL zero-shot anomaly localization via V-V attention surgery on CLIP.
 

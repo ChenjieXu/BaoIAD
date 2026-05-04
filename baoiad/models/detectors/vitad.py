@@ -143,7 +143,7 @@ def _vitad_image_scores(score_map: torch.Tensor, pooling_kernel_size: int = 16) 
 
 # ========================= Encoder name → config helper ===================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class ViTADDetector(BaseADModel):
     """ViTAD: ViT-based Anomaly Detection.
 

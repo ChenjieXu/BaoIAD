@@ -114,7 +114,7 @@ class GaussianBlur2d(nn.Module):
 
 # ─── CFA Detector ──────────────────────────────────────────────────────────
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class CFADetector(DiscriminatorADModel):
     """CFA: Coupled-hypersphere-based Feature Adaptation.
 

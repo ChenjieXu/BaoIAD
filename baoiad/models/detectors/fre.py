@@ -35,7 +35,7 @@ class TiedAE(nn.Module):
 _LAYER_TO_INDEX = {'layer1': 1, 'layer2': 2, 'layer3': 3, 'layer4': 4}
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class FREDetector(ReconstructionADModel):
     """Feature Reconstruction Error for anomaly detection.
 

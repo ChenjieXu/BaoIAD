@@ -11,7 +11,7 @@ from baoiad.datasets.base_ad_dataset import BaseADDataset
 from baoiad.registry import DATASETS
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class MVTecADDataset(BaseADDataset):
     """MVTec Anomaly Detection dataset.
 

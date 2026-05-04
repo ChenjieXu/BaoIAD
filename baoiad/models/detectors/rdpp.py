@@ -410,7 +410,7 @@ def _official_rdpp_loss(feats_t, feats_s) -> torch.Tensor:
     return loss
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class RDPPDetector(KnowledgeDistillationADModel):
     """RD++ anomaly detector (CVPR 2023).
 

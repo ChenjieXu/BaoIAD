@@ -773,7 +773,7 @@ class PyramidFlowCore(nn.Module):
         return feat1
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class PyramidFlowDetector(FlowBasedADModel):
     """PyramidFlow: High-Resolution Defect Contrastive Localization.
 

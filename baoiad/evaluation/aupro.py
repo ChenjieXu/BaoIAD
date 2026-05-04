@@ -90,7 +90,7 @@ def compute_aupro(gt_masks: np.ndarray | Sequence[np.ndarray], pred_maps: np.nda
     cca = _make_global_region_labels(np.asarray(cca, dtype=object))
 
     # Step 2: Flatten
-    labels = np.concatenate([np.asarray(item).reshape(-1) for item in cca])
+    labels = np.concatenate([np.asarray(item, dtype=np.int64).reshape(-1) for item in cca])
     preds_flat = np.concatenate([pred_map.reshape(-1).astype(np.float64) for pred_map in pred_list])
 
     # Step 3: Compute contributions

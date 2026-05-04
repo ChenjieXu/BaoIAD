@@ -65,6 +65,16 @@ docs/zh_cn/_build/
 docs/alignment/
 docs/paper/
 tools/run_visa_*.sh
+scripts/
+
+# External dependencies
+groundingdino/
+
+# Agent docs
+AGENT.md
+agent.md
 
 # Dev
 CLAUDE.md
+.claude/
+.refs/

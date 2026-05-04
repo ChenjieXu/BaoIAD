@@ -59,7 +59,7 @@ def _rotate_tensor(x: torch.Tensor, angle: float) -> torch.Tensor:
     )
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class AnomalyDINODetector(VisionLanguageADModel):
     """Training-free anomaly detection using DINOv2 patch tokens.
 

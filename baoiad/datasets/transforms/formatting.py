@@ -9,7 +9,7 @@ from baoiad.registry import TRANSFORMS
 from baoiad.structures import ADDataSample
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class PackADInputs(BaseTransform):
     """Pack image, labels, and masks into mmengine DataSample format.
 
@@ -72,7 +72,7 @@ class PackADInputs(BaseTransform):
         return packed
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class PackDRAEMInputs(BaseTransform):
     """Pack DRAEM-specific inputs including original and augmented images.
 
@@ -130,7 +130,7 @@ class PackDRAEMInputs(BaseTransform):
         )
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class PackRealNetInputs(BaseTransform):
     """Pack RealNet training inputs.
 
@@ -176,7 +176,7 @@ class PackRealNetInputs(BaseTransform):
         )
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class PackGLASSInputs(BaseTransform):
     """Pack GLASS strict inputs including image-space augmentation metadata."""
 
@@ -222,7 +222,7 @@ class PackGLASSInputs(BaseTransform):
         return dict(inputs=img, data_samples=data_sample)
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class PackRDPPInputs(BaseTransform):
     """Pack strict RD++ inputs with the auxiliary noisy image branch."""
 

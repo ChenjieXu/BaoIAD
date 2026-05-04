@@ -503,7 +503,7 @@ def RsCIN(scores_old: np.ndarray, cls_tokens: List[np.ndarray] = None, k_list: L
 # MuScDetector
 # ============================================================================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class MuScDetector(VisionLanguageADModel):
     """MuSc: Mutual Scoring anomaly detector.
 

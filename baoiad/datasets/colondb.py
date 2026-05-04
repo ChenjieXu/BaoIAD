@@ -8,7 +8,7 @@ from baoiad.datasets.base_ad_dataset import BaseADDataset
 from baoiad.registry import DATASETS
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class ColonDBDataset(BaseADDataset):
     """ColonDB dataset stored in a MVTec-like folder layout.
 

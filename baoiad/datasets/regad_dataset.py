@@ -50,7 +50,7 @@ def _load_mask_tensor(mask_path: str, img_size: int) -> torch.Tensor:
     return torch.from_numpy((array > 0).astype(np.float32)).contiguous()
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class RegADTrainDataset(BaseDataset):
     """Official-compatible RegAD training dataset.
 
@@ -180,7 +180,7 @@ class RegADTrainDataset(BaseDataset):
         return self.pipeline(results)
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class RegADTestDataset(BaseDataset):
     """Official-compatible RegAD test dataset.
 

@@ -10,7 +10,7 @@ from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import MemoryBankADModel
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class PaDiMDetector(MemoryBankADModel):
     """PaDiM: a Patch Distribution Modeling Framework for Anomaly Detection."""
 

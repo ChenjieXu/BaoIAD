@@ -71,7 +71,7 @@ class _SingleClassGaussian(nn.Module):
         return torch.sum(transformed * transformed, dim=1) + 2 * torch.sum(torch.log(self.sigma_mat))
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DFMDetector(MemoryBankADModel):
     """Deep Feature Modeling for anomaly detection.
 

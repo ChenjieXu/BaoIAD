@@ -52,7 +52,7 @@ def _build_rand_augmenter(resize_arg, img_size: int):
     ])
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class GLASSDataset(BaseADDataset):
     """Official-style GLASS dataset supporting both train and test splits."""
 

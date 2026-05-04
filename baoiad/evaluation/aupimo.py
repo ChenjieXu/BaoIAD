@@ -80,7 +80,7 @@ def _compute_shared_fprs(pred_maps: list[np.ndarray], normal_idx: list[int], thr
             float((pred_maps[index] >= threshold).mean())
             for index in normal_idx
         ]
-        shared_fprs.append(float(image_fprs.mean()))
+        shared_fprs.append(float(np.mean(image_fprs)))
     return np.asarray(shared_fprs, dtype=np.float64)
 
 

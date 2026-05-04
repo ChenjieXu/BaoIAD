@@ -235,7 +235,7 @@ def _official_weights_init(module: nn.Module) -> None:
             module.bias.data.zero_()
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class MemAEDetector(ReconstructionADModel):
     """Official-style MemAE for image anomaly detection via repeated clips."""
 

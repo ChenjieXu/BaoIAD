@@ -280,7 +280,7 @@ class StudentCNN(nn.Module):
         return self.conv2(out)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class ASTDetector(BaseADModel):
     """AST detector with official two-stage and legacy joint modes."""
 

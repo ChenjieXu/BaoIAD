@@ -294,7 +294,7 @@ def _stack_sample_tensors(
     return torch.stack(tensors)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DeSTSegDetector(ReconstructionADModel):
     """Official-style DeSTSeg detector with step-based two-stage training."""
 

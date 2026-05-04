@@ -8,7 +8,7 @@ from baoiad.datasets.base_ad_dataset import BaseADDataset
 from baoiad.registry import DATASETS
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class VADDataset(BaseADDataset):
     """VAD dataset for industrial anomaly detection.
 

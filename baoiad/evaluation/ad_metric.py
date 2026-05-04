@@ -19,7 +19,7 @@ from baoiad.evaluation.fpr_at_tpr import compute_fpr_at_tpr
 from baoiad.registry import METRICS
 
 
-@METRICS.register_module()
+@METRICS.register_module(force=True)
 class AnomalyDetectionMetric(BaseMetric):
     """Unified anomaly detection metric.
 

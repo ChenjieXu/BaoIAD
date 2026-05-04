@@ -32,7 +32,7 @@ CLASS_NAMES = {
 }
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class AACLIPJsonDataset(BaseDataset):
     """AA-CLIP dataset that reads official-style jsonl metadata."""
 

@@ -188,7 +188,7 @@ class RescaleSegmentor:
         return [ndimage.gaussian_filter(score_map, sigma=self.smoothing) for score_map in maps]
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class SimpleNetDetector(DiscriminatorADModel):
     """SimpleNet: feature extraction + patch aggregation + projection + discriminator.
 

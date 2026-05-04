@@ -223,7 +223,7 @@ class DiscriminatorLoss(nn.Module):
 
 # ==================== Detector ====================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class GanomalyDetector(ReconstructionADModel):
     """GANomaly: Semi-Supervised Anomaly Detection via Adversarial Training.
 

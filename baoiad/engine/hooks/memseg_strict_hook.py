@@ -6,7 +6,7 @@ from mmengine.hooks import Hook
 from baoiad.registry import HOOKS
 
 
-@HOOKS.register_module()
+@HOOKS.register_module(force=True)
 class MemSegStrictTrainHook(Hook):
     """Match the frozen MemSeg runtime without over-enabling determinism.
 

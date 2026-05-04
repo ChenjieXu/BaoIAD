@@ -12,7 +12,7 @@ from mmengine.model import BaseModule
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class TIMMBackbone(BaseModule):
     """Wrapper around timm.create_model registered in MODELS registry.
 

@@ -6,7 +6,7 @@ from mmengine.model import BaseModule
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class L1Loss(BaseModule):
     """Registered L1 loss.
 
@@ -24,7 +24,7 @@ class L1Loss(BaseModule):
         return self.loss_weight * F.l1_loss(pred, target, reduction=self.reduction)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class SmoothL1Loss(BaseModule):
     """Registered Smooth L1 loss.
 

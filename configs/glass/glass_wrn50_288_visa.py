@@ -9,25 +9,22 @@ benchmark_multi_class = False
 
 data_root = 'data/visa'
 
-# VisA does not have GLASS-specific assets (fg_mask, distribution xlsx).
-# Disable strict assets and foreground masking for VisA.
+# Use VisADataset for both train and test since VisA lacks GLASS-specific assets.
+# The legacy (non-strict) training path generates anomalies internally.
 train_dataloader = dict(
     dataset=dict(
-        type='GLASSDataset',
+        type='VisADataset',
         data_root=data_root,
         split='train',
-        cls_names=None,
         multi_class=True,
-        dataset_name='visa',
-        dtd_path='auto',
-        fg=0,
-        distribution=1,  # random distribution, no file needed
-        rand_aug=1,
-        strict_assets_required=False,
-        fg_mask_root=None,
-        distribution_meta_path=None,
         _delete_=True,
-        pipeline=[dict(type='PackGLASSInputs')],
+        pipeline=[
+            dict(type='LoadImage'),
+            dict(type='LoadMask'),
+            dict(type='ResizeAD', size=288),
+            dict(type='NormalizeAD'),
+            dict(type='PackADInputs'),
+        ],
     ))
 
 test_dataloader = dict(
@@ -37,7 +34,13 @@ test_dataloader = dict(
         split='test',
         multi_class=True,
         _delete_=True,
-        pipeline=[dict(type='PackADInputs')],
+        pipeline=[
+            dict(type='LoadImage'),
+            dict(type='LoadMask'),
+            dict(type='ResizeAD', size=288),
+            dict(type='NormalizeAD'),
+            dict(type='PackADInputs'),
+        ],
     ))
 val_dataloader = test_dataloader
 
@@ -46,3 +49,8 @@ model = dict(
     strict=False,
     distribution_meta_path=None,
 )
+
+# Override train_cfg to use standard loop (not GLASSTrainLoop which needs strict assets)
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=10, val_interval=1)
+val_cfg = dict(type='ADValLoop')
+test_cfg = dict(type='ADTestLoop')

@@ -182,7 +182,7 @@ class CutPasteAugmentation:
         return self.cutpaste_scar(img)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class CutPasteDetector(BaseADModel):
     """CutPaste anomaly detector with self-supervised augmentation.
 

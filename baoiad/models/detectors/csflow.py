@@ -270,7 +270,7 @@ class CrossScaleFlow(nn.Module):
 
 # ─── CS-Flow Detector ──────────────────────────────────────────────────────
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class CSFlowDetector(FlowBasedADModel):
     """CS-Flow: Cross-Scale Flow for anomaly detection.
 

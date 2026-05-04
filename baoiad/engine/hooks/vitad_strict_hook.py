@@ -17,7 +17,7 @@ def _iter_decay_factor(current_iter: int, decay_iters: Sequence[int], gamma: flo
     return factor
 
 
-@HOOKS.register_module()
+@HOOKS.register_module(force=True)
 class ViTADStrictTrainHook(Hook):
     """Mirror ADer's ViTAD training protocol where it matters.
 

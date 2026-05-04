@@ -11,7 +11,7 @@ from baoiad.registry import TRANSFORMS
 from baoiad.utils.rdpp_noise import Simplex_CLASS
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class ResizeAD(BaseTransform):
     """Resize image and mask to a fixed size.
 
@@ -142,7 +142,7 @@ class ResizeAD(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class ThresholdMask(BaseTransform):
     """Threshold a float mask into a binary mask."""
 
@@ -157,7 +157,7 @@ class ThresholdMask(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class RandomRotation(BaseTransform):
     """Random rotation augmentation.
 
@@ -187,7 +187,7 @@ class RandomRotation(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class NormalizeAD(BaseTransform):
     """Normalize image with ImageNet statistics.
 
@@ -219,7 +219,7 @@ class NormalizeAD(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class OpenCLIPPreprocessAD(BaseTransform):
     """Apply the official OpenCLIP-style val preprocessing.
 
@@ -302,7 +302,7 @@ class OpenCLIPPreprocessAD(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class GraphCorePreprocessAD(BaseTransform):
     """Exact GraphCore preprocessing using PIL + torchvision transforms.
 
@@ -372,7 +372,7 @@ class GraphCorePreprocessAD(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class ScaleNormalizeAD(BaseTransform):
     """Scale image to [0, 1] range without ImageNet normalization.
 
@@ -387,7 +387,7 @@ class ScaleNormalizeAD(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class GenerateRDPPNoise(BaseTransform):
     """Generate the official RD++ simplex-noise image branch."""
 
@@ -438,7 +438,7 @@ class GenerateRDPPNoise(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class CenterCrop(BaseTransform):
     """Center crop image and mask to a fixed size.
 
@@ -467,7 +467,7 @@ class CenterCrop(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class RandomCrop(BaseTransform):
     """Random crop image and mask to a fixed size.
 
@@ -502,7 +502,7 @@ class RandomCrop(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class RandomVerticalFlip(BaseTransform):
     """Random vertical flip with probability p.
 
@@ -521,7 +521,7 @@ class RandomVerticalFlip(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class RandomHorizontalFlip(BaseTransform):
     """Random horizontal flip with probability p."""
 
@@ -536,7 +536,7 @@ class RandomHorizontalFlip(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class PyramidFlowStrictTrainTransform(BaseTransform):
     """Paper-aligned texture augmentation for PyramidFlow strict training.
 
@@ -569,7 +569,7 @@ class PyramidFlowStrictTrainTransform(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class NSATransform(BaseTransform):
     """Category-aware transform for NSA training.
 
@@ -624,7 +624,7 @@ class NSATransform(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class NSATestTransform(BaseTransform):
     """Category-aware test transform for NSA.
 

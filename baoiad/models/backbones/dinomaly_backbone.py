@@ -311,7 +311,7 @@ class DecoderViTBlock(nn.Module):
 
 # ========================== DinomalyEncoder ================================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DinomalyEncoder(BaseModule):
     """DINOv2 encoder for Dinomaly, registered in MODELS registry.
 

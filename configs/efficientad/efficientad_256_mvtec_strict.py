@@ -4,6 +4,7 @@ _base_ = ['../_base_/default_runtime.py']
 benchmark_keep_dataloader_workers = True
 benchmark_preserve_checkpoint_hooks = True
 benchmark_resume_existing = True
+benchmark_test_after_train = True
 benchmark_timeout = 21600
 data_root = 'data/mvtec_ad'
 img_size = 256

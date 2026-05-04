@@ -8,7 +8,7 @@ from torch.optim import Optimizer
 from baoiad.registry import OPTIMIZERS
 
 
-@OPTIMIZERS.register_module()
+@OPTIMIZERS.register_module(force=True)
 class StableAdamW(Optimizer):
     """AdamW with RMS-based adaptive step clipping.
 

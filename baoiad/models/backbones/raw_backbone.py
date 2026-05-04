@@ -29,7 +29,7 @@ _CHANNEL_DIMS = {
 }
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class RawBackbone(BaseModule):
     """Raw torchvision backbone that exposes individual layers.
 

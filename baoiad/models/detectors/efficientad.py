@@ -291,7 +291,7 @@ class AutoEncoder(nn.Module):
         return self.decoder(x, image_size)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class EfficientADDetector(KnowledgeDistillationADModel):
     """EfficientAD: Accurate Visual Anomaly Detection at Millisecond-Level.
 

@@ -15,7 +15,7 @@ class TestType:
     PRIVATE_MIXED = 'private_mixed'
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class MVTecAD2Dataset(BaseADDataset):
     """MVTec AD 2 dataset for advanced anomaly detection scenarios.
 

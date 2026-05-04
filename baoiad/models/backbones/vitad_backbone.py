@@ -44,7 +44,7 @@ _ENCODER_CONFIGS = {
 }
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DistilledVisionTransformerBackbone(VisionTransformer):
     """DeiT encoder that extracts intermediate features from specified blocks.
 
@@ -114,7 +114,7 @@ class DistilledVisionTransformerBackbone(VisionTransformer):
         return out, neck
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class ViTEncoderBackbone(VisionTransformer):
     """Standard ViT encoder that extracts intermediate features.
 

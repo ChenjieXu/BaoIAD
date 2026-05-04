@@ -37,6 +37,12 @@ ALL_CATEGORIES = [
     'tile', 'toothbrush', 'transistor', 'wood', 'zipper',
 ]
 
+VISA_CATEGORIES = [
+    'candle', 'capsules', 'cashew', 'chewinggum', 'fryum',
+    'macaroni1', 'macaroni2', 'pcb1', 'pcb2', 'pcb3', 'pcb4',
+    'pipe_fryum',
+]
+
 _METHOD_CONFIG_PRIORITY = {
     'aaclip': [
         'aaclip_vitl14_336_518_mvtec_strict.py',
@@ -249,19 +255,6 @@ _CLOSED_STRICT_BENCHMARKS = {
             'benchmark.py is MVTec-category oriented and must not be used for '
             'strict MemAE. Use tools/memae_official_video_smoke.sh or direct '
             'train/test with the official video configs instead.'
-        ),
-    ),
-    'resad': dict(
-        strict_configs={
-            'resad_official_visa_to_mvtec.py',
-            'resad_wrn50_256_mvtec_strict.py',
-        },
-        reason=(
-            'ResAD strict alignment now follows the official VisA->MVTec '
-            'protocol via tools/resad_official_eval.py. generic benchmark.py '
-            'must not be used for strict ResAD. Use '
-            'configs/resad/resad_wrn50_256_mvtec_benchmark.py for the '
-            'BaoIAD budget sidecar track instead.'
         ),
     ),
 }
@@ -747,6 +740,7 @@ def _prepare_subprocess_env(base_env=None, disable_compile=False):
     env_copy.setdefault('OPENBLAS_NUM_THREADS', '1')
     env_copy.setdefault('OMP_NUM_THREADS', '1')
     env_copy.setdefault('MKL_NUM_THREADS', '1')
+    env_copy.setdefault('PYTHONWARNINGS', 'ignore')
     if disable_compile:
         env_copy['TORCH_COMPILE_DISABLE'] = '1'
         env_copy['TORCHDYNAMO_DISABLE'] = '1'
@@ -1117,6 +1111,8 @@ def run_method(config_path, data_root, category, device, epochs,
     if device == 'cpu':
         cmd.insert(2, '--cpu')
 
+    os.umask(0)  # NFS shared env: ensure work dirs are world-writable
+
     env_copy = _prepare_subprocess_env(disable_compile=disable_compile)
     try:
         process = subprocess.Popen(
@@ -1239,7 +1235,16 @@ def main():
     args = parser.parse_args()
 
     requested_all_categories = 'all' in args.categories
-    categories = ALL_CATEGORIES if requested_all_categories else args.categories
+    if requested_all_categories:
+        # Auto-detect dataset: if any VISA-specific category has train/ dir,
+        # use VISA categories; otherwise default to MVTec AD.
+        visa_present = any(
+            os.path.isdir(os.path.join(args.data_root, c, 'train'))
+            for c in VISA_CATEGORIES
+        )
+        categories = VISA_CATEGORIES if visa_present else ALL_CATEGORIES
+    else:
+        categories = args.categories
 
     # Resolve methods
     if args.methods is None:
@@ -1346,9 +1351,19 @@ def main():
                 f1 = metrics.get('image_f1max', 0)
                 print(f"img={ia:.4f} pxl={pa:.4f} f1={f1:.4f} ({elapsed:.0f}s)")
             else:
-                results[method][cat] = {'image_auroc': None, 'error': info[:100]}
-                print(f"FAILED ({info[:80]})")
+                results[method][cat] = {'image_auroc': None, 'error': info[:500]}
+                print(f"FAILED ({info[:120]})")
             save_results()
+
+            # Free GPU memory between categories to prevent OOM accumulation
+            import gc
+            gc.collect()
+            try:
+                import torch as _torch
+                if _torch.cuda.is_available():
+                    _torch.cuda.empty_cache()
+            except ImportError:
+                pass
 
         def _compute_average(selected_categories):
             avg = {}

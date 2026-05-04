@@ -330,7 +330,7 @@ def resolve_cait_pretrained_overlays(cache_dir: str | None = None) -> dict[str, 
 
 # ─── U-Flow Detector ──────────────────────────────────────────────────────
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class UFlowDetector(FlowBasedADModel):
     """U-Flow: U-shaped Normalizing Flow for anomaly detection.
 

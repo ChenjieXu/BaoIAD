@@ -66,7 +66,7 @@ def _kcenter_greedy(
     return np.asarray(selected, dtype=np.int64)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class GraphCoreDetector(BaseADModel):
     """GraphCore detector using official ViG embeddings and KCenter coreset.
 

@@ -33,7 +33,7 @@ from baoiad.registry import MODELS
 from baoiad.structures import ADDataSample
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class PNIHead(BaseModule):
     """PNI head with official patch-embedding, coreset, and nb+coor scoring."""
 

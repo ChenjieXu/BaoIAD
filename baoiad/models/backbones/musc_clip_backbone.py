@@ -75,7 +75,7 @@ class MultiLayerHook:
                 break
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class MuScCLIPBackbone(BaseModule):
     """CLIP backbone with multi-layer feature extraction for MuSc.
 
@@ -365,7 +365,7 @@ class MuScCLIPBackbone(BaseModule):
         return self
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class MuScDINOv2Backbone(BaseModule):
     """DINOv2 backbone with multi-layer feature extraction for MuSc.
 

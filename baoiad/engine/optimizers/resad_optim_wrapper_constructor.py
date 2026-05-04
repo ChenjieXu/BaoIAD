@@ -18,7 +18,7 @@ from mmengine.optim import OptimWrapperDict
 from baoiad.registry import OPTIMIZERS, OPTIM_WRAPPER_CONSTRUCTORS, OPTIM_WRAPPERS
 
 
-@OPTIM_WRAPPER_CONSTRUCTORS.register_module()
+@OPTIM_WRAPPER_CONSTRUCTORS.register_module(force=True)
 class ResADOptimWrapperConstructor:
     """Build the official ResAD split optimizers.
 

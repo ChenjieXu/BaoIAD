@@ -12,7 +12,7 @@ from torchvision.transforms import CenterCrop, InterpolationMode, RandomRotation
 from baoiad.registry import TRANSFORMS
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class CFlowOfficialTransform(BaseTransform):
     """Apply the official CFlow resize / rotate / crop policy."""
 

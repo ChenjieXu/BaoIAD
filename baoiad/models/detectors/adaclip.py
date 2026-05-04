@@ -1131,7 +1131,7 @@ class AdaCLIP(nn.Module):
 # AdaCLIPDetector: BaoIAD Detector Wrapper
 # ---------------------------------------------------------------------------
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class AdaCLIPDetector(VisionLanguageADModel):
     """AdaCLIP: Adapting CLIP with Hybrid Learnable Prompts for Zero-Shot AD.
 

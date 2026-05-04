@@ -11,3 +11,11 @@ test_dataloader = dict(
     dataset=dict(type='VisADataset', data_root='data/visa', multi_class=True))
 val_dataloader = dict(
     dataset=dict(type='VisADataset', data_root='data/visa', multi_class=True))
+
+# VISA has no pre-computed C3 masks — disable strict mask requirements
+model = dict(
+    require_mask_dir=False,
+    require_heat_mask_dir=False,
+    mask_dir='',
+    heat_mask_dir='',
+)

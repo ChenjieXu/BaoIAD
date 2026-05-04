@@ -642,7 +642,7 @@ class UpsamplingModule(nn.Module):
 
 # ==================== DSR Detector ====================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DSRDetector(ReconstructionADModel):
     """DSR: Dual Subspace Re-projection Network for Surface Anomaly Detection.
 

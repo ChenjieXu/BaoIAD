@@ -160,7 +160,7 @@ class _FallbackCFlowHead(nn.Module):
         return z, log_jac_det
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class CFlowDetector(FlowBasedADModel):
     """CFlow: Conditional Normalizing Flow for anomaly detection.
 

@@ -379,7 +379,7 @@ def _weights_init(m):
 
 # ==================== Detector ====================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DRAEMDetector(ReconstructionADModel):
     """DRAEM: reconstruction + discrimination for anomaly detection.
 

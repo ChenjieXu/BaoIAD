@@ -484,7 +484,7 @@ def weighted_decision_mechanism(batch_size, output_list, alpha=0.01, beta=3e-5, 
 
 # ─── UniNet Detector ────────────────────────────────────────────────────────
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class UniNetDetector(BaseADModel):
     """UniNet anomaly detector with multi-teacher distillation.
 

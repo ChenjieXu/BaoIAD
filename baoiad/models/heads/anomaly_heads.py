@@ -7,7 +7,7 @@ from mmengine.model import BaseModule
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class AnomalySegmentationHead(BaseModule):
     """Simple convolutional segmentation head for anomaly map prediction.
 
@@ -38,7 +38,7 @@ class AnomalySegmentationHead(BaseModule):
         return self.net(x)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class AnomalyClassificationHead(BaseModule):
     """Simple FC head for image-level anomaly classification.
 
@@ -68,7 +68,7 @@ class AnomalyClassificationHead(BaseModule):
         return self.fc(x)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class ProjectionHead(BaseModule):
     """MLP projection head for contrastive/self-supervised methods.
 

@@ -58,7 +58,7 @@ def _load_frame_tensor(img_path: str, *, in_channels: int, img_size: int) -> tor
     return ((tensor - 127.5) / 127.5).contiguous()
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class MemAEOfficialClipDataset(BaseDataset):
     """Official MemAE clip dataset backed by preprocessed video folders."""
 

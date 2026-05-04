@@ -8,7 +8,7 @@ from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import KnowledgeDistillationADModel
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class STFPMDetector(KnowledgeDistillationADModel):
     """Student-Teacher Feature Pyramid Matching for anomaly detection."""
 

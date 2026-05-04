@@ -40,7 +40,7 @@ def _vitad_param_groups(model: nn.Module, weight_decay: float) -> list[dict]:
     return groups
 
 
-@OPTIM_WRAPPER_CONSTRUCTORS.register_module()
+@OPTIM_WRAPPER_CONSTRUCTORS.register_module(force=True)
 class ViTADOptimWrapperConstructor:
     """Build ADer-style AdamW param groups for ViTAD.
 

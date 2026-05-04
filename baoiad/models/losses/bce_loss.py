@@ -6,7 +6,7 @@ from mmengine.model import BaseModule
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class BCEWithLogitsLoss(BaseModule):
     """Registered BCE with logits loss.
 
@@ -25,7 +25,7 @@ class BCEWithLogitsLoss(BaseModule):
             pred, target, reduction=self.reduction)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class BCELoss(BaseModule):
     """Registered BCE loss (expects sigmoid-activated inputs).
 

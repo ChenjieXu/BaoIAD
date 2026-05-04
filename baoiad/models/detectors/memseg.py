@@ -462,7 +462,7 @@ def rand_augment(force_torchvision: bool = False):
     def _enhance_sharpness(image: np.ndarray) -> np.ndarray:
         pil_img = Image.fromarray(_as_uint8(image))
         factor = float(np.random.uniform(0.0, 2.0))
-        return np.asarray(Image.ImageEnhance.Sharpness(pil_img).enhance(factor), dtype=np.uint8)
+        return np.asarray(ImageEnhance.Sharpness(pil_img).enhance(factor), dtype=np.uint8)
 
     def _add_hue_saturation(image: np.ndarray) -> np.ndarray:
         hsv = cv2.cvtColor(_as_uint8(image), cv2.COLOR_RGB2HSV).astype(np.int16)
@@ -712,7 +712,7 @@ class AnomalyGenerator:
 
 # ==================== MemSeg Detector ====================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class MemSegDetector(ReconstructionADModel):
     """MemSeg: Memory-based Segmentation for Anomaly Detection.
 

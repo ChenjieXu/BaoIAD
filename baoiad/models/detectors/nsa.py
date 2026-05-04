@@ -773,7 +773,7 @@ def _poisson_blend(source, target, mask, use_mixed=False):
     return result.clamp(0, 1)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class NSADetector(BaseADModel):
     """NSA: Natural Synthetic Anomalies anomaly detector.
 

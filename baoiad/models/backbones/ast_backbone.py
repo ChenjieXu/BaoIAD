@@ -9,7 +9,7 @@ from mmengine.model import BaseModule
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class EfficientNetFeatureExtractor(BaseModule):
     """Extract features from a specific layer of EfficientNet-b5."""
 
@@ -34,7 +34,7 @@ class EfficientNetFeatureExtractor(BaseModule):
         return x
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class EfficientNetLayerExtractor(BaseModule):
     """Extract features from EfficientNet at a specific block index (flat enumeration)."""
 
@@ -66,7 +66,7 @@ class EfficientNetLayerExtractor(BaseModule):
         return x
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class GenericFeatureExtractor(BaseModule):
     """Extract features from any timm model using features_only mode.
 

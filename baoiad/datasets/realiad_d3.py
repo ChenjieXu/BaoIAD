@@ -8,7 +8,7 @@ from baoiad.datasets.base_ad_dataset import BaseADDataset
 from baoiad.registry import DATASETS
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class RealIADD3Dataset(BaseADDataset):
     """RealIAD D3 dataset for industrial anomaly detection.
 

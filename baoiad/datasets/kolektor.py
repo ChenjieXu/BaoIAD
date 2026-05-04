@@ -32,7 +32,7 @@ def _is_mask_anomalous(mask_path: str) -> bool:
         return not np.all(img == 0)
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class KolektorDataset(BaseADDataset):
     """Kolektor Surface-Defect dataset.
 

@@ -10,7 +10,7 @@ from torch import Tensor
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class MultiScalePooling(BaseModule):
     """Pool multi-scale features to a unified spatial size and concatenate.
 

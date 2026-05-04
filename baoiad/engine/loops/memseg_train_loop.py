@@ -53,8 +53,8 @@ def _build_memseg_official_dataloader(dataloader_cfg: Dict[str, Any]) -> DataLoa
     )
 
 
-@LOOPS.register_module()
-@MMENGINE_LOOPS.register_module()
+@LOOPS.register_module(force=True)
+@MMENGINE_LOOPS.register_module(force=True)
 class MemSegOfficialTrainLoop(BaseLoop):
     """Mirror the frozen MemSeg ``while + for trainloader`` iteration rhythm."""
 

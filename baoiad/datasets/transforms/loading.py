@@ -10,7 +10,7 @@ from PIL import Image
 from baoiad.registry import TRANSFORMS
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class LoadImage(BaseTransform):
     """Load image from file path.
 
@@ -67,7 +67,7 @@ class LoadImage(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class LoadMask(BaseTransform):
     """Load ground truth mask for anomaly segmentation.
 

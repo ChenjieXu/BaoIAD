@@ -94,7 +94,7 @@ _NORM_MEAN = np.array([123.675, 116.28, 103.53], dtype=np.float32)
 _NORM_STD = np.array([58.395, 57.12, 57.375], dtype=np.float32)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class SAADetector(BaseADModel):
     """SAA/SAA+ anomaly detector.
 

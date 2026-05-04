@@ -7,7 +7,7 @@ from mmengine.hooks import Hook
 from baoiad.registry import HOOKS
 
 
-@HOOKS.register_module()
+@HOOKS.register_module(force=True)
 class UFlowStrictTrainHook(Hook):
     """Mirror the official UFlow LinearLR budget in iteration space.
 

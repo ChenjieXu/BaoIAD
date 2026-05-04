@@ -140,7 +140,7 @@ def _get_activation_fn(activation):
     raise RuntimeError(f'activation should be relu/gelu/glu, not {activation}.')
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class UniADDetector(BaseADModel):
     """UniAD: Unified Anomaly Detection (NeurIPS 2022).
 

@@ -7,7 +7,7 @@ from mmengine.hooks import Hook
 from baoiad.registry import HOOKS
 
 
-@HOOKS.register_module()
+@HOOKS.register_module(force=True)
 class MemoryBankHook(Hook):
     """Build memory bank after the last training epoch.
 

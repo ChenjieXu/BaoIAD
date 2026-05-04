@@ -498,7 +498,7 @@ class RRSDecoder(nn.Module):
         return logit_mask, pred
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class RealNetDetector(BaseADModel):
     """RealNet detector with official AFS / reconstruction / RRS semantics."""
 

@@ -6,6 +6,8 @@ _base_ = ['./dinomaly_392_mvtec_strict.py']
 
 # Benchmark mode: MC
 benchmark_multi_class = True
+benchmark_test_after_train = True
+benchmark_timeout = 43200
 
 # Override dataset to VisA
 train_dataloader = dict(

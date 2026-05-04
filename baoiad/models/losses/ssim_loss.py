@@ -7,7 +7,7 @@ from mmengine.model import BaseModule
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class SSIMLoss(BaseModule):
     """1 - SSIM loss for reconstruction-based methods.
 

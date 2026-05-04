@@ -117,11 +117,13 @@ def rand_perlin_2d_np(
 
 def generate_thr(img_shape: Sequence[int], min_scale: int = 0, max_scale: int = 4) -> np.ndarray:
     """Generate one rotated binary Perlin mask as in the official GLASS code."""
+    from scipy.ndimage import rotate as scipy_rotate
+
     perlin_scalex = 2 ** np.random.randint(min_scale, max_scale)
     perlin_scaley = 2 ** np.random.randint(min_scale, max_scale)
     perlin_noise = rand_perlin_2d_np((img_shape[1], img_shape[2]), (perlin_scalex, perlin_scaley))
-    rot = build_rotation_augmenter()
-    perlin_noise = rot(image=perlin_noise.astype(np.float32))
+    angle = np.random.uniform(-90, 90)
+    perlin_noise = scipy_rotate(perlin_noise.astype(np.float32), angle, reshape=False, order=1)
     return np.where(perlin_noise > 0.5, np.ones_like(perlin_noise), np.zeros_like(perlin_noise))
 
 

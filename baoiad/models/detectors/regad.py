@@ -434,7 +434,7 @@ class GaussianBlur2d(nn.Module):
 # RegAD Detector
 # ============================================================================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class RegADDetector(MemoryBankADModel):
     """RegAD: Registration-based Few-Shot Anomaly Detection.
 

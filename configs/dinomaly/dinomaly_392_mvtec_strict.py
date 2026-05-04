@@ -30,6 +30,7 @@ all_categories = [
 ]
 
 benchmark_multi_class = True
+benchmark_test_after_train = True
 benchmark_keep_dataloader_workers = True
 benchmark_preserve_checkpoint_hooks = True
 benchmark_resume_existing = True

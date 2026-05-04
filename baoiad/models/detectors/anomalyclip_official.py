@@ -119,7 +119,7 @@ def _masks_from_samples(
     return torch.stack(masks[:batch_size], dim=0)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class AnomalyCLIPOfficialDetector(VisionLanguageADModel):
     """Official AnomalyCLIP detector for strict alignment work."""
 

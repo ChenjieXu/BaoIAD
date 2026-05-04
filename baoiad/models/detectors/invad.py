@@ -476,7 +476,7 @@ class Fuser(nn.Module):
 
 # ========================= InvAD Detector =========================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class InvADDetector(BaseADModel):
     """InvAD: Inverse Anomaly Detection.
 

@@ -51,7 +51,7 @@ def _import_open_clip(prefer_local_reference=False):
         raise
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class OpenCLIPBackbone(BaseModule):
     """Wrapper around open_clip for config-driven CLIP model construction.
 
@@ -112,16 +112,47 @@ class OpenCLIPBackbone(BaseModule):
             self.hf_endpoint = hf_endpoint
             create_fn = open_clip.create_model_and_transforms
 
-            # When loading a local file, temporarily patch torch.load
-            # to use weights_only=False (needed for TorchScript archives
-            # in PyTorch >= 2.6).
+            # When loading a local file, create model without weights then
+            # load manually to handle TorchScript archives in PyTorch >= 2.6.
             if manual_load:
-                _orig_load = torch.load
-                def _patched_load(*a, **kw):
-                    kw['weights_only'] = False
-                    return _orig_load(*a, **kw)
-                torch.load = _patched_load
-            try:
+                if open_clip.__name__ == 'clip':
+                    effective_image_size = image_size
+                    if effective_image_size is None:
+                        effective_image_size = 336 if '336' in model_name else 224
+                    self.model, _, self.preprocess = create_fn(
+                        model_name, effective_image_size,
+                        pretrained='',
+                        force_quick_gelu=force_quick_gelu
+                    )
+                else:
+                    create_kwargs = dict(
+                        pretrained='',
+                        load_weights=False,
+                        force_quick_gelu=force_quick_gelu,
+                    )
+                    if image_size is not None:
+                        create_kwargs['force_image_size'] = image_size
+                    self.model, _, self.preprocess = create_fn(
+                        model_name, **create_kwargs
+                    )
+                # Manually load checkpoint with TorchScript handling
+                ckpt = torch.load(effective_pretrained, map_location='cpu', weights_only=False)
+                if hasattr(ckpt, 'state_dict'):
+                    sd = ckpt.state_dict()
+                elif isinstance(ckpt, dict) and 'state_dict' in ckpt:
+                    sd = ckpt['state_dict']
+                elif isinstance(ckpt, dict):
+                    sd = ckpt
+                else:
+                    sd = {}
+                sd = {k: v for k, v in sd.items() if isinstance(v, torch.Tensor)}
+                if sd and next(iter(sd.items()))[0].startswith('module'):
+                    sd = {k[7:]: v for k, v in sd.items()}
+                # Resize positional embeddings if needed (e.g. different image sizes)
+                if hasattr(open_clip, 'model') and hasattr(open_clip.model, 'resize_pos_embed'):
+                    open_clip.model.resize_pos_embed(sd, self.model)
+                self.model.load_state_dict(sd, strict=False)
+            else:
                 if open_clip.__name__ == 'clip':
                     effective_image_size = image_size
                     if effective_image_size is None:
@@ -148,9 +179,6 @@ class OpenCLIPBackbone(BaseModule):
                     self.model, _, self.preprocess = create_fn(
                         model_name, **create_kwargs
                     )
-            finally:
-                if manual_load:
-                    torch.load = _orig_load
         self.tokenizer = open_clip.get_tokenizer(model_name)
         self._tokenize = open_clip.tokenize
 

@@ -105,7 +105,7 @@ class _KDEClassifier:
         return 1 / (1 + torch.exp(0.05 * (log_scores - 12)))
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DFKDEDetector(MemoryBankADModel):
     """Deep Feature Kernel Density Estimation detector.
 

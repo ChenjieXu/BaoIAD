@@ -51,9 +51,9 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type='AACLIPJsonDataset',
-        data_root='data/mvtec_ad',
-        metadata_path='.refs/AA-CLIP/dataset/metadata/MVTec/full-shot.jsonl',
-        dataset_name='MVTec',
+        data_root='data/visa',
+        metadata_path='.refs/AA-CLIP/dataset/metadata/VisA/full-shot.jsonl',
+        dataset_name='VisA',
         img_size=img_size,
         multi_class=True,
         text_mode=False,

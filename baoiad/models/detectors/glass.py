@@ -251,7 +251,7 @@ class RescaleSegmentor:
         return [ndimage.gaussian_filter(score_map, sigma=self.smoothing) for score_map in maps]
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class GLASSDetector(BaseADModel):
     """GLASS detector with a fast legacy path and a strict official path."""
 
@@ -696,7 +696,21 @@ class GLASSDetector(BaseADModel):
 
     def train_step(self, data, optim_wrapper):
         if not self.strict:
-            return super().train_step(data, optim_wrapper)
+            data = self.data_preprocessor(data, True)
+            inputs = self._prepare_inputs(data['inputs'])
+            losses = self._legacy_loss(inputs)
+            loss = losses['loss']
+            if isinstance(optim_wrapper, OptimWrapperDict):
+                for ow in optim_wrapper.values():
+                    ow.zero_grad()
+                loss.backward()
+                for ow in optim_wrapper.values():
+                    ow.step()
+            else:
+                optim_wrapper.zero_grad()
+                loss.backward()
+                optim_wrapper.step()
+            return losses
 
         if not isinstance(optim_wrapper, OptimWrapperDict) or 'discriminator' not in optim_wrapper:
             raise TypeError(

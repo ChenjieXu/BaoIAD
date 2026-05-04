@@ -132,7 +132,7 @@ def _get_texture_augmenters():
     ]
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class DRAEMDataset(BaseDataset):
     """DRAEM training dataset with augmentation in __getitem__.
 

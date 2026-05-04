@@ -15,7 +15,7 @@ from baoiad.models.base_ad_model import MemoryBankADModel
 logger = logging.getLogger(__name__)
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class SPADEDetector(MemoryBankADModel):
     """SPADE anomaly detector using per-layer kNN on multi-scale features.
 

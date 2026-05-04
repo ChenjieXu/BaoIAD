@@ -15,8 +15,8 @@ from torch.utils.data import Sampler
 from baoiad.registry import DATA_SAMPLERS
 
 
-@DATA_SAMPLERS.register_module()
-@MMENGINE_DATA_SAMPLERS.register_module()
+@DATA_SAMPLERS.register_module(force=True)
+@MMENGINE_DATA_SAMPLERS.register_module(force=True)
 class PersistentShuffleSampler(Sampler):
     """Sampler that mirrors PyTorch ``RandomSampler`` epoch semantics.
 
@@ -85,8 +85,8 @@ class PersistentShuffleSampler(Sampler):
         del epoch
 
 
-@DATA_SAMPLERS.register_module()
-@MMENGINE_DATA_SAMPLERS.register_module()
+@DATA_SAMPLERS.register_module(force=True)
+@MMENGINE_DATA_SAMPLERS.register_module(force=True)
 class PythonShuffleSampler(Sampler):
     """Sampler that mirrors ``random.shuffle(indices)`` with a fixed seed."""
 
@@ -132,8 +132,8 @@ class PythonShuffleSampler(Sampler):
         del epoch
 
 
-@DATA_SAMPLERS.register_module()
-@MMENGINE_DATA_SAMPLERS.register_module()
+@DATA_SAMPLERS.register_module(force=True)
+@MMENGINE_DATA_SAMPLERS.register_module(force=True)
 class OpenIADSubsetRandomSampler(Sampler):
     """Sampler matching open-iad's ``random.shuffle + SubsetRandomSampler``.
 
@@ -190,8 +190,8 @@ class OpenIADSubsetRandomSampler(Sampler):
         del epoch
 
 
-@DATA_SAMPLERS.register_module()
-@MMENGINE_DATA_SAMPLERS.register_module()
+@DATA_SAMPLERS.register_module(force=True)
+@MMENGINE_DATA_SAMPLERS.register_module(force=True)
 class ExplicitOrderSampler(Sampler):
     """Sampler that yields a fixed index order loaded from config or JSON."""
 
@@ -241,8 +241,8 @@ class ExplicitOrderSampler(Sampler):
         del epoch
 
 
-@DATA_SAMPLERS.register_module()
-@MMENGINE_DATA_SAMPLERS.register_module()
+@DATA_SAMPLERS.register_module(force=True)
+@MMENGINE_DATA_SAMPLERS.register_module(force=True)
 class PerEpochOrderSampler(Sampler):
     """Sampler that replays a fixed list of indices for each epoch.
 
@@ -303,8 +303,8 @@ class PerEpochOrderSampler(Sampler):
         self.epoch = int(epoch)
 
 
-@DATA_SAMPLERS.register_module()
-@MMENGINE_DATA_SAMPLERS.register_module()
+@DATA_SAMPLERS.register_module(force=True)
+@MMENGINE_DATA_SAMPLERS.register_module(force=True)
 class MemAEOfficialOrderSampler(PerEpochOrderSampler):
     """Replay the exact epoch orders implied by the official MemAE script.
 

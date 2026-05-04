@@ -195,7 +195,7 @@ def rand_perlin_2d_np(
     )
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class RealNetTrainDataset(BaseDataset):
     """RealNet training dataset aligned to the official MVTec setup."""
 

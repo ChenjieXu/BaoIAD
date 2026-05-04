@@ -130,7 +130,7 @@ class _AdaCLIPStrictDatasetMixin:
         raise NotImplementedError
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class AdaCLIPVisADataset(_AdaCLIPStrictDatasetMixin, VisADataset):
     """VisA loader for AdaCLIP strict alignment."""
 
@@ -143,7 +143,7 @@ class AdaCLIPVisADataset(_AdaCLIPStrictDatasetMixin, VisADataset):
             self.split = original_split
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class AdaCLIPClinicDBDataset(_AdaCLIPStrictDatasetMixin, ClinicDBDataset):
     """ClinicDB loader for AdaCLIP strict alignment."""
 
@@ -151,7 +151,7 @@ class AdaCLIPClinicDBDataset(_AdaCLIPStrictDatasetMixin, ClinicDBDataset):
         return _load_single_class_test_layout(self.data_root, self.cls_names)
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class AdaCLIPColonDBDataset(_AdaCLIPStrictDatasetMixin, ColonDBDataset):
     """ColonDB loader for AdaCLIP strict alignment."""
 

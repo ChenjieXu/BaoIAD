@@ -45,7 +45,7 @@ class ResizeLongestSide:
         return np.array(resize(to_pil_image(image), target_size))
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class SAASaliencyBackbone(BaseModule):
     """Feature extractor aligned with the official SAA+ ``ModelINet``."""
 

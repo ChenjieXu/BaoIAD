@@ -10,8 +10,8 @@ from mmengine.runner import EpochBasedTrainLoop
 from baoiad.registry import LOOPS
 
 
-@LOOPS.register_module()
-@MMENGINE_LOOPS.register_module()
+@LOOPS.register_module(force=True)
+@MMENGINE_LOOPS.register_module(force=True)
 class CFlowOfficialTrainLoop(EpochBasedTrainLoop):
     """Mirror the official ``meta_epochs x sub_epochs`` training rhythm."""
 

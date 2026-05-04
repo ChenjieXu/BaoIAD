@@ -61,8 +61,8 @@ def _build_vitad_official_dataloader(dataloader_cfg: Dict[str, Any]) -> DataLoad
     )
 
 
-@LOOPS.register_module()
-@MMENGINE_LOOPS.register_module()
+@LOOPS.register_module(force=True)
+@MMENGINE_LOOPS.register_module(force=True)
 class ViTADOfficialTrainLoop(BaseLoop):
     """Epoch train loop that lazily builds the ViTAD raw DataLoader.
 

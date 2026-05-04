@@ -6,8 +6,8 @@ from mmengine.runner import TestLoop
 from baoiad.registry import LOOPS
 
 
-@LOOPS.register_module()
-@MMENGINE_LOOPS.register_module()
+@LOOPS.register_module(force=True)
+@MMENGINE_LOOPS.register_module(force=True)
 class ADTestLoop(TestLoop):
     """Test loop for anomaly detection.
 

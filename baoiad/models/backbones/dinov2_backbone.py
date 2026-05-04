@@ -70,7 +70,7 @@ class _DINOv2Encoder(nn.Module):
         return {'x_norm_patchtokens': patch_tokens}
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DINOv2Backbone(BaseModule):
     """DINOv2 ViT encoder registered in MODELS registry.
 

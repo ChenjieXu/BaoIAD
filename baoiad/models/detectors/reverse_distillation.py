@@ -222,7 +222,7 @@ class OCBE(nn.Module):
         return output.contiguous()
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class ReverseDistillation(KnowledgeDistillationADModel):
     """Reverse Distillation for anomaly detection (CVPR 2022).
 

@@ -10,7 +10,6 @@ env_cfg = dict(
 )
 benchmark_multi_class = True
 benchmark_keep_dataloader_workers = True
-benchmark_train_script = 'tools/train_vitad_exact_order.py'
 train_pipeline = [
     dict(type='LoadImage', backend='pil'),
     dict(type='LoadMask', backend='pil'),

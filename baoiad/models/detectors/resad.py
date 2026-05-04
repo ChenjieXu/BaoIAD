@@ -333,7 +333,7 @@ class MultiScaleConv(nn.Module):
         return [conv(f) for f, conv in zip(features, self.convs)]
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class ResADDetector(BaseADModel):
     """ResAD: Residual-based Anomaly Detection with Conditional Normalizing Flows.
 

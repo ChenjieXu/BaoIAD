@@ -12,7 +12,7 @@ from sklearn.metrics import roc_auc_score
 from baoiad.registry import METRICS
 
 
-@METRICS.register_module()
+@METRICS.register_module(force=True)
 class MemAEVideoMetric(BaseMetric):
     """Frame-level AUROC following MemAE's official video evaluation."""
 

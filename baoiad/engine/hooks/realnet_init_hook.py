@@ -5,7 +5,7 @@ from mmengine.hooks import Hook
 from baoiad.registry import HOOKS
 
 
-@HOOKS.register_module()
+@HOOKS.register_module(force=True)
 class RealNetInitHook(Hook):
     """Run ``init_afs()`` once before the first RealNet training epoch."""
 

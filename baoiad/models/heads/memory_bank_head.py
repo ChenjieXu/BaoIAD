@@ -27,7 +27,7 @@ HAS_FAISS_GPU = (
 )
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class MemoryBankHead(BaseModule):
     """Memory bank head using coreset subsampling and kNN scoring.
 

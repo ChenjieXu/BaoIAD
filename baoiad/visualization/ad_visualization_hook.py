@@ -10,7 +10,7 @@ from mmengine.hooks import Hook
 from baoiad.registry import HOOKS
 
 
-@HOOKS.register_module()
+@HOOKS.register_module(force=True)
 class ADVisualizationHook(Hook):
     """Automatically save visualization results during the test stage.
 

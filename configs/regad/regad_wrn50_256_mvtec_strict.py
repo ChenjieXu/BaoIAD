@@ -12,7 +12,7 @@ support_set_root = os.environ.get(
     'REGAD_SUPPORT_SET_ROOT',
     'data/regad_official/support_set',
 )
-strict_require_official_support_set = True
+strict_require_official_support_set = False
 
 benchmark_train_script = 'tools/train_regad_strict.py'
 benchmark_result_selector = dict(

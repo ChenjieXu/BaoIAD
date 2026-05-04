@@ -217,7 +217,7 @@ class FlowSequence(nn.Module):
         return current[0], log_jac
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DifferNetDetector(FlowBasedADModel):
     """DifferNet anomaly detector using normalizing flows on AlexNet features.
 

@@ -357,7 +357,7 @@ class AnomalyMapGenerator(nn.Module):
 
 # ─── SuperSimpleNet Detector ────────────────────────────────────────────────
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class SuperSimpleNetDetector(DiscriminatorADModel):
     """SuperSimpleNet anomaly detector.
 

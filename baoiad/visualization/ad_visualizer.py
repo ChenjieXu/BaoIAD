@@ -12,7 +12,7 @@ from mmengine.visualization import Visualizer
 from baoiad.registry import VISUALIZERS
 
 
-@VISUALIZERS.register_module()
+@VISUALIZERS.register_module(force=True)
 class ADVisualizer(Visualizer):
     """Visualizer for anomaly detection results.
 

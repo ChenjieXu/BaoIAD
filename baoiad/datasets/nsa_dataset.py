@@ -37,7 +37,7 @@ from baoiad.models.detectors.nsa import (
 from baoiad.registry import DATASETS
 
 
-@DATASETS.register_module()
+@DATASETS.register_module(force=True)
 class NSATrainDataset(BaseDataset):
     """NSA training dataset with upstream-style worker-local source selection."""
 

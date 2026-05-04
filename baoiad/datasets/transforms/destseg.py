@@ -130,7 +130,7 @@ def _collect_texture_paths(images_dir: str) -> list[str]:
     return sorted(set(paths))
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class DeSTSegAugment(BaseTransform):
     """Synthesize official-style DeSTSeg training pairs in image space."""
 
@@ -182,7 +182,7 @@ class DeSTSegAugment(BaseTransform):
         return results
 
 
-@TRANSFORMS.register_module()
+@TRANSFORMS.register_module(force=True)
 class PackDeSTSegInputs(BaseTransform):
     """Pack DeSTSeg training pairs with explicit clean/augmented tensors."""
 

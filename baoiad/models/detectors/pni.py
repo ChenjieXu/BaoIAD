@@ -19,7 +19,7 @@ from baoiad.models.base_ad_model import BaseADModel
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class PNI(BaseADModel):
     """PNI: Position and Neighborhood Information detector.
 

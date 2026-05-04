@@ -7,7 +7,7 @@ from mmengine.model import BaseModule
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class CosineDistanceLoss(BaseModule):
     """1 - cosine_similarity, averaged over spatial dims.
 

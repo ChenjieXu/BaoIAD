@@ -9,7 +9,7 @@ from baoiad.models.base_ad_model import BaseADModel
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class PatchCore(BaseADModel):
     """PatchCore: Towards Total Recall in Industrial Anomaly Detection.
 

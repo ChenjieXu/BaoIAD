@@ -117,7 +117,7 @@ def make_masks(grid_size, kernel_size, stride=1):
 # Detector
 # ---------------------------------------------------------------------------
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class WinClipDetector(VisionLanguageADModel):
     """WinCLIP zero-/few-shot anomaly detection using CLIP.
 

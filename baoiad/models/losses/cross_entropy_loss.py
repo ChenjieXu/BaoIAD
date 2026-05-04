@@ -6,7 +6,7 @@ from mmengine.model import BaseModule
 from baoiad.registry import MODELS
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class CrossEntropyLoss(BaseModule):
     """Registered Cross Entropy loss.
 

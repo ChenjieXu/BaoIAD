@@ -29,8 +29,8 @@ DEFAULT_RDPP_CATEGORY_EPOCHS: Dict[str, int] = {
 }
 
 
-@LOOPS.register_module()
-@MMENGINE_LOOPS.register_module()
+@LOOPS.register_module(force=True)
+@MMENGINE_LOOPS.register_module(force=True)
 class RDPPTrainLoop(EpochBasedTrainLoop):
     """Match the official RD++ per-category epoch schedule."""
 

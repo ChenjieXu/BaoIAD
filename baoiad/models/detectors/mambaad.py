@@ -910,7 +910,7 @@ class MFFOCE(nn.Module):
         return self.bn_layer(sv_features).contiguous()
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class MambaADDetector(BaseADModel):
     """MambaAD anomaly detector aligned to the official MVTec setting."""
 

@@ -5,7 +5,7 @@ from mmengine.hooks import Hook
 from baoiad.registry import HOOKS
 
 
-@HOOKS.register_module()
+@HOOKS.register_module(force=True)
 class MuScScoreHook(Hook):
     """Call score_all() on MuSc detector after all test predictions.
 

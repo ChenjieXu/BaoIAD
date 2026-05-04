@@ -19,8 +19,8 @@ def _batch_size_from_inputs(inputs: Any) -> int:
     raise TypeError(f'Unsupported inputs container for GLASS loop: {type(inputs)!r}')
 
 
-@LOOPS.register_module()
-@MMENGINE_LOOPS.register_module()
+@LOOPS.register_module(force=True)
+@MMENGINE_LOOPS.register_module(force=True)
 class GLASSTrainLoop(EpochBasedTrainLoop):
     """Epoch-based loop that mirrors the official GLASS training rhythm.
 

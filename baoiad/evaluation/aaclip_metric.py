@@ -14,7 +14,7 @@ from baoiad.evaluation.fpr_at_tpr import compute_fpr_at_tpr
 from baoiad.registry import METRICS
 
 
-@METRICS.register_module()
+@METRICS.register_module(force=True)
 class AACLIPOfficialMetric(AnomalyDetectionMetric):
     """AA-CLIP metric with official per-class normalization and image fusion."""
 

@@ -397,7 +397,7 @@ _GRAPHCORE_VARIANTS: Dict[str, Dict[str, int]] = {
 }
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class GraphCoreViGBackbone(BaseModule):
     """ViG backbone used by the official GraphCore implementation."""
 

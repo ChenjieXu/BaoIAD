@@ -37,7 +37,7 @@ def sigmoid_focal_loss(
     return loss
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class BinaryFocalLoss(BaseModule):
     """Focal loss for binary classification / segmentation.
 
@@ -66,7 +66,7 @@ class BinaryFocalLoss(BaseModule):
         return self.loss_weight * focal
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class FocalLoss(BaseModule):
     """Multiclass Focal Loss (cross-entropy based).
 

@@ -38,7 +38,7 @@ except ImportError:
 # Base
 # ============================================================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class BaseScoringHead(BaseModule):
     """Abstract base class for all composable scoring heads.
 
@@ -127,7 +127,7 @@ class _GaussianBlur2d(nn.Module):
 # KNNScoringHead (PatchCore tricks)
 # ============================================================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class KNNScoringHead(BaseScoringHead):
     """kNN-based anomaly scoring with coreset subsampling.
 
@@ -338,7 +338,7 @@ class KNNScoringHead(BaseScoringHead):
 # GaussianScoringHead (PaDiM tricks)
 # ============================================================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class GaussianScoringHead(BaseScoringHead):
     """Per-position Gaussian modeling with Mahalanobis distance scoring.
 
@@ -459,7 +459,7 @@ class GaussianScoringHead(BaseScoringHead):
 # PCAScoringHead (DFM tricks)
 # ============================================================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class PCAScoringHead(BaseScoringHead):
     """PCA subspace modeling with reconstruction error scoring.
 

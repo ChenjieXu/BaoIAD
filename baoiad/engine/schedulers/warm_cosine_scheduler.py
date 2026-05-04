@@ -8,7 +8,7 @@ from mmengine.optim.scheduler.param_scheduler import _ParamScheduler
 from baoiad.registry import PARAM_SCHEDULERS
 
 
-@PARAM_SCHEDULERS.register_module()
+@PARAM_SCHEDULERS.register_module(force=True)
 class WarmCosineLR(LRSchedulerMixin, _ParamScheduler):
     """Match Dinomaly's absolute warmup + cosine learning-rate curve.
 

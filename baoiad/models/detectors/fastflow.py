@@ -11,7 +11,7 @@ from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import FlowBasedADModel
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class FastFlowDetector(FlowBasedADModel):
     """FastFlow: Unsupervised Anomaly Detection and Localization via 2D Normalizing Flows.
 

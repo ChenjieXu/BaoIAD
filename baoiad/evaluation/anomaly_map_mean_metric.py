@@ -11,7 +11,7 @@ from mmengine.evaluator import BaseMetric
 from baoiad.registry import METRICS
 
 
-@METRICS.register_module()
+@METRICS.register_module(force=True)
 class AnomalyMapMeanMetric(BaseMetric):
     """Compute the mean anomaly-map value across a validation set.
 

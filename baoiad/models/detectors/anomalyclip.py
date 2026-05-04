@@ -292,7 +292,7 @@ def _augment_views(images):
     return views
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class AnomalyCLIPDetector(VisionLanguageADModel):
     """AnomalyCLIP detector with DPAM (V-V attention) for pixel-level scoring.
 

@@ -101,7 +101,7 @@ class CosineHardMiningLoss(nn.Module):
 
 # ========================== Main Detector ==================================
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class DinomalyDetector(KnowledgeDistillationADModel):
     """Dinomaly: DINOv2 encoder + reconstruction decoder for anomaly detection.
 

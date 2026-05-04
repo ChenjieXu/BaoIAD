@@ -232,7 +232,7 @@ def _vl_clip_layer_index(num_layers: int, requested_layers: int) -> int:
 # UniVAD Detector
 # ---------------------------------------------------------------------------
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class UniVADDetector(BaseADModel):
     """UniVAD: Universal Visual Anomaly Detection.
 

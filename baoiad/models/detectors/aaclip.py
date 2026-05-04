@@ -396,7 +396,7 @@ class AdaptedCLIP(nn.Module):
         return x
 
 
-@MODELS.register_module()
+@MODELS.register_module(force=True)
 class AACLIPDetector(VisionLanguageADModel):
     """AA-CLIP detector with official stage semantics."""
 
