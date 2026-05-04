@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90D9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#357ABD;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#F5A623;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F7C948;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="480" height="120" rx="16" fill="url(#bg)"/>
+  <!-- Accent bar -->
+  <rect x="0" y="0" width="8" height="120" rx="4" fill="url(#accent)"/>
+  <!-- Icon: magnifying glass over circuit -->
+  <g transform="translate(40, 24)">
+    <circle cx="28" cy="28" r="24" fill="none" stroke="white" stroke-width="3" opacity="0.9"/>
+    <line x1="46" y1="46" x2="64" y2="64" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+    <!-- inner crosshair -->
+    <line x1="28" y1="16" x2="28" y2="40" stroke="white" stroke-width="2" opacity="0.6"/>
+    <line x1="16" y1="28" x2="40" y2="28" stroke="white" stroke-width="2" opacity="0.6"/>
+    <!-- defect dot -->
+    <circle cx="34" cy="22" r="4" fill="#F5A623" opacity="0.9"/>
+  </g>
+  <!-- Text: BaoIAD -->
+  <text x="130" y="58" font-family="'Helvetica Neue', Arial, sans-serif" font-size="48" font-weight="bold" fill="white" letter-spacing="2">BaoIAD</text>
+  <!-- Subtitle -->
+  <text x="132" y="88" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" fill="white" opacity="0.8" letter-spacing="1">Benchmark for Industrial Anomaly Detection</text>
+</svg>

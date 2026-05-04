@@ -1,0 +1,14 @@
+_base_ = ['../_base_/default_runtime.py', '../_base_/datasets/mvtec_ad.py', '../_base_/schedules/schedule_100e.py', '../_base_/backbones/wide_resnet50_raw.py']
+data_root = 'data/mvtec_ad'
+train_dataloader = dict(batch_size=8, num_workers=0, persistent_workers=False,
+    sampler=dict(type='DefaultSampler', shuffle=True),
+    dataset=dict(type='MVTecADDataset', data_root=data_root, split='train', cls_names=['bottle'], pipeline={{_base_.train_pipeline}}))
+test_dataloader = dict(batch_size=8, num_workers=0, persistent_workers=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(type='MVTecADDataset', data_root=data_root, split='test', cls_names=['bottle'], pipeline={{_base_.test_pipeline}}))
+val_dataloader = test_dataloader
+test_evaluator = dict(type='AnomalyDetectionMetric')
+val_evaluator = test_evaluator
+model = dict(type='DifferNetDetector', backbone={{_base_.backbone}},
+    data_preprocessor=dict(type='mmengine.model.ImgDataPreprocessor'), n_coupling_blocks=8, clamp=2.0)
+train_cfg = dict(by_epoch=True, max_epochs=100, val_interval=10)

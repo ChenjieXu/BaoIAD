@@ -1,0 +1,79 @@
+# Data
+data/
+!data/.gitkeep
+
+# Training outputs
+runs/
+results/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment
+.env
+.venv/
+env/
+
+# OMC
+.omc/
+
+# Node
+node_modules/
+
+# Cache
+*.cache/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Pretrained weights (large files)
+pretrained/
+pre_trained/
+
+# BERT
+bert-base-uncased/
+
+# Lock files (regenerated)
+requirements.lock
+package-lock.json
+
+# Logs
+*.log
+
+# Sphinx build
+docs/en/_build/
+docs/zh_cn/_build/
+
+# IADBench sync artifacts
+docs/paper/
+tools/run_visa_*.sh
+scripts/
+
+# External dependencies
+groundingdino/
+
+# Agent docs
+AGENT.md
+agent.md
+
+# Dev
+CLAUDE.md
+.claude/
+.refs/

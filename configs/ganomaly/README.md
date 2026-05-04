@@ -1,0 +1,42 @@
+## GANomaly
+
+> GANomaly: Semi-Supervised Anomaly Detection
+
+- **Paper**: [GANomaly: Semi-Supervised Anomaly Detection](https://arxiv.org/abs/1805.06725)
+- **Category**: Reconstruction
+- **Backbone**: GAN
+
+GANomaly uses an encoder-decoder-encoder GAN architecture for anomaly detection. The first encoder compresses the input, the decoder reconstructs it, and the second encoder re-encodes the reconstruction — the anomaly score comes from the latent distance between the two encoders' outputs. During training, the network is trained on normal images with reconstruction and latent consistency losses. At inference, the L2 distance between the two latent representations serves as the anomaly score, as anomalous inputs produce inconsistent latent codes.
+
+### Configs
+
+| Config | Description |
+|--------|-------------|
+| [`ganomaly_256_mvtec_strict.py`](ganomaly_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`ganomaly_256_visa.py`](ganomaly_256_visa.py) | VisA |
+
+<!-- BaoIAD repo-local evidence: start -->
+
+### MVTec AD result summary
+
+| #cat | img mean±std | pxl mean±std | AUPRO mean±std | AUPIMO mean±std | iECE mean±std | pECE mean±std |
+|---|---|---|---|---|---|---|
+| 15 | 0.5934±0.0091 | — | — | — | — | — |
+
+### VisA result summary
+
+| img_AUROC | pxl_AUROC | img_F1max | pxl_F1max | img_AP | pxl_AP | AUPRO | cats |
+|---|---|---|---|---|---|---|---|
+| 0.6387 | — | 0.7551 | — | 0.6777 | — | — | 12/12 |
+
+### Speed summary
+
+| avg_ms_per_img | fps | img_size | forward_mode |
+|---|---|---|---|
+| 2.36 | 423.0 | 256 | predict |
+
+### Alignment note
+
+This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The alignment record is [`docs/alignment/ganomaly.md`](../../docs/alignment/ganomaly.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+
+<!-- BaoIAD repo-local evidence: end -->
