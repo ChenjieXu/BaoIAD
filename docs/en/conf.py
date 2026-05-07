@@ -27,18 +27,26 @@ release = '0.1.0'
 # Add any Sphinx extension module names here, as strings.
 extensions = [
     'myst_parser',
+    'sphinx.ext.autodoc',
 ]
 
-# NOTE: autodoc/napoleon/viewcode are disabled because baoiad has heavy
-# torch/mmcv dependencies that hang during import even with mocks.
-# Re-enable them in a CI environment with all deps installed.
+# NOTE: autodoc is enabled only so existing ``automodule`` directives parse.
+# Heavy torch/mmcv-style dependencies stay mocked below for Read the Docs.
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = [
+    '_build',
+    'Thumbs.db',
+    '.DS_Store',
+    # Superseded legacy tutorials are kept in the repo for compatibility but
+    # are intentionally excluded from the Phase 1 docs IA.
+    'user_guides/new_model.md',
+    'user_guides/new_dataset.md',
+]
 
 # The suffix(es) of source filenames.
 source_suffix = {
@@ -51,31 +59,17 @@ master_doc = 'index'
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.
+# Prefer the Read the Docs theme on Read the Docs.  The optional
+# ``pytorch_sphinx_theme`` currently fails under the Sphinx version resolved by
+# RTD with ``UndefinedError("'style' is undefined")``.
 try:
-    import pytorch_sphinx_theme
-    html_theme = 'pytorch_sphinx_theme'
-    html_theme_options = {
-        'logo': {
-            'text': 'BaoIAD',
-        },
-        'menu': [
-            {
-                'name': 'GitHub',
-                'url': 'https://github.com/xxx/BaoIAD',
-            },
-        ],
-    }
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
 except ImportError:
-    try:
-        import sphinx_rtd_theme
-        html_theme = 'sphinx_rtd_theme'
-    except ImportError:
-        html_theme = 'alabaster'
-    html_theme_options = {
-        'logo_only': False,
-        'display_version': True,
-    }
+    html_theme = 'alabaster'
+html_theme_options = {
+    'logo_only': False,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files.
@@ -130,6 +124,12 @@ myst_enable_extensions = [
 ]
 
 myst_heading_anchors = 3
+
+# BaoIAD docs intentionally link to many repo-root sources (configs/, tools/,
+# baoiad/, docs/alignment/) that are not Sphinx source documents. Treat MyST
+# markdown links as links instead of unresolved cross-reference targets. RST
+# toctrees still own documentation reachability.
+myst_all_links_external = True
 
 # -- Options for copybutton --------------------------------------------------
 

@@ -1,10 +1,10 @@
 # Config System
 
-BaoIAD uses MMEngine's config system with inheritance, allowing concise method definitions that reuse shared base configs.
+BaoIAD uses MMEngine's hierarchical config system with `_base_` inheritance. A typical method config is minimal — it only defines the `model` and inherits everything else from shared base configs.
 
 ## Config Inheritance
 
-Configs can inherit from one or more base configs using the `_base_` field:
+Use the `_base_` field to inherit from one or more base configs:
 
 ```python
 # configs/patchcore/patchcore_wrn50_256_mvtec_strict.py
@@ -13,9 +13,31 @@ _base_ = [
     '../_base_/datasets/mvtec_ad.py',
     '../_base_/schedules/schedule_100e.py',
 ]
+
+model = dict(
+    type='PatchCore',
+    backbone=dict(
+        type='TIMMBackbone',
+        model_name='wide_resnet50_2',
+        pretrained=True,
+        features_only=True,
+        out_indices=(2, 3),
+        frozen=True,
+    ),
+    neck=dict(type='MultiScalePooling', output_size=28),
+    head=dict(
+        type='MemoryBankHead',
+        coreset_ratio=0.1,
+        num_neighbors=9,
+        distance='euclidean',
+        input_size=(256, 256),
+        blur_sigma=4.0,
+    ),
+    freeze_backbone=True,
+)
 ```
 
-The `_base_` list specifies which base configs to inherit. Fields defined in the current config override inherited values.
+Fields defined in the current config override inherited values of the same name.
 
 ## Base Config Structure
 
@@ -24,8 +46,10 @@ configs/_base_/
 ├── backbones/
 │   ├── wide_resnet50_unified.py    # WRN-50-2 (standardized for fair comparison)
 │   ├── wide_resnet50.py            # WRN-50-2 (default)
+│   ├── wide_resnet50_raw.py        # WRN-50-2 (raw, no preprocessing)
 │   ├── resnet18.py                 # ResNet-18
 │   ├── resnet50.py                 # ResNet-50
+│   ├── resnet18_raw.py             # ResNet-18 (raw)
 │   ├── efficientnet_b4.py          # EfficientNet-B4
 │   ├── efficientnet_b5.py          # EfficientNet-B5
 │   ├── dinov2_vitb14.py            # DINOv2 ViT-B/14
@@ -42,70 +66,108 @@ configs/_base_/
 │   ├── vad.py                      # VAD
 │   └── realiad.py                  # RealIAD
 ├── schedules/
-│   └── schedule_100e.py            # 100 epochs, SGD, CosineAnnealing
+│   └── schedule_100e.py            # 100 epochs, Adam, CosineAnnealing
 └── default_runtime.py              # scope='baoiad', seed=42, MemoryBankHook
-```
-
-## Config Walkthrough: PatchCore
-
-```python
-# 1. Inherit base configs
-_base_ = [
-    '../_base_/default_runtime.py',    # Runtime: scope, hooks, seed
-    '../_base_/datasets/mvtec_ad.py',  # Dataset: MVTec AD, batch_size=32
-    '../_base_/schedules/schedule_100e.py',  # Schedule: 100 epochs
-]
-
-# 2. Define model
-model = dict(
-    type='PatchCore',
-    backbone=dict(
-        type='TIMMBackbone',
-        model_name='wide_resnet50_2',
-        pretrained=True,
-        features_only=True,
-        out_indices=(2, 3),  # layer2 + layer3 features
-        frozen=True,
-    ),
-    neck=dict(
-        type='MultiScalePooling',
-        output_size=28,
-    ),
-    head=dict(
-        type='MemoryBankHead',
-        coreset_ratio=0.1,
-        num_neighbors=9,
-        distance='euclidean',
-        input_size=(256, 256),
-        blur_sigma=4.0,
-    ),
-    freeze_backbone=True,
-)
 ```
 
 ## Config Components
 
-A full config contains these top-level fields:
+A fully resolved config contains these top-level fields:
 
-| Field | Description |
-|-------|-------------|
-| `model` | Model definition (type, backbone, neck, head) |
-| `train_dataloader` | Training dataloader (dataset, batch_size, sampler) |
-| `test_dataloader` | Test dataloader |
-| `val_dataloader` | Validation dataloader |
-| `train_cfg` | Training loop config |
-| `val_cfg` | Validation loop config |
-| `test_cfg` | Test loop config |
-| `optim_wrapper` | Optimizer wrapper |
-| `param_scheduler` | Learning rate scheduler |
-| `custom_hooks` | Custom hooks (e.g., MemoryBankHook) |
-| `default_hooks` | Default hooks (timer, logger, checkpoint) |
-| `randomness` | Seed and deterministic settings |
-| `default_scope` | Registry scope (`'baoiad'`) |
+| Field | Source | Description |
+|-------|--------|-------------|
+| `default_scope` | Runtime | Registry scope (`'baoiad'`) |
+| `custom_imports` | Runtime | Auto-imports the `baoiad` package to trigger registration |
+| `model` | Method config | Model definition (type, backbone, neck, head) |
+| `train_dataloader` | Dataset config | Training dataloader (dataset, batch_size, sampler, pipeline) |
+| `test_dataloader` | Dataset config | Test dataloader |
+| `val_dataloader` | Dataset config | Validation dataloader (usually same as test) |
+| `train_cfg` | Schedule config | Training loop config (`by_epoch`, `max_epochs`, `val_interval`) |
+| `test_cfg` | Runtime | Test loop type (`ADTestLoop`) |
+| `val_cfg` | Runtime | Validation loop type (`ADValLoop`) |
+| `optim_wrapper` | Schedule config | Optimizer wrapper (e.g., Adam with lr=1e-3) |
+| `param_scheduler` | Schedule config | Learning rate scheduler (e.g., CosineAnnealing) |
+| `custom_hooks` | Runtime | Custom hooks (e.g., `MemoryBankHook`) |
+| `default_hooks` | Runtime | Timer, logger, checkpoint, visualization hooks |
+| `env_cfg` | Runtime | cuDNN, multiprocessing, distributed backend settings |
+| `visualizer` | Runtime | `ADVisualizer` with `LocalVisBackend` |
+| `randomness` | Runtime | Seed=42, deterministic=False |
+| `test_evaluator` | Dataset config | `AnomalyDetectionMetric` |
+| `val_evaluator` | Dataset config | `AnomalyDetectionMetric` |
 
-## Runtime Config Override
+## Runtime Config
 
-Override any config field from the command line using `--cfg-options`:
+[`configs/_base_/default_runtime.py`](../../../configs/_base_/default_runtime.py) sets the foundation for all method configs:
+
+- **Scope**: `default_scope = 'baoiad'` ensures all component lookups use the BaoIAD registries.
+- **Custom imports**: `custom_imports = dict(imports=['baoiad'])` triggers module registration.
+- **Loops**: `ADTestLoop` and `ADValLoop` support deferred scoring (required by methods like MuSc that aggregate features across the test set before computing scores).
+- **Hooks**: `MemoryBankHook` is included by default for methods that build a memory bank during training. `ADVisualizationHook` is disabled by default (enable via `--cfg-options`).
+- **Reproducibility**: `seed=42` matches the anomalib default.
+
+## Schedule Config
+
+[`configs/_base_/schedules/schedule_100e.py`](../../../configs/_base_/schedules/schedule_100e.py) defines:
+
+```python
+optim_wrapper = dict(
+    optimizer=dict(type='Adam', lr=1e-3, weight_decay=1e-5),
+)
+param_scheduler = [
+    dict(type='CosineAnnealingLR', T_max=100, by_epoch=True, eta_min=1e-5),
+]
+train_cfg = dict(by_epoch=True, max_epochs=100, val_interval=10)
+```
+
+Methods that do not use gradient-based training (e.g., PatchCore, PaDiM) ignore the optimizer but still use `train_cfg.max_epochs` to control the number of passes over the data.
+
+## Dataset Config
+
+Each dataset base config defines `train_dataloader` and `test_dataloader` with the dataset class, data root, and pipeline. See [Dataset Zoo](../dataset_zoo.md) for details on all 10 datasets.
+
+Key fields in a dataset config:
+
+```python
+# configs/_base_/datasets/mvtec_ad.py
+data_root = 'data/mvtec_ad'
+img_size = 256
+
+train_dataloader = dict(
+    batch_size=32,
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(type='DefaultSampler', shuffle=True),
+    dataset=dict(
+        type='MVTecADDataset',
+        data_root=data_root,
+        split='train',
+        multi_class=True,    # iterate over all categories
+        pipeline=train_pipeline,
+    ),
+)
+
+test_dataloader = dict(
+    batch_size=32,
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='MVTecADDataset',
+        data_root=data_root,
+        split='test',
+        multi_class=True,
+        pipeline=test_pipeline,
+    ),
+)
+
+val_dataloader = test_dataloader
+test_evaluator = dict(type='AnomalyDetectionMetric')
+val_evaluator = test_evaluator
+```
+
+## Runtime Overrides
+
+Override any config field from the command line using `--cfg-options` with `key=value` pairs:
 
 ```bash
 python tools/train.py <config> --work-dir runs/test \
@@ -117,20 +179,67 @@ python tools/train.py <config> --work-dir runs/test \
     optim_wrapper.optimizer.lr=0.001
 ```
 
-Key overrides:
+### Common Overrides
 
 | Override | Effect |
 |----------|--------|
-| `train_dataloader.batch_size=N` | Change batch size |
-| `train_dataloader.dataset.cls_names="['bottle']"` | Select categories |
-| `train_dataloader.dataset.multi_class=False` | Single-category mode |
-| `train_dataloader.dataset.data_root=/path` | Change data root |
-| `model.head.<param>=<value>` | Change model head parameters |
+| `train_dataloader.batch_size=N` | Change training batch size |
+| `test_dataloader.batch_size=N` | Change test batch size |
+| `train_dataloader.dataset.cls_names="['bottle']"` | Select specific categories |
+| `train_dataloader.dataset.multi_class=False` | Single-category mode (must set with `cls_names`) |
+| `train_dataloader.dataset.data_root=/path` | Change dataset root |
+| `test_dataloader.dataset.data_root=/path` | Change test dataset root |
+| `model.head.<param>=<value>` | Change model-specific parameters |
 | `optim_wrapper.optimizer.lr=<value>` | Change learning rate |
+| `default_hooks.visualization.enable=True` | Enable visualization outputs |
+
+When selecting a single category, you must set both `cls_names` and `multi_class=False` for both `train_dataloader` and `test_dataloader`:
+
+```bash
+python tools/train.py <config> --work-dir runs/bottle \
+    --cfg-options \
+    train_dataloader.dataset.cls_names="['bottle']" \
+    train_dataloader.dataset.multi_class=False \
+    test_dataloader.dataset.cls_names="['bottle']" \
+    test_dataloader.dataset.multi_class=False
+```
 
 ## Strict vs Unified Configs
 
-- **`*_strict.py`**: Reference configs aligned with the original paper implementation for each method
-- **`*_unified.py`**: Configs using a standardized WRN-50-2 backbone for fair cross-method comparison
+BaoIAD provides two config variants for most methods:
 
-The unified configs inherit from `configs/_base_/backbones/wide_resnet50_unified.py` to ensure consistent backbone initialization across all methods.
+- **`*_strict.py`** (e.g., `patchcore_wrn50_256_mvtec_strict.py`): Reference configs that align with the original paper implementation, using whatever backbone, resolution, and hyperparameters the original authors specified. These are the configs used for alignment evidence in [`docs/alignment/`](../../../docs/alignment/).
+- **`*_unified.py`** or configs without `strict` suffix: Configs using a standardized WRN-50-2 backbone (`configs/_base_/backbones/wide_resnet50_unified.py`) for fair cross-method comparison. These share the same backbone initialization across all methods.
+
+Use `strict` configs when reproducing a specific paper's results. Use unified configs when comparing methods head-to-head.
+
+## Model Config Structure
+
+All detectors follow a `backbone → neck → head` pattern:
+
+```python
+model = dict(
+    type='<MethodName>',           # Registered in MODELS registry
+    backbone=dict(
+        type='<BackboneClass>',     # e.g., TIMMBackbone, DINOv2Backbone
+        ...
+    ),
+    neck=dict(
+        type='<NeckClass>',         # e.g., MultiScalePooling
+        ...
+    ),
+    head=dict(
+        type='<HeadClass>',         # e.g., MemoryBankHead, SimpleNetHead
+        ...
+    ),
+    freeze_backbone=True,           # Common for feature-extraction methods
+)
+```
+
+Not all methods use all three components. Some methods define only a subset (e.g., no `neck`), and some have additional method-specific fields.
+
+## See Also
+
+- [Get Started](../get_started.md) — Installation and first run
+- [Dataset Zoo](../dataset_zoo.md) — Supported datasets and directory structures
+- [Prepare Datasets](prepare_dataset.md) — Download and setup instructions

@@ -107,12 +107,18 @@ def residual_hits(root: Path = ROOT, paths: tuple[str, ...] | None = None) -> li
         if skip_parts & set(rel.parts):
             continue
         is_alignment_doc = rel.parts[:2] == ('docs', 'alignment')
+        is_phase1_user_docs = rel.parts[:2] == ('docs', 'en')
         try:
             text = file.read_text(encoding='utf-8')
         except UnicodeDecodeError:
             continue
         for lineno, line in enumerate(text.splitlines(), 1):
             terms = ('../baoiad-paper', 'docs/evidence', 'paper-facing') if is_alignment_doc else PUBLIC_FORBIDDEN
+            if is_phase1_user_docs:
+                # Phase 1 English documentation intentionally includes a method-specific
+                # caveats guide. Keep the public-contract ban on status/caveat inventory
+                # fields, but do not reject user-facing guide prose or toctree entries.
+                terms = tuple(t for t in terms if t != 'caveat')
             for term in terms:
                 if term in line:
                     hits.append(Hit(rel, term, lineno, line.strip()))

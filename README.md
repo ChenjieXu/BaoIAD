@@ -165,11 +165,11 @@ Contributions, issue reports, and reproducibility fixes are welcome. Please open
 If you use this toolbox or benchmark in your research, please cite this GitHub repository.
 
 ```bibtex
-@misc{xu2026baoiad,
+@software{xu2026baoiad,
   title        = {BaoIAD: Towards Trustworthy and Reproducible Benchmarking for Industrial Anomaly Detection},
-  author       = {Chenjie Xu},
+  author       = {Chenjie Xu and Yang Zhang and Tianyun Hu and Bing Hu},
   year         = {2026},
-  howpublished = {GitHub repository},
+  doi          = {10.5281/zenodo.20067087},
   url          = {https://github.com/ChenjieXu/BaoIAD}
 }
 ```

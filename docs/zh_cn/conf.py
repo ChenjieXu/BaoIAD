@@ -16,10 +16,11 @@ release = '0.1.0'
 
 extensions = [
     'myst_parser',
+    'sphinx.ext.autodoc',
 ]
 
-# NOTE: autodoc/napoleon/viewcode disabled due to heavy torch/mmcv deps.
-# Re-enable in CI with all dependencies installed.
+# NOTE: autodoc is enabled only so existing ``automodule`` directives parse.
+# Heavy torch/mmcv-style dependencies stay mocked below for Read the Docs.
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
@@ -38,29 +39,13 @@ language = 'zh_CN'
 # -- Options for HTML output -------------------------------------------------
 
 try:
-    import pytorch_sphinx_theme
-    html_theme = 'pytorch_sphinx_theme'
-    html_theme_options = {
-        'logo': {
-            'text': 'BaoIAD',
-        },
-        'menu': [
-            {
-                'name': 'GitHub',
-                'url': 'https://github.com/xxx/BaoIAD',
-            },
-        ],
-    }
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
 except ImportError:
-    try:
-        import sphinx_rtd_theme
-        html_theme = 'sphinx_rtd_theme'
-    except ImportError:
-        html_theme = 'alabaster'
-    html_theme_options = {
-        'logo_only': False,
-        'display_version': True,
-    }
+    html_theme = 'alabaster'
+html_theme_options = {
+    'logo_only': False,
+}
 
 html_static_path = ['_static']
 

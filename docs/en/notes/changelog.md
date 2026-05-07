@@ -1,5 +1,30 @@
-# BaoIAD repository guide
+# Changelog
 
-BaoIAD is a self-contained industrial anomaly detection benchmark repository. The repo-local method inventory is maintained in [`baoiad/method_inventory.py`](../../baoiad/method_inventory.py), and `python tools/benchmark.py --methods all` selects those 37 method slugs.
+## v1.0.0 — Initial Release
 
-For method details, use the config-local READMEs under [`configs/`](../../configs/). For implementation-alignment process notes, use [`docs/alignment/`](../alignment/).
+Release of the BaoIAD unified industrial anomaly detection benchmark.
+
+### Highlights
+
+- **37 methods** across 9 families: feature-memory, knowledge distillation, normalizing flow, reconstruction, self-supervised synthesis, discriminative, vision-language, few-shot, and hybrid/unified.
+- **10 supported datasets**: MVTec AD, VisA, BTech, MVTec 3D AD, MVTec LOCO, MPDD, MVTec AD 2, Kolektor, VAD, Real-IAD.
+- **Unified evaluation pipeline** with image-level metrics (AUROC, F1-max, AP, ECE, FPR@95TPR) and pixel-level metrics (AUROC, F1-max, AP, AUPRO, AUPIMO, ECE).
+- **Strict alignment evidence** for all 37 methods, including reference freezes, code-path parity checks, and behavior probes.
+- **Benchmark runner** (`tools/benchmark.py`) for large-scale evaluation across methods and categories.
+- **Speed benchmark** support for inference latency and throughput measurement.
+- **MMEngine-based architecture** with scoped registries for models, datasets, transforms, metrics, hooks, and visualizers.
+- **Per-method config READMEs** and alignment records in `docs/alignment/`.
+
+### Included Methods
+
+| Family | Methods |
+|--------|---------|
+| Feature-memory / density | PatchCore, PaDiM, DFM, DFKDE |
+| Knowledge distillation | RD, RD++, AST, EfficientAD, DeSTSeg |
+| Normalizing flow | FastFlow, CFlow, DifferNet, U-Flow, PyramidFlow |
+| Reconstruction / ViT | Dinomaly, ViTAD, MemSeg, UniAD, GANomaly |
+| Self-supervised synthesis | DRAEM, GLASS, DSR, CutPaste, NSA |
+| Discriminative | SimpleNet, SuperSimpleNet, CFA |
+| Vision-language / foundation | WinCLIP, AnomalyCLIP, MuSc, AACLIP, AnoVL, AdaCLIP, SAA+ |
+| Few-shot / registration | AnomalyDINO, RegAD |
+| Hybrid / unified | UniNet |

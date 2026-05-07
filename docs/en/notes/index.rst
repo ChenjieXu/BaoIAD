@@ -5,4 +5,6 @@ Notes
    :maxdepth: 1
 
    faq.md
+   troubleshooting.md
+   contributing.md
    changelog.md

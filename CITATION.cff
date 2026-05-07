@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this toolbox or benchmark in your research, please cite it as below."
+title: "BaoIAD: Towards Trustworthy and Reproducible Benchmarking for Industrial Anomaly Detection"
+type: software
+authors:
+  - given-names: Chenjie
+    family-names: Xu
+  - given-names: Yang
+    family-names: Zhang
+  - given-names: Tianyun
+    family-names: Hu
+  - given-names: Bing
+    family-names: Hu
+repository-code: "https://github.com/ChenjieXu/BaoIAD"
+license: Apache-2.0
+version: "1.0.0"
+date-released: "2026-05-07"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20067087"
