@@ -1,0 +1,8 @@
+# Exact repository-relative paths changed from upstream/master.
+# No glob syntax is allowed. Every expansion requires review.
+
+.gitignore
+tests/test_release/test_check_public_release.py
+tools/check_public_release.py
+tools/public_release_allowlist.txt
+tools/public_release_policy.json

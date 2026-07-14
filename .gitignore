@@ -78,3 +78,28 @@ agent.md
 CLAUDE.md
 .claude/
 .refs/
+
+# Local research and release-excluded artifacts
+README.pdf
+artifacts/
+baoiad-sota/
+curricad-sota/
+curricad_sota/
+docs/evidence/
+*.pid
+**/remote_raw/
+**/raw_results/
+work_dirs/
+
+# Research-only methods and configs excluded from the WAIC release
+baoiad/models/detectors/covad.py
+baoiad/models/detectors/nfa_dinomaly.py
+configs/covad/
+configs/nfa_dinomaly/
+configs/**/curricad_*.py
+configs/dinomaly/dinomaly_392_mvtec_ad2_r6_1*.py
+configs/dinomaly/dinomaly_392_realiad_d3_r4_1_single.py
+configs/dinomaly/dinomaly_392_visa_r3_2a_single.py
+configs/efficientad/efficientad_256_realiad_d3_r4_1_single.py
+configs/patchcore/patchcore_wrn50_256_realiad_d3_r4_1_single.py
+tools/validate_admitted37_manifest.py
