@@ -13,9 +13,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="Apache 2.0 license"></a>
 </p>
 
-BaoIAD is an MMEngine-based industrial anomaly detection benchmark with 37 repository-local method integrations across 9 families, maintained by [Baosight-xVue](https://github.com/Baosight-xVue).
-
-Repository release checks have been executed on Python 3.10 and 3.12. Dataset adapters cover 10 public industrial anomaly-detection datasets; the datasets themselves are not distributed by this repository.
+BaoIAD is an MMEngine-based industrial anomaly detection benchmark with 37 repository-local method integrations across 9 families.
 
 <p align="center">
   <a href="docs/en/get_started.md">🛠️ Installation</a> |
@@ -25,14 +23,6 @@ Repository release checks have been executed on Python 3.10 and 3.12. Dataset ad
   <a href="#contributing">🤝 Contributing</a> |
   <a href="#citation">📝 Citation</a>
 </p>
-
-## Scope and limitations
-
-- BaoIAD is distributed as source code. It does not currently publish hosted checkpoints, a hosted demo, a Docker image, or a PyPI package.
-- Users must obtain each dataset and any external pretrained artifact under its original terms, then configure the corresponding local path.
-- Optional method families have different dependency and hardware requirements; installing the core package alone does not make every configuration runnable.
-- Implementation provenance and validation depth vary across the 37-method inventory. Consult the [method-status manifest](docs/alignment/method_status.json), [documented exceptions](docs/alignment/exceptions.json), and [compliance checker](tools/check_release_compliance.py) before interpreting a method as independently reproduced.
-- The visualization below is a qualitative illustration, not a uniform benchmark or ranking. It includes SPADE as an external, non-inventory reference alongside BaoIAD methods.
 
 ## Capabilities
 
@@ -146,12 +136,6 @@ python tools/test.py <config> <checkpoint> \
     --cfg-options default_hooks.visualization.enable=True
 ```
 
-<div align="center">
-<img src="resources/vis_examples/anomaly_detection_results.png" width="100%" alt="Anomaly detection visualization">
-
-*Qualitative output-format examples on MVTec AD. For each category, columns show the input image, ground-truth mask, anomaly heatmap overlaid on the input, and predicted mask. Rows compare PatchCore, PaDiM, and SPADE; SPADE is an external comparison baseline and is not part of BaoIAD's 37-method inventory. These examples are not a benchmark ranking or a cross-configuration performance comparison.*
-</div>
-
 ## Documentation Map
 
 - [English docs](docs/en/index.rst)
@@ -189,8 +173,4 @@ If you use this toolbox or benchmark in your research, please cite this GitHub r
 
 ## License
 
-BaoIAD-authored source code is released under the [Apache 2.0 license](LICENSE). Third-party components, datasets, pretrained artifacts, and derived media remain subject to their own terms; see [Third-party notices](THIRD_PARTY_NOTICES.md) and the [resource inventory](resources/README.md).
-
-## Acknowledgement
-
-BaoIAD is maintained by the [Baosight-xVue](https://github.com/Baosight-xVue) organization and is built on top of [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv). We thank the OpenMMLab community for providing the foundational training infrastructure. We also thank the original authors of the integrated anomaly-detection methods for making their research and implementations publicly available.
+BaoIAD-authored source code is released under the [Apache 2.0 license](LICENSE).

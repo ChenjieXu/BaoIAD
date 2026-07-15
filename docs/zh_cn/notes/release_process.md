@@ -107,5 +107,4 @@ Zenodo 和 GitHub Release 只能由已批准 owner 操作。
 ## 发布材料
 
 - {doc}`v1.1.0 发布说明草案 <v1_1_0_release_notes>`
-- {doc}`WAIC go/no-go 检查表 <waic_go_no_go>`
 - {doc}`发布值守与热修复手册 <support_hotfix_runbook>`

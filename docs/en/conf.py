@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 # -- Project information -----------------------------------------------------
 
 project = "BaoIAD"
-copyright = "2026, Baosight-xVue and BaoIAD Contributors"
+copyright = ""
 author = "Baosight-xVue and BaoIAD Contributors"
 
 # The full version, including alpha/beta/rc tags

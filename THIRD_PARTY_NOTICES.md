@@ -6,7 +6,7 @@ derived, or bundled third-party material. Each such item retains its upstream
 terms, if any.
 
 The authoritative audit inventory is
-[`third_party/provenance.json`](third_party/provenance.json). The resource-level
+[`provenance.json`](.github/release/provenance.json). The resource-level
 record is [`resources/asset_approvals.json`](resources/asset_approvals.json).
 These records describe the evidence available in the repository; they are not
 legal advice or a grant of rights.

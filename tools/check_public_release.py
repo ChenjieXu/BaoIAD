@@ -54,12 +54,6 @@ REVIEW_STATUS_PATTERN = re.compile(
 BAOIAD_GITHUB_URL_PATTERN = re.compile(
     r"https?://github\.com/([^/\s)\]\"'>]+)/BaoIAD\b", re.IGNORECASE
 )
-ENGLISH_SCOPE_HEADING = re.compile(
-    r"^##\s+Scope and limitations\s*$", re.IGNORECASE | re.MULTILINE
-)
-CHINESE_SCOPE_HEADING = re.compile(
-    r"^##\s+(?:范围与局限|适用范围与限制)\s*$", re.MULTILINE
-)
 BLANKET_ALIGNMENT_PATTERNS = (
     re.compile(r"strict-alignment evidence for the 37", re.IGNORECASE),
     re.compile(r"why a method is considered strictly aligned", re.IGNORECASE),
@@ -309,14 +303,6 @@ def _validate_public_documentation(
                     f"{readme_path}"
                 )
                 break
-
-    english_readme = documents.get("README.md")
-    if english_readme is not None and not ENGLISH_SCOPE_HEADING.search(english_readme):
-        errors.append("README.md is missing the Scope and limitations section")
-
-    chinese_readme = documents.get("README_zh-CN.md")
-    if chinese_readme is not None and not CHINESE_SCOPE_HEADING.search(chinese_readme):
-        errors.append("README_zh-CN.md is missing the Scope and limitations section")
 
     for path in (
         "CITATION.cff",

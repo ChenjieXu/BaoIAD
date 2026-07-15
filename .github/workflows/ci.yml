@@ -96,16 +96,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: |
-            constraints/ci-cpu.txt
+            .github/constraints/ci-cpu.txt
             pyproject.toml
       - name: Install the constrained CPU environment
         run: |
           python -m pip install --upgrade pip
           python -m pip install \
-            --constraint constraints/ci-cpu.txt \
+            --constraint .github/constraints/ci-cpu.txt \
             --index-url https://download.pytorch.org/whl/cpu \
             torch torchvision
-          python -m pip install --constraint constraints/ci-cpu.txt --editable ".[dev]"
+          python -m pip install --constraint .github/constraints/ci-cpu.txt --editable ".[dev]"
       - name: Verify core import and offline installation
         run: |
           python - <<'PY'
@@ -176,17 +176,17 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: |
-            constraints/ci-cpu.txt
+            .github/constraints/ci-cpu.txt
             pyproject.toml
       - name: Install one public optional group
         run: |
           python -m pip install --upgrade pip
           python -m pip install \
-            --constraint constraints/ci-cpu.txt \
+            --constraint .github/constraints/ci-cpu.txt \
             --index-url https://download.pytorch.org/whl/cpu \
             torch torchvision
           python -m pip install \
-            --constraint constraints/ci-cpu.txt \
+            --constraint .github/constraints/ci-cpu.txt \
             --editable ".[${{ matrix.extra }}]"
       - name: Import the optional dependency boundary
         env:
@@ -270,7 +270,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: |
-            constraints/ci-cpu.txt
+            .github/constraints/ci-cpu.txt
             pyproject.toml
       - name: Build wheel and source distribution
         run: |
@@ -284,11 +284,11 @@ jobs:
           PACKAGE_PYTHON="${{ runner.temp }}/package-env/bin/python"
           "$PACKAGE_PYTHON" -m pip install --upgrade pip
           "$PACKAGE_PYTHON" -m pip install \
-            --constraint constraints/ci-cpu.txt \
+            --constraint .github/constraints/ci-cpu.txt \
             --index-url https://download.pytorch.org/whl/cpu \
             torch torchvision
           "$PACKAGE_PYTHON" -m pip install \
-            --constraint constraints/ci-cpu.txt \
+            --constraint .github/constraints/ci-cpu.txt \
             dist/*.whl
           cd "${{ runner.temp }}"
           "$PACKAGE_PYTHON" -c \

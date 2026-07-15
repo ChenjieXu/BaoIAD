@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 APACHE_2_SHA256 = "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
 METHOD_STATUS_PATH = Path("docs/alignment/method_status.json")
 ALIGNMENT_EXCEPTIONS_PATH = Path("docs/alignment/exceptions.json")
-PROVENANCE_PATH = Path("third_party/provenance.json")
+PROVENANCE_PATH = Path(".github/release/provenance.json")
 ASSET_APPROVALS_PATH = Path("resources/asset_approvals.json")
 EXTERNAL_APPROVALS_PATH = Path("docs/release/external_approvals.json")
 EXPECTED_MANIFEST_DIGESTS = {
@@ -1521,7 +1521,7 @@ def validate_provenance_document(
                     for raw in notice_files:
                         notice_path = Path(raw)
                         if (
-                            not raw.startswith("third_party/licenses/")
+                            not raw.startswith(".github/release/licenses/")
                             or ".." in notice_path.parts
                             or not (root / notice_path).is_file()
                         ):
@@ -1988,7 +1988,7 @@ def validate_human_notices(root: Path = ROOT) -> list[str]:
     if not path.is_file():
         return ["missing THIRD_PARTY_NOTICES.md"]
     text = path.read_text(encoding="utf-8")
-    for term in ("third_party/provenance.json", "Apache-2.0"):
+    for term in (PROVENANCE_PATH.as_posix(), "Apache-2.0"):
         if term not in text:
             errors.append(f"THIRD_PARTY_NOTICES.md must mention {term!r}")
     provenance_path = root / PROVENANCE_PATH

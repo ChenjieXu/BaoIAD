@@ -27,11 +27,11 @@ class PublicReleasePolicyTest(unittest.TestCase):
         (self.repo / "conflict.txt").write_text("base\n", encoding="utf-8")
         (self.repo / "large.bin").write_bytes(b"x" * 64)
         (self.repo / "README.md").write_text(
-            "# BaoIAD\n\n## Scope and limitations\n\nPublic limits.\n",
+            "# BaoIAD\n",
             encoding="utf-8",
         )
         (self.repo / "README_zh-CN.md").write_text(
-            "# BaoIAD\n\n## 范围与局限\n\n公开边界。\n", encoding="utf-8"
+            "# BaoIAD\n", encoding="utf-8"
         )
         (self.repo / "CITATION.cff").write_text(
             "message: Cite Chenjie Xu when using BaoIAD.\n"
@@ -172,13 +172,12 @@ class PublicReleasePolicyTest(unittest.TestCase):
         readme = self.repo / "README.md"
         readme.write_text(
             "# BaoIAD\n\nUnder review.\n\n"
-            "https://github.com/ChenjieXu/BaoIAD\n\n"
-            "## Scope and limitations\n",
+            "https://github.com/ChenjieXu/BaoIAD\n",
             encoding="utf-8",
         )
         self._git("add", "README.md")
         readme.write_text(
-            "# BaoIAD\n\n## Scope and limitations\n\nPublic limits.\n",
+            "# BaoIAD\n",
             encoding="utf-8",
         )
         self._write_allowlist("allowlist.txt", "README.md")
@@ -194,7 +193,7 @@ class PublicReleasePolicyTest(unittest.TestCase):
     def test_staged_deletion_cannot_hide_behind_worktree_recreation(self) -> None:
         self._git("rm", "README.md")
         (self.repo / "README.md").write_text(
-            "# BaoIAD\n\n## Scope and limitations\n\nPublic limits.\n",
+            "# BaoIAD\n",
             encoding="utf-8",
         )
         self._write_allowlist("allowlist.txt", "README.md")
@@ -282,8 +281,7 @@ class PublicReleasePolicyTest(unittest.TestCase):
     def test_readmes_reject_review_status_and_personal_repository_url(self) -> None:
         (self.repo / "README.md").write_text(
             "# BaoIAD\n\nUnder-Review at NeurIPS.\n\n"
-            "https://github.com/ChenjieXu/BaoIAD\n\n"
-            "## Scope and limitations\n",
+            "https://github.com/ChenjieXu/BaoIAD\n",
             encoding="utf-8",
         )
         self._write_allowlist("allowlist.txt", "README.md")
@@ -303,7 +301,7 @@ class PublicReleasePolicyTest(unittest.TestCase):
 
     def test_chinese_readme_rejects_review_status(self) -> None:
         (self.repo / "README_zh-CN.md").write_text(
-            "# BaoIAD\n\n论文审稿中，项目评审中。\n\n## 范围与局限\n",
+            "# BaoIAD\n\n论文审稿中，项目评审中。\n",
             encoding="utf-8",
         )
         self._write_allowlist("allowlist.txt", "README_zh-CN.md")
@@ -352,20 +350,6 @@ class PublicReleasePolicyTest(unittest.TestCase):
             "public document does not use "
             "https://github.com/Baosight-xVue/BaoIAD: docs/zh_cn/get_started.md",
             errors,
-        )
-
-    def test_bilingual_readmes_require_scope_and_limitations_sections(self) -> None:
-        (self.repo / "README.md").write_text("# BaoIAD\n", encoding="utf-8")
-        (self.repo / "README_zh-CN.md").write_text("# BaoIAD\n", encoding="utf-8")
-        self._write_allowlist("allowlist.txt", "README.md", "README_zh-CN.md")
-
-        report = self._validate()
-
-        self.assertFalse(report["ok"])
-        errors = "\n".join(report["errors"])
-        self.assertIn("README.md is missing the Scope and limitations section", errors)
-        self.assertIn(
-            "README_zh-CN.md is missing the Scope and limitations section", errors
         )
 
     def test_public_documents_reject_internal_paths_users_and_proxy(self) -> None:

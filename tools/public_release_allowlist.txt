@@ -201,7 +201,7 @@ tests/test_release/test_release_compliance.py
 tests/test_release/test_version_compatibility.py
 tests/test_runtime_policy.py
 tests/test_utils/test_benchmark_config_detection.py
-third_party/provenance.json
+.github/release/provenance.json
 tools/benchmark.py
 tools/benchmark_speed.py
 tools/check_install.py
@@ -227,7 +227,7 @@ tools/train_vitad_exact_order.py
 .github/workflows/gpu-smoke.yml
 CONTRIBUTING.md
 SECURITY.md
-constraints/ci-cpu.txt
+.github/constraints/ci-cpu.txt
 docs/en/notes/index.rst
 docs/en/notes/release_process.md
 docs/release/gpu_smoke_evidence.schema.json
@@ -256,12 +256,9 @@ tools/run_gpu_smoke.py
 # G007 public release materials.
 docs/release/support_hotfix_runbook.md
 docs/release/v1_1_0_release_notes.md
-docs/release/waic_go_no_go.md
 docs/en/notes/gpu_validation.md
 docs/en/notes/support_hotfix_runbook.md
 docs/en/notes/v1_1_0_release_notes.md
-docs/en/notes/waic_go_no_go.md
 docs/zh_cn/notes/gpu_validation.md
 docs/zh_cn/notes/support_hotfix_runbook.md
 docs/zh_cn/notes/v1_1_0_release_notes.md
-docs/zh_cn/notes/waic_go_no_go.md

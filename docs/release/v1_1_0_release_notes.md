@@ -6,10 +6,10 @@ This document is a draft for the target v1.1.0 release. BaoIAD v1.1.0 has not
 been released. No release date, tag, GitHub Release URL, documentation
 promotion, or version DOI is claimed here.
 
-The final version remains subject to the recorded
-[WAIC go/no-go decision](waic_go_no_go.md). If compatibility review changes the
-approved version, the release owner must update package, citation,
-documentation, and release metadata together before publication.
+The final version remains subject to the release owner's recorded decision. If
+compatibility review changes the approved version, the release owner must
+update package, citation, documentation, and release metadata together before
+publication.
 
 ## Highlights
 

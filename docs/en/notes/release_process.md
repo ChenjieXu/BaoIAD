@@ -138,5 +138,4 @@ See {doc}`the contribution guide <contributing>` for contributor-facing checks.
 ## Release materials
 
 - {doc}`Draft v1.1.0 release notes <v1_1_0_release_notes>`
-- {doc}`WAIC go/no-go checklist <waic_go_no_go>`
 - {doc}`Support and hotfix runbook <support_hotfix_runbook>`

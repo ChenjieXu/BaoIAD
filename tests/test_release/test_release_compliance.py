@@ -148,7 +148,7 @@ def test_approved_method_license_review_needs_evidence():
 
 def test_unresolved_provenance_must_block_release():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     document["entries"][0]["release_blocking"] = False
 
     errors = checker.validate_provenance_document(document, ROOT)
@@ -158,7 +158,7 @@ def test_unresolved_provenance_must_block_release():
 
 def test_provenance_requires_a_scope_for_every_covered_path():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     document["entries"][0]["ranges"] = []
 
     errors = checker.validate_provenance_document(document, ROOT)
@@ -168,7 +168,7 @@ def test_provenance_requires_a_scope_for_every_covered_path():
 
 def test_provenance_audit_projection_prevents_distinct_source_entry_loss():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     document["entries"] = [
         entry for entry in document["entries"] if entry["id"] != "TP-CODE-CFA-COORDCONV"
     ]
@@ -180,7 +180,7 @@ def test_provenance_audit_projection_prevents_distinct_source_entry_loss():
 
 def test_provenance_rejects_fake_derived_kinds_and_ranges():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     item = next(
         entry for entry in document["entries"] if entry["id"] == "TP-CODE-CUTPASTE"
     )
@@ -195,7 +195,7 @@ def test_provenance_rejects_fake_derived_kinds_and_ranges():
 
 def test_provenance_cannot_be_approved_with_unresolved_license():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     item = next(
         entry
         for entry in document["entries"]
@@ -212,7 +212,7 @@ def test_provenance_cannot_be_approved_with_unresolved_license():
 
 def test_approved_code_provenance_requires_frozen_source_ranges_and_notices():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     item = next(
         entry for entry in document["entries"] if entry["id"] == "TP-CODE-WINCLIP"
     )
@@ -255,7 +255,7 @@ def test_approved_code_provenance_requires_frozen_source_ranges_and_notices():
 
 def test_incompatible_code_requires_fail_closed_disposition():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     item = next(
         entry
         for entry in document["entries"]
@@ -270,7 +270,7 @@ def test_incompatible_code_requires_fail_closed_disposition():
 
 def test_agpl_spdx_cannot_be_reclassified_as_confirmed():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     item = next(
         entry
         for entry in document["entries"]
@@ -291,7 +291,7 @@ def test_agpl_spdx_cannot_be_reclassified_as_confirmed():
 
 def test_rejected_provenance_review_cannot_be_made_non_blocking():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     item = next(
         entry
         for entry in document["entries"]
@@ -307,7 +307,7 @@ def test_rejected_provenance_review_cannot_be_made_non_blocking():
 
 def test_provenance_requires_complete_non_empty_audit_fields():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     item = document["entries"][0]
     item["kind"] = ""
     item["obligations"] = []
@@ -346,7 +346,7 @@ def test_direct_source_marker_catches_optional_the_wording():
 
 def test_external_weight_entry_does_not_satisfy_derived_code_coverage():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     path = "baoiad/models/detectors/efficientad.py"
     document["entries"] = [
         entry
@@ -373,7 +373,7 @@ def test_canonical_derived_detectors_cannot_be_omitted_from_provenance():
     }
 
     for path in canonical_paths:
-        document = _read_json("third_party/provenance.json")
+        document = _read_json(".github/release/provenance.json")
         document["entries"] = [
             entry for entry in document["entries"] if path not in entry["paths"]
         ]
@@ -388,7 +388,7 @@ def test_canonical_derived_detectors_cannot_be_omitted_from_provenance():
 
 def test_secondary_source_entries_cannot_be_collapsed_into_primary_sources():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     identifier = "TP-CODE-HSUXU-FOCAL"
     document["entries"] = [
         entry for entry in document["entries"] if entry["id"] != identifier
@@ -404,7 +404,7 @@ def test_secondary_source_entries_cannot_be_collapsed_into_primary_sources():
 
 def test_external_artifacts_are_bound_to_exact_urls_and_fail_closed_state():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     identifier = "TP-WEIGHT-VITAD-DINO-SMALL"
     item = next(entry for entry in document["entries"] if entry["id"] == identifier)
     item["source"]["url"] = "https://example.invalid/random.pth"
@@ -420,7 +420,7 @@ def test_external_artifacts_are_bound_to_exact_urls_and_fail_closed_state():
 
 def test_required_external_artifact_cannot_be_omitted():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     identifier = "TP-DATA-IMAGENETTE"
     document["entries"] = [
         entry for entry in document["entries"] if entry["id"] != identifier
@@ -436,7 +436,7 @@ def test_required_external_artifact_cannot_be_omitted():
 
 def test_external_artifact_can_reach_a_legitimate_approved_terminal_state():
     checker = _load_checker()
-    document = _read_json("third_party/provenance.json")
+    document = _read_json(".github/release/provenance.json")
     identifier = "TP-DATA-IMAGENETTE"
     item = next(entry for entry in document["entries"] if entry["id"] == identifier)
     item["license"] = {

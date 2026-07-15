@@ -14,7 +14,7 @@ except ModuleNotFoundError:  # pragma: no cover - Python 3.10
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ci.yml"
-CONSTRAINTS_PATH = ROOT / "constraints" / "ci-cpu.txt"
+CONSTRAINTS_PATH = ROOT / ".github" / "constraints" / "ci-cpu.txt"
 CHECKOUT_ACTION = "actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5"
 SETUP_PYTHON_ACTION = "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
 P0_CONTEXTS = {

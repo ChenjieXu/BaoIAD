@@ -13,9 +13,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="Apache 2.0 许可证"></a>
 </p>
 
-BaoIAD 是基于 MMEngine 的工业异常检测基准，在 9 个方法家族中提供 37 个仓库内方法集成，由 [Baosight-xVue](https://github.com/Baosight-xVue) 组织维护。
-
-仓库发布检查已在 Python 3.10 和 3.12 上执行。仓库包含 10 个公开工业异常检测数据集的适配器，但不分发数据集本身。
+BaoIAD 是基于 MMEngine 的工业异常检测基准，在 9 个方法家族中提供 37 个仓库内方法集成。
 
 <p align="center">
   <a href="docs/zh_cn/get_started.md">🛠️ 安装</a> |
@@ -25,14 +23,6 @@ BaoIAD 是基于 MMEngine 的工业异常检测基准，在 9 个方法家族中
   <a href="#贡献">🤝 贡献</a> |
   <a href="#引用">📝 引用</a>
 </p>
-
-## 范围与局限
-
-- BaoIAD 以源码形式分发，目前不提供托管权重、在线 Demo、Docker 镜像或 PyPI 包。
-- 用户需按原始条款获取各数据集和外部预训练资产，并配置对应的本地路径。
-- 不同可选方法家族的依赖和硬件要求不同；仅安装核心包并不意味着所有配置都可直接运行。
-- 37 个方法的实现溯源和验证深度并不相同。在将某个方法解读为已独立复现前，请核对[方法状态清单](docs/alignment/method_status.json)、[已记录例外](docs/alignment/exceptions.json)和[合规检查器](tools/check_release_compliance.py)。
-- 下方可视化为定性示例，不是统一基准或方法排名；其中 SPADE 是与 BaoIAD 方法并列展示的外部、非清单参考方法。
 
 ## 主要能力
 
@@ -141,12 +131,6 @@ python tools/test.py <config> <checkpoint> \
     --cfg-options default_hooks.visualization.enable=True
 ```
 
-<div align="center">
-<img src="resources/vis_examples/anomaly_detection_results.png" width="100%" alt="异常检测结果可视化">
-
-*MVTec AD 上的定性输出格式示例。每个类别依次展示输入图像、真实掩码、叠加在输入上的异常热力图和预测掩码。各行对比 PatchCore、PaDiM 与 SPADE；SPADE 是外部对比基线，不属于 BaoIAD 当前 37 方法清单。该图不构成基准排名或跨配置性能比较。*
-</div>
-
 ## 文档导航
 
 - [英文文档](docs/en/index.rst)
@@ -184,8 +168,4 @@ python tools/benchmark.py --methods all --help
 
 ## 许可证
 
-BaoIAD 自有源代码基于 [Apache 2.0 许可证](LICENSE) 发布。第三方组件、数据集、预训练资产和衍生媒体仍受各自条款约束；详见[第三方声明](THIRD_PARTY_NOTICES.md)和[资源清单](resources/README.md)。
-
-## 致谢
-
-BaoIAD 由 [Baosight-xVue](https://github.com/Baosight-xVue) 组织维护，并基于 [MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv) 构建。感谢 OpenMMLab 社区提供基础训练设施，也感谢所有已集成异常检测方法的原始作者公开研究和实现。
+BaoIAD 自有源代码基于 [Apache 2.0 许可证](LICENSE) 发布。
