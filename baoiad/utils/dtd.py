@@ -27,13 +27,18 @@ def download_dtd(target_dir: str = DTD_DEFAULT_DIR) -> str:
     tar_path = os.path.join(target_dir, "dtd-r1.0.1.tar.gz")
 
     if not os.path.isfile(tar_path):
-        import socket
-        import urllib.request
+        from baoiad.runtime import OfflineModeError, download_url
+
         logger.info("Downloading DTD texture dataset...")
-        old_timeout = socket.getdefaulttimeout()
-        socket.setdefaulttimeout(60)
         try:
-            urllib.request.urlretrieve(DTD_DOWNLOAD_URL, tar_path)
+            download_url(
+                DTD_DOWNLOAD_URL,
+                tar_path,
+                action='download the DTD texture dataset',
+                timeout=60,
+            )
+        except OfflineModeError:
+            raise
         except Exception as e:
             if os.path.isfile(tar_path):
                 os.remove(tar_path)
@@ -41,9 +46,6 @@ def download_dtd(target_dir: str = DTD_DEFAULT_DIR) -> str:
                 f"Failed to download DTD dataset: {e}. "
                 f"Please manually download from {DTD_DOWNLOAD_URL}"
             )
-        finally:
-            socket.setdefaulttimeout(old_timeout)
-
     logger.info("Extracting DTD texture dataset...")
     with tarfile.open(tar_path, 'r:gz') as tf:
         tf.extractall(target_dir)

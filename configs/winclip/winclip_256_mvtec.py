@@ -1,4 +1,4 @@
-import os
+os = __import__('os')
 
 _base_ = [
     '../_base_/default_runtime.py',

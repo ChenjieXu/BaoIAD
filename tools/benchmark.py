@@ -736,9 +736,12 @@ def _move_data_samples_to_device(data_samples, device):
 
 
 def _run_direct_patchcore(config_path, data_root, category, device,
-                          batch_size, work_dir, extra_cfg_options=None):
+                          batch_size, work_dir, extra_cfg_options=None,
+                          offline=False):
     """Benchmark PatchCore in-process without Runner.train()/val loop overhead."""
-    os.environ.setdefault('HF_HUB_OFFLINE', '1')
+    from baoiad.runtime import configure_offline_mode
+
+    configure_offline_mode(offline)
 
     import torch
     from mmengine.config import Config, DictAction
@@ -839,7 +842,7 @@ def _find_benchmark_checkpoint(work_dir, source='last'):
 
 def run_method(config_path, data_root, category, device, epochs,
                batch_size, work_dir, timeout, multi_class=False,
-               extra_cfg_options=None):
+               extra_cfg_options=None, offline=False):
     """Run a method via tools/train.py using Runner."""
     timeout = benchmark_timeout(config_path, timeout)
 
@@ -852,6 +855,7 @@ def run_method(config_path, data_root, category, device, epochs,
             batch_size=batch_size,
             work_dir=work_dir,
             extra_cfg_options=extra_cfg_options,
+            offline=offline,
         )
 
     # Prefer the current interpreter so benchmark subprocesses run in the same
@@ -1003,6 +1007,8 @@ def run_method(config_path, data_root, category, device, epochs,
 
     if device == 'cpu':
         cmd.insert(2, '--cpu')
+    if offline:
+        cmd.insert(2, '--offline')
 
     os.umask(0)  # NFS shared env: ensure work dirs are world-writable
 
@@ -1056,6 +1062,8 @@ def run_method(config_path, data_root, category, device, epochs,
                         '--cfg-options'] + cfg_options
             if device == 'cpu':
                 test_cmd.insert(2, '--cpu')
+            if offline:
+                test_cmd.insert(2, '--offline')
 
             test_process = subprocess.Popen(
                 test_cmd,
@@ -1125,6 +1133,11 @@ def main():
     )
     parser.add_argument('--cfg-options', nargs='+', default=None,
                         help='Extra cfg-options forwarded to train.py')
+    parser.add_argument(
+        '--offline',
+        action='store_true',
+        help='Disable model-hub and BaoIAD-managed downloads for each run.',
+    )
     args = parser.parse_args()
 
     requested_all_categories = 'all' in args.categories
@@ -1231,7 +1244,7 @@ def main():
             metrics, info = run_method(
                 config_path, args.data_root, cat, args.device,
                 args.epochs, args.batch_size, work_dir, args.timeout, is_multi_class,
-                args.cfg_options,
+                args.cfg_options, args.offline,
             )
             elapsed = time.time() - t0
 

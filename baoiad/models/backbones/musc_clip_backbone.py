@@ -6,6 +6,7 @@ This module provides CLIP backbone support for MuSc using either:
 
 The fallback approach extracts intermediate features by running hooks during forward.
 """
+import glob
 import sys
 import os
 import math
@@ -398,6 +399,21 @@ class MuScDINOv2Backbone(BaseModule):
         self.frozen = frozen
 
         # Load DINOv2 from torch hub
+        from baoiad.runtime import is_offline_mode, require_network
+
+        hub_cache = os.path.expanduser(torch.hub.get_dir())
+        cached_repositories = glob.glob(os.path.join(hub_cache, 'facebookresearch_dinov2_*'))
+        checkpoint_name = f'{model_name}_pretrain.pth'
+        if model_name.endswith('_reg'):
+            checkpoint_name = f'{model_name[:-4]}_reg4_pretrain.pth'
+        cached_checkpoint = os.path.join(hub_cache, 'checkpoints', checkpoint_name)
+        if is_offline_mode() and (
+            not cached_repositories or not os.path.isfile(cached_checkpoint)
+        ):
+            require_network(
+                'download the DINOv2 torch.hub repository or weights',
+                url=f'https://github.com/facebookresearch/dinov2 ({checkpoint_name})',
+            )
         self.model = torch.hub.load('facebookresearch/dinov2', model_name)
 
         # Get dimensions

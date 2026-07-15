@@ -250,6 +250,9 @@ class DifferNetDetector(FlowBasedADModel):
         # Original DifferNet: alexnet.features(x) → GAP → 256-dim per scale
         self.backbone_name = backbone if isinstance(backbone, str) else backbone.get('backbone_name', 'alexnet')
         weights = tv_models.AlexNet_Weights.IMAGENET1K_V1 if pretrained else None
+        from baoiad.runtime import require_torchvision_weights
+
+        require_torchvision_weights(weights, action='load AlexNet pretrained weights')
         alexnet = tv_models.alexnet(weights=weights)
         self.backbone_features = alexnet.features
         self.backbone_features.eval()

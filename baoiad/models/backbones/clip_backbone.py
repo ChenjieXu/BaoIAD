@@ -103,7 +103,6 @@ class OpenCLIPBackbone(BaseModule):
                        and os.path.isfile(effective_pretrained))
 
         with _maybe_hf_endpoint():
-            os.environ.setdefault('HF_HUB_OFFLINE', '1')
             open_clip = _import_open_clip(prefer_local_reference=prefer_local_reference)
             self.model_name = model_name
             self.image_size = image_size
@@ -165,7 +164,7 @@ class OpenCLIPBackbone(BaseModule):
                 else:
                     create_kwargs = dict(
                         pretrained=effective_pretrained,
-                        load_weights=True,
+                        load_weights=load_weights,
                         force_quick_gelu=force_quick_gelu,
                     )
                     if image_size is not None:

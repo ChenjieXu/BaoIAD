@@ -7,7 +7,6 @@ exactly one augmented version per epoch, providing consistent training signals.
 import math
 import os
 import glob
-import tarfile
 import logging
 from typing import Dict, List, Optional, Sequence
 
@@ -16,6 +15,7 @@ import numpy as np
 from mmengine.dataset import BaseDataset
 
 from baoiad.registry import DATASETS
+from baoiad.runtime import OfflineModeError
 from baoiad.models.detectors.draem import generate_perlin_mask
 
 logger = logging.getLogger(__name__)
@@ -185,6 +185,8 @@ class DRAEMDataset(BaseDataset):
         if dtd_path == 'auto':
             try:
                 effective_dtd_path = _download_dtd()
+            except OfflineModeError:
+                raise
             except Exception as e:
                 logger.warning(f"Failed to auto-download DTD dataset: {e}. Using random noise textures.")
                 effective_dtd_path = None

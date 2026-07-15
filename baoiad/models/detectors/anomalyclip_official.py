@@ -176,6 +176,16 @@ class AnomalyCLIPOfficialDetector(VisionLanguageADModel):
         anomalyclip_lib, prompt_cls, focal_cls, dice_cls = self._import_reference()
         self._anomalyclip_lib = anomalyclip_lib
 
+        from baoiad.runtime import is_offline_mode, require_network
+
+        if is_offline_mode():
+            load_globals = getattr(anomalyclip_lib.load, '__globals__', {})
+            model_url = load_globals.get('_MODELS', {}).get(self.clip_model)
+            download_root = os.path.expanduser(self.download_root or '~/.cache/clip')
+            cached_model = os.path.join(download_root, os.path.basename(model_url)) if model_url else None
+            if not cached_model or not os.path.isfile(cached_model):
+                require_network('download AnomalyCLIP backbone weights', url=model_url)
+
         design_details = {
             'Prompt_length': self.prompt_length,
             'learnabel_text_embedding_depth': self.prompt_depth,

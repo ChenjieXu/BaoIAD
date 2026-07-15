@@ -16,6 +16,7 @@ from mmengine.optim import OptimWrapperDict
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.optional import require_optional_module
+from baoiad.runtime import OfflineModeError
 from baoiad.utils.glass_utils import (
     distribution_judge,
     resolve_dtd_texture_paths,
@@ -347,6 +348,8 @@ class GLASSDetector(BaseADModel):
             paths = resolve_dtd_texture_paths(dtd_path)
             logger.info('GLASS: loaded %d DTD textures for legacy LAS path', len(paths))
             return paths
+        except OfflineModeError:
+            raise
         except Exception as exc:  # pragma: no cover - depends on external assets/network
             logger.warning('GLASS: failed to resolve DTD textures (%s); legacy LAS will fall back to random noise.', exc)
             return []

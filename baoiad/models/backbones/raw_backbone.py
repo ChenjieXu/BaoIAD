@@ -8,6 +8,7 @@ from mmengine.model import BaseModule
 from torchvision import models as tv_models
 
 from baoiad.registry import MODELS
+from baoiad.runtime import require_torchvision_weights
 
 _BACKBONE_REGISTRY = {
     'resnet18': (tv_models.resnet18, tv_models.ResNet18_Weights.IMAGENET1K_V1),
@@ -54,7 +55,12 @@ class RawBackbone(BaseModule):
                 f"Supported: {list(_BACKBONE_REGISTRY.keys())}"
             )
         constructor, weights = _BACKBONE_REGISTRY[backbone_name]
-        net = constructor(weights=weights if pretrained else None)
+        selected_weights = weights if pretrained else None
+        require_torchvision_weights(
+            selected_weights,
+            action=f'load {backbone_name} pretrained weights',
+        )
+        net = constructor(weights=selected_weights)
 
         # Expose individual layers
         self.conv1 = net.conv1

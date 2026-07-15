@@ -21,6 +21,11 @@ def parse_args():
     parser.add_argument('--resume', action='store_true', help='Resume each stage from latest checkpoint if present')
     parser.add_argument('--cpu', action='store_true', help='Force CPU device')
     parser.add_argument(
+        '--offline',
+        action='store_true',
+        help='Disable model-hub and BaoIAD-managed downloads for each stage.',
+    )
+    parser.add_argument(
         '--cfg-options',
         nargs='+',
         default=None,
@@ -47,6 +52,8 @@ def _run_stage(stage_name: str, config: str, work_dir: str, args, extra_cfg_opti
     cmd = [python, train_script, config, '--work-dir', work_dir]
     if args.cpu:
         cmd.insert(2, '--cpu')
+    if args.offline:
+        cmd.insert(2, '--offline')
     if args.resume:
         cmd.append('--resume')
     cfg_options = list(args.cfg_options or [])

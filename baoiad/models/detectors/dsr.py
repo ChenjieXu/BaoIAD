@@ -25,6 +25,7 @@ import numpy as np
 from torchvision.transforms import v2
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
+from baoiad.runtime import OfflineModeError
 from baoiad.models.base_ad_model import ReconstructionADModel
 
 logger = logging.getLogger(__name__)
@@ -77,13 +78,18 @@ def _download_vqvae_weights(target_dir=_VQVAE_WEIGHTS_DIR, force_redownload: boo
         os.remove(zip_path)
 
     if not os.path.isfile(zip_path):
-        import socket
-        import urllib.request
+        from baoiad.runtime import download_url
+
         logger.info("Downloading DSR pretrained VQ-VAE weights from anomalib...")
-        old_timeout = socket.getdefaulttimeout()
-        socket.setdefaulttimeout(300)
         try:
-            urllib.request.urlretrieve(_VQVAE_WEIGHTS_URL, zip_path)
+            download_url(
+                _VQVAE_WEIGHTS_URL,
+                zip_path,
+                action='download DSR VQ-VAE weights',
+                timeout=300,
+            )
+        except OfflineModeError:
+            raise
         except Exception as e:
             if os.path.isfile(zip_path):
                 os.remove(zip_path)
@@ -91,9 +97,6 @@ def _download_vqvae_weights(target_dir=_VQVAE_WEIGHTS_DIR, force_redownload: boo
                 f"Failed to download DSR VQ-VAE weights: {e}. "
                 f"Please manually download from {_VQVAE_WEIGHTS_URL} and extract to {target_dir}/"
             )
-        finally:
-            socket.setdefaulttimeout(old_timeout)
-
     logger.info("Extracting DSR VQ-VAE weights...")
     try:
         with zipfile.ZipFile(zip_path, "r") as zf:
@@ -786,6 +789,8 @@ class DSRDetector(ReconstructionADModel):
                     return c
             try:
                 return _download_vqvae_weights()
+            except OfflineModeError:
+                raise
             except Exception as e:
                 warnings.warn(
                     f"Failed to auto-download DSR VQ-VAE weights: {e}. "
@@ -854,6 +859,8 @@ class DSRDetector(ReconstructionADModel):
 
         try:
             return _load_from(checkpoint_path)
+        except OfflineModeError:
+            raise
         except Exception as error:
             if not allow_auto_redownload:
                 raise
@@ -866,6 +873,8 @@ class DSRDetector(ReconstructionADModel):
             try:
                 redownloaded_path = _download_vqvae_weights(force_redownload=True)
                 return _load_from(redownloaded_path)
+            except OfflineModeError:
+                raise
             except Exception as retry_error:
                 warnings.warn(
                     f'Failed to auto-load compatible DSR VQ-VAE weights: {retry_error}. '

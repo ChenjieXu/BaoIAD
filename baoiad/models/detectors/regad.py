@@ -206,6 +206,9 @@ class ResNet18STN(nn.Module):
         from torchvision.models import resnet18
         import torchvision
         weights = torchvision.models.ResNet18_Weights.IMAGENET1K_V1 if pretrained else None
+        from baoiad.runtime import require_torchvision_weights
+
+        require_torchvision_weights(weights, action='load RegAD ResNet-18 pretrained weights')
         resnet = resnet18(weights=weights)
 
         self.conv1 = resnet.conv1

@@ -40,8 +40,6 @@ class TIMMBackbone(BaseModule):
         self.out_indices = tuple(out_indices)
         self._frozen_module_names = tuple(str(name) for name in (frozen_names or ()))
         self._frozen_module_eval = bool(frozen_names_eval)
-        if pretrained:
-            os.environ.setdefault('HF_HUB_OFFLINE', '1')
         import timm
         effective_checkpoint_path = checkpoint_path
         use_pretrained = pretrained

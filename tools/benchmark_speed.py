@@ -23,7 +23,6 @@ from torchvision import transforms
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-os.environ.setdefault('HF_HUB_OFFLINE', '1')
 
 from baoiad import register_all_modules  # noqa: E402
 
@@ -297,7 +296,16 @@ def main():
     parser.add_argument('--output', required=True)
     parser.add_argument('--warmup', type=int, default=10)
     parser.add_argument('--runs', type=int, default=100)
+    parser.add_argument(
+        '--offline',
+        action='store_true',
+        help='Disable model-hub and BaoIAD-managed downloads for this process.',
+    )
     args = parser.parse_args()
+
+    from baoiad.runtime import configure_offline_mode
+
+    configure_offline_mode(args.offline)
 
     device = torch.device(f'cuda:{args.gpu}')
     methods = [m.strip() for m in args.methods.split(',') if m.strip()]

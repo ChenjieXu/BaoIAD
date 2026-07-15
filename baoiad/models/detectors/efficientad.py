@@ -23,12 +23,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader
 from torchvision import transforms as T
 from torchvision.transforms import functional as TF
 from torchvision.datasets import ImageFolder
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
+from baoiad.runtime import OfflineModeError
 from baoiad.models.base_ad_model import KnowledgeDistillationADModel
 
 logger = logging.getLogger(__name__)
@@ -81,31 +82,33 @@ def _download_pretrained_weights(target_dir=_WEIGHTS_DIR):
         os.remove(zip_path)
 
     if not os.path.isfile(zip_path):
-        import socket
-        import urllib.request
-        old_timeout = socket.getdefaulttimeout()
-        socket.setdefaulttimeout(30)
+        from baoiad.runtime import download_url
+
         last_error = None
-        try:
-            for url in _WEIGHTS_URLS:
-                logger.info("Downloading EfficientAD pretrained teacher weights from %s...", url)
-                try:
-                    urllib.request.urlretrieve(url, zip_path)
-                except Exception as exc:
-                    last_error = exc
-                    if os.path.isfile(zip_path):
-                        os.remove(zip_path)
-                    continue
-
-                if zipfile.is_zipfile(zip_path):
-                    last_error = None
-                    break
-
-                last_error = zipfile.BadZipFile(f"Downloaded file from {url} is not a valid zip archive.")
+        for url in _WEIGHTS_URLS:
+            logger.info("Downloading EfficientAD pretrained teacher weights from %s...", url)
+            try:
+                download_url(
+                    url,
+                    zip_path,
+                    action='download EfficientAD teacher weights',
+                    timeout=30,
+                )
+            except OfflineModeError:
+                raise
+            except Exception as exc:
+                last_error = exc
                 if os.path.isfile(zip_path):
                     os.remove(zip_path)
-        finally:
-            socket.setdefaulttimeout(old_timeout)
+                continue
+
+            if zipfile.is_zipfile(zip_path):
+                last_error = None
+                break
+
+            last_error = zipfile.BadZipFile(f"Downloaded file from {url} is not a valid zip archive.")
+            if os.path.isfile(zip_path):
+                os.remove(zip_path)
 
         if last_error is not None:
             raise last_error
@@ -144,9 +147,14 @@ def _download_imagenette(target_dir=_IMAGENETTE_DIR):
     parent = os.path.dirname(target_dir) or "."
     tgz_path = os.path.join(parent, "imagenette2.tgz")
     if not os.path.isfile(tgz_path):
-        import urllib.request
+        from baoiad.runtime import download_url
+
         logger.info("Downloading ImageNette dataset...")
-        urllib.request.urlretrieve(_IMAGENETTE_URL, tgz_path)
+        download_url(
+            _IMAGENETTE_URL,
+            tgz_path,
+            action='download the ImageNette dataset',
+        )
     if os.path.isfile(tgz_path):
         import tarfile
         logger.info("Extracting ImageNette...")
@@ -378,6 +386,8 @@ class EfficientADDetector(KnowledgeDistillationADModel):
             if not os.path.isfile(weight_file):
                 try:
                     _download_pretrained_weights()
+                except OfflineModeError:
+                    raise
                 except Exception as e:
                     import warnings
                     warnings.warn(
@@ -410,6 +420,8 @@ class EfficientADDetector(KnowledgeDistillationADModel):
             try:
                 _download_imagenette(imagenet_dir)
                 train_dir = os.path.join(imagenet_dir, 'train')
+            except OfflineModeError:
+                raise
             except Exception as e:
                 logger.warning(f"Failed to download ImageNette: {e}. Penalty loss disabled.")
                 return

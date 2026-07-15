@@ -53,7 +53,7 @@ source tools/env.sh
 export BAOIAD_DATA_ROOT=/path/to/your/datasets
 ```
 
-The env script ([`tools/env.sh`](../../tools/env.sh)) also configures `HF_HOME` and `TORCH_HOME` for offline lab environments, and sets `HF_HUB_OFFLINE=1` by default during training/testing to avoid network calls.
+The env script ([`tools/env.sh`](../../tools/env.sh)) configures `HF_HOME` and `TORCH_HOME`, but does not silently disable network access. Add `--offline` to `train.py`, `test.py`, or `benchmark.py` when all required datasets and weights are already available locally. BaoIAD then enables the supported model-hub offline variables and rejects its own download attempts before opening a connection. Existing offline environment variables are also respected.
 
 Place each dataset under `$BAOIAD_DATA_ROOT/<dataset_name>/` (e.g., `data/mvtec_ad/`, `data/visa/`). See [Prepare Datasets](user_guides/prepare_dataset.md) for download links and expected directory layouts.
 

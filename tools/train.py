@@ -9,9 +9,6 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-# Prefer local HuggingFace/timm caches in offline lab environments.
-os.environ.setdefault('HF_HUB_OFFLINE', '1')
-
 # Check --cpu early before any torch import
 if '--cpu' in sys.argv:
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
@@ -41,6 +38,11 @@ def parse_args():
     parser.add_argument('--work-dir', help='Working directory to save logs and models')
     parser.add_argument('--resume', action='store_true', help='Resume from latest checkpoint')
     parser.add_argument('--cpu', action='store_true', help='Force CPU device')
+    parser.add_argument(
+        '--offline',
+        action='store_true',
+        help='Disable model-hub and BaoIAD-managed downloads for this process.',
+    )
     parser.add_argument(
         '--cfg-options',
         nargs='+',
@@ -72,6 +74,10 @@ def _apply_runtime_overrides(cfg: Config) -> None:
 
 def main():
     args = parse_args()
+
+    from baoiad.runtime import configure_offline_mode
+
+    configure_offline_mode(args.offline)
 
     from baoiad import register_all_modules
 

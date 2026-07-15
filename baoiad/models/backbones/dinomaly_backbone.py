@@ -243,6 +243,9 @@ def _download_and_load_weights(encoder, model_type, arch, patch_size, cache_dir=
     if not weight_path.exists():
         model_dir = f"dinov2_vit{arch_code}{patch_size}"
         url = f"{DINOV2_BASE_URL}/{model_dir}/{fname}"
+        from baoiad.runtime import require_network
+
+        require_network('download DINOv2 weights', url=url)
         print(f"Downloading DINOv2 weights from {url}")
         torch.hub.download_url_to_file(url, str(weight_path))
     state_dict = torch.load(weight_path, map_location="cpu", weights_only=True)

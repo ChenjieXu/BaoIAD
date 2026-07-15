@@ -13,6 +13,7 @@ import torch.nn as nn
 from torchvision import models as tv_models
 
 from baoiad.registry import MODELS
+from baoiad.runtime import require_torchvision_weights
 
 
 # ---------------------------------------------------------------------------
@@ -108,7 +109,9 @@ def build_backbone(name: str, pretrained: bool = True):
             f"Unknown backbone '{name}'. Supported: {list(_BACKBONE_REGISTRY.keys())}"
         )
     constructor, weights = _BACKBONE_REGISTRY[name]
-    return constructor(weights=weights if pretrained else None)
+    selected_weights = weights if pretrained else None
+    require_torchvision_weights(selected_weights, action=f'load {name} pretrained weights')
+    return constructor(weights=selected_weights)
 
 
 def get_channel_dims(name: str) -> tuple:

@@ -29,6 +29,7 @@ from PIL import Image, ImageEnhance, ImageOps
 
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
+from baoiad.runtime import OfflineModeError
 from baoiad.models.base_ad_model import ReconstructionADModel
 from baoiad.utils.dtd import download_dtd as _download_dtd
 
@@ -802,6 +803,8 @@ class MemSegDetector(ReconstructionADModel):
             if self.dtd_path == 'auto':
                 try:
                     self._dtd_dir = _download_dtd()
+                except OfflineModeError:
+                    raise
                 except Exception as e:
                     if self.require_texture_source:
                         raise

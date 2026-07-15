@@ -6,7 +6,6 @@ import argparse
 import copy
 import inspect
 import json
-import os
 import random
 from pathlib import Path
 from typing import Any, Dict, Mapping, MutableMapping, Sequence
@@ -572,9 +571,12 @@ def probe_config(
     seed: int | None = None,
     cfg_options: dict[str, Any] | None = None,
     output: str | None = None,
+    offline: bool = False,
 ) -> Dict[str, Any]:
     """Run a lightweight structural probe on one config."""
-    os.environ.setdefault('HF_HUB_OFFLINE', '1')
+    from baoiad.runtime import configure_offline_mode
+
+    configure_offline_mode(offline)
 
     import baoiad  # noqa: F401
     from baoiad.registry import MODELS
@@ -753,6 +755,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--seed', type=int, default=None, help='Random seed for probe (defaults to config randomness.seed)')
     parser.add_argument('--output', help='Optional JSON output path')
     parser.add_argument(
+        '--offline',
+        action='store_true',
+        help='Disable model-hub and BaoIAD-managed downloads for this process.',
+    )
+    parser.add_argument(
         '--cfg-options',
         nargs='+',
         action=DictAction,
@@ -771,6 +778,7 @@ def main() -> None:
         seed=args.seed,
         cfg_options=args.cfg_options,
         output=args.output,
+        offline=args.offline,
     )
     print(json.dumps(report, indent=2))
     if not report['passed']:

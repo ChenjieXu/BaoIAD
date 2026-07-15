@@ -14,8 +14,6 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-os.environ.setdefault('HF_HUB_OFFLINE', '1')
-
 if '--cpu' in sys.argv:
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
     os.environ['PYTORCH_MPS_DISABLE'] = '1'
@@ -53,6 +51,11 @@ def parse_args():
     parser.add_argument('--work-dir', help='Working directory to save logs and checkpoints')
     parser.add_argument('--resume', action='store_true', help='Resume from `last_checkpoint` if present')
     parser.add_argument('--cpu', action='store_true', help='Force CPU device')
+    parser.add_argument(
+        '--offline',
+        action='store_true',
+        help='Disable model-hub and BaoIAD-managed downloads for this process.',
+    )
     parser.add_argument(
         '--cfg-options',
         nargs='+',
@@ -136,6 +139,10 @@ def _resume_if_needed(cfg: Config, args, model, optimizer, device: torch.device)
 
 def main():
     args = parse_args()
+
+    from baoiad.runtime import configure_offline_mode
+
+    configure_offline_mode(args.offline)
 
     import iadbench  # noqa: F401
     from iadbench.registry import MODELS

@@ -73,7 +73,11 @@ def _build_pyramidflow_resnet18() -> nn.Module:
             )
         return resnet
 
-    return models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
+    weights = models.ResNet18_Weights.IMAGENET1K_V1
+    from baoiad.runtime import require_torchvision_weights
+
+    require_torchvision_weights(weights, action='load PyramidFlow ResNet-18 pretrained weights')
+    return models.resnet18(weights=weights)
 
 
 class InvertibleModule(nn.Module):

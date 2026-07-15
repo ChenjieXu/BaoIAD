@@ -732,9 +732,9 @@
         "baoiad/datasets/glass_dataset.py:30-52 <- datasets/mvtec.py:145-170 (official three-of-nine texture augmenter; adapted)",
         "baoiad/datasets/glass_dataset.py:144-165 <- datasets/mvtec.py:122-143 (base image and mask transforms; local affine core at lines 146-155 maps to upstream lines 123-131)",
         "baoiad/datasets/glass_dataset.py:296-353 <- datasets/mvtec.py:172-212 (training texture/foreground/Perlin synthesis and test-mask assembly; adapted to BaseDataset and fail-closed assets)",
-        "baoiad/utils/glass_utils.py:71-115 <- perlin.py:48-73 (linear interpolation and NumPy Perlin generator; local dot/interpolation core at lines 104-114 maps to upstream lines 64-73)",
-        "baoiad/utils/glass_utils.py:118-193 <- perlin.py:7-45 (rotated threshold and paired foreground-aware Perlin masks; adapted with bounded retries)",
-        "baoiad/utils/glass_utils.py:209-241 <- utils.py:14-57 (frequency-distribution classifier; local density core at lines 227-239 maps to upstream lines 34-47)",
+        "baoiad/utils/glass_utils.py:68-112 <- perlin.py:48-73 (linear interpolation and NumPy Perlin generator; local dot/interpolation core at lines 101-111 maps to upstream lines 64-73)",
+        "baoiad/utils/glass_utils.py:115-190 <- perlin.py:7-45 (rotated threshold and paired foreground-aware Perlin masks; adapted with bounded retries)",
+        "baoiad/utils/glass_utils.py:206-238 <- utils.py:14-57 (frequency-distribution classifier; local density core at lines 224-236 maps to upstream lines 34-47)",
         "baoiad/engine/loops/glass_train_loop.py:14-58 <- glass.py:252-273,316-324 (per-epoch center refresh, optimization pass, and sample-budget cutoff; adapted to MMEngine)"
       ],
       "source": {"name": "cqylunlun/GLASS", "url": "https://github.com/cqylunlun/GLASS", "revision": "6af03b9d7f7b33a1aebd69cd4c30a41bf020a2d1"},

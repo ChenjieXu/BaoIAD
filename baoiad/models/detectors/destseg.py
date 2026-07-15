@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import math
 import os
-import urllib.request
 from typing import Sequence
 
 import timm
@@ -344,8 +343,14 @@ class DeSTSegDetector(ReconstructionADModel):
     def _ensure_legacy_teacher_checkpoint() -> str:
         os.makedirs(os.path.dirname(_LEGACY_RESNET18_PATH), exist_ok=True)
         if not os.path.exists(_LEGACY_RESNET18_PATH):
+            from baoiad.runtime import download_url
+
             logger.info('Downloading legacy ResNet-18 teacher checkpoint for DeSTSeg...')
-            urllib.request.urlretrieve(_LEGACY_RESNET18_URL, _LEGACY_RESNET18_PATH)
+            download_url(
+                _LEGACY_RESNET18_URL,
+                _LEGACY_RESNET18_PATH,
+                action='download the DeSTSeg teacher checkpoint',
+            )
         return _LEGACY_RESNET18_PATH
 
     def _set_phase_trainability(self):

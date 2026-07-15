@@ -51,7 +51,6 @@ model = dict(
     k_clusters=20,  # K-means clusters for HSF (official default)
     temperature=0.07,
     gaussian_sigma=4.0,  # Official uses gaussian_filter with sigma=4
-    hf_endpoint='https://hf-mirror.com',
     official_checkpoint="pretrained/pretrained_mvtec_colondb.pth",
     require_official_checkpoint=True,
 )

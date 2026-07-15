@@ -15,8 +15,6 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-os.environ.setdefault('HF_HUB_OFFLINE', '1')
-
 if '--cpu' in sys.argv:
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
     os.environ['PYTORCH_MPS_DISABLE'] = '1'
@@ -52,6 +50,11 @@ def parse_args():
     parser.add_argument('--work-dir', help='Working directory to save logs and models')
     parser.add_argument('--resume', action='store_true', help='Resume from latest checkpoint')
     parser.add_argument('--cpu', action='store_true', help='Force CPU device')
+    parser.add_argument(
+        '--offline',
+        action='store_true',
+        help='Disable model-hub and BaoIAD-managed downloads for this process.',
+    )
     parser.add_argument(
         '--cfg-options',
         nargs='+',
@@ -130,6 +133,10 @@ def _apply_exact_order_overrides(cfg: Config, order_file: Path) -> None:
 
 def main():
     args = parse_args()
+
+    from baoiad.runtime import configure_offline_mode
+
+    configure_offline_mode(args.offline)
 
     import iadbench  # noqa: F401
 

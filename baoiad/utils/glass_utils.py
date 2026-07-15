@@ -11,9 +11,6 @@ import logging
 import math
 import os
 import os.path as osp
-import socket
-import tarfile
-import urllib.request
 from typing import Optional, Sequence, Tuple
 
 import cv2

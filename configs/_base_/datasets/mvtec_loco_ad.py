@@ -1,4 +1,4 @@
-from baoiad.paths import resolve_data_root
+resolve_data_root = __import__('baoiad.paths', fromlist=['resolve_data_root']).resolve_data_root
 
 data_root = str(resolve_data_root('mvtec_loco_ad'))
 img_size = 256

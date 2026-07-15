@@ -2,6 +2,8 @@
 
 Registered in MODELS registry for config-driven construction.
 """
+import os
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -87,6 +89,14 @@ class DistilledVisionTransformerBackbone(VisionTransformer):
         self.head_dist.apply(self._init_weights)
 
         if pretrained and pretrained_url:
+            from baoiad.runtime import require_network
+
+            from urllib.parse import urlparse
+
+            filename = os.path.basename(urlparse(pretrained_url).path)
+            cached_path = os.path.join(torch.hub.get_dir(), 'checkpoints', filename)
+            if not os.path.isfile(cached_path):
+                require_network('download ViTAD backbone weights', url=pretrained_url)
             checkpoint = torch.hub.load_state_dict_from_url(
                 url=pretrained_url, map_location="cpu", check_hash=True)
             self.load_state_dict(checkpoint["model"], strict=False)

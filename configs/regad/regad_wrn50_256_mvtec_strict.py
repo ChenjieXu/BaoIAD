@@ -1,4 +1,4 @@
-import os
+os = __import__('os')
 
 _base_ = [
     '../_base_/default_runtime.py',
@@ -12,12 +12,12 @@ support_set_root = os.environ.get(
     'REGAD_SUPPORT_SET_ROOT',
     'data/regad_official/support_set',
 )
-strict_require_official_support_set = False
+strict_require_official_support_set = True
 
 benchmark_train_script = 'tools/train_regad_strict.py'
 benchmark_result_selector = dict(
     mode='best_balanced',
-    metrics=['image_auroc', 'pixel_auroc', 'aupro'],
+    metrics=['image_auroc', 'pixel_auroc'],
 )
 benchmark_keep_dataloader_workers = True
 benchmark_preserve_checkpoint_hooks = True

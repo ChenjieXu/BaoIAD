@@ -22,6 +22,7 @@ from torch import Tensor
 
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
+from baoiad.runtime import OfflineModeError
 from baoiad.structures import ADDataSample
 from baoiad.models.base_ad_model import BaseADModel
 from baoiad.utils.score_utils import minmax_normalize
@@ -48,10 +49,11 @@ def _download_gdino_weights() -> str:
     if os.path.isfile(save_path):
         return save_path
 
-    import urllib.request
+    from baoiad.runtime import download_url
+
     logger.info(f"Downloading GroundingDINO weights from {_GDINO_URL}...")
     logger.info("This may take a few minutes (file size: ~700MB)")
-    urllib.request.urlretrieve(_GDINO_URL, save_path)
+    download_url(_GDINO_URL, save_path, action='download GroundingDINO weights')
     logger.info(f"Saved to {save_path}")
     return save_path
 
@@ -68,10 +70,11 @@ def _download_sam_weights() -> str:
     if os.path.isfile(save_path):
         return save_path
 
-    import urllib.request
+    from baoiad.runtime import download_url
+
     logger.info(f"Downloading SAM weights from {_SAM_URL}...")
     logger.info("This may take a few minutes (file size: ~2.5GB)")
-    urllib.request.urlretrieve(_SAM_URL, save_path)
+    download_url(_SAM_URL, save_path, action='download SAM weights')
     logger.info(f"Saved to {save_path}")
     return save_path
 
@@ -82,6 +85,9 @@ try:
     HAS_GROUNDING_DINO = True
 except ImportError:
     HAS_GROUNDING_DINO = False
+    load_gdino_model = None
+    gdino_transforms = None
+    get_phrases_from_posmap = None
 
 try:
     from segment_anything import SamPredictor, sam_model_registry
@@ -330,8 +336,8 @@ class SAADetector(BaseADModel):
     def _normalize_defect_area_threshold(value: float) -> float:
         """Validate a runtime defect-area threshold override."""
         value = float(value)
-        if value <= 0.0:
-            raise AssertionError('defect_area_threshold must be positive')
+        if value < 0.0:
+            raise AssertionError('defect_area_threshold must be non-negative')
         return value
 
     @staticmethod
@@ -397,6 +403,8 @@ class SAADetector(BaseADModel):
             if gdino_ckpt == 'auto' or not os.path.isfile(gdino_ckpt):
                 try:
                     gdino_ckpt = _download_gdino_weights()
+                except OfflineModeError:
+                    raise
                 except Exception as e:
                     raise RuntimeError(
                         f"Failed to download GroundingDINO weights: {e}. "
@@ -427,6 +435,8 @@ class SAADetector(BaseADModel):
             if sam_ckpt == 'auto' or not os.path.isfile(sam_ckpt):
                 try:
                     sam_ckpt = _download_sam_weights()
+                except OfflineModeError:
+                    raise
                 except Exception as e:
                     raise RuntimeError(
                         f"Failed to download SAM weights: {e}. "

@@ -54,7 +54,6 @@ model = dict(
     k_clusters=20,
     temperature=0.07,
     gaussian_sigma=4.0,
-    hf_endpoint='https://hf-mirror.com',
     official_checkpoint=None,
     require_official_checkpoint=False,
     # Official MVTec protocol trains prompts on auxiliary labeled data.

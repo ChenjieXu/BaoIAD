@@ -83,7 +83,7 @@ The script also prints a summary table sorted by FPS (descending) when finished.
 - **Deterministic results**: Latency varies with GPU model, driver, CUDA version, and thermal state. For reproducible comparisons, run on the same hardware under similar load conditions.
 - **Batch size**: The speed benchmark uses batch size 1 (one image per forward pass), matching common deployment scenarios.
 - **Memory bank methods**: Methods that require a pre-computed memory bank (PatchCore, PaDiM, DFM, DFKDE, RegAD, AnomalyDINO) receive randomly initialized dummy banks. This measures inference-only latency, not the full training+inference pipeline.
-- **Vision-language methods**: The benchmark detects VL model types and applies CLIP normalization. Pretrained weights are loaded from local cache; set `HF_HUB_OFFLINE=1` (the default) to prevent network access.
+- **Vision-language methods**: The benchmark detects VL model types and applies CLIP normalization. Pretrained weights may use a local cache; pass `--offline` when the required assets are already present and network access must be disabled.
 
 ## Examples
 
