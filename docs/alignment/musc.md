@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/xrli-U/MuSc](https://github.com/xrli-U/MuSc)
 - **Source revision:** [72d58ad56c0cafa2b056bd0aa7676f9c21fccbc4](https://github.com/xrli-U/MuSc/commit/72d58ad56c0cafa2b056bd0aa7676f9c21fccbc4)
 - **Config README:** [configs/musc/README.md](../../configs/musc/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

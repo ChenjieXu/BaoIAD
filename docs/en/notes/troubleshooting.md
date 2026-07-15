@@ -47,7 +47,7 @@ This installs `FrEIA>=0.2`. Alternatively: `pip install "FrEIA>=0.2"`.
 pip install -e ".[faiss-cpu]"   # CPU version
 ```
 
-The former `faiss-gpu` extra is no longer declared because GPU FAISS packages are platform- and CUDA-specific. Install a compatible GPU build outside BaoIAD only after validating it against your target CUDA environment; BaoIAD's core release gate covers the `faiss-cpu` extra.
+The former `faiss-gpu` extra is no longer declared because GPU FAISS packages are platform- and CUDA-specific. Install a compatible GPU build outside BaoIAD only after validating it against your target CUDA environment; BaoIAD provides the supported `faiss-cpu` extra.
 
 ## Missing `geomloss`, `imgaug`, or `mmpretrain` errors
 

@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/zqhang/AnomalyCLIP](https://github.com/zqhang/AnomalyCLIP)
 - **Source revision:** [3911738c0867544f545a076ad78f3f11d9ecbfdf](https://github.com/zqhang/AnomalyCLIP/commit/3911738c0867544f545a076ad78f3f11d9ecbfdf)
 - **Config README:** [configs/anomalyclip/README.md](../../configs/anomalyclip/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

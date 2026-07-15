@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 REQUIRED_METHODS = {"patchcore", "rd", "fastflow"}
 REQUIRED_CUDA_CHECK = "torchvision_nms_cuda"
 REQUIRED_STATE_CHECK = "mmcv_custom_ops"

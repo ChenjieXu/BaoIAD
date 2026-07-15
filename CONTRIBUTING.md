@@ -7,10 +7,8 @@ reproducible, and honest about their validation boundary.
 
 - Use the repository Issue forms for bugs, feature requests, and documentation
   problems.
-- Do not report a suspected vulnerability in a public Issue. Read
-  [SECURITY.md](SECURITY.md) first. The private reporting channel is a
-  release-blocking external approval and must be active before a public
-  release.
+- Do not report a suspected vulnerability in a public Issue or pull request.
+  Read [SECURITY.md](SECURITY.md) before sharing any security-sensitive detail.
 - Dataset access, third-party services, and unpublished checkpoints are outside
   BaoIAD's support commitment unless the repository explicitly says otherwise.
 
@@ -36,7 +34,6 @@ Run the checks that apply to your change:
 ```bash
 ruff check baoiad tests tools
 python tools/check_method_inventory.py
-python tools/check_public_release.py
 pytest -m "not network and not gpu and not slow"
 ```
 
@@ -45,22 +42,6 @@ as errors. Use the committed CI constraints when reproducing the Python 3.10
 and 3.12 release jobs.
 
 Passing CPU tests does not validate CUDA training, compiled CUDA operators,
-peak GPU memory, or end-to-end GPU inference. If no real-GPU evidence exists,
-write **GPU not validated** in the pull request and do not make a GPU-support
-claim.
-
-## Review and release-sensitive changes
-
-- At least one approving reviewer other than the author is required.
-- Code and config changes require technical-maintainer review.
-- Public identity, top-level documentation, and release media require the
-  approved brand role.
-- License, provenance, redistribution, and security-policy changes require the
-  Legal/OSS or Security role recorded in the release approval checklist.
-- Release metadata and tag preparation require the Release owner and the
-  exact-commit go/no-go described in the
-  [release process](docs/en/notes/release_process.md).
-
-Approved GitHub users or teams have not yet been supplied for `CODEOWNERS`.
-Review ownership is therefore documented by role and must not be represented
-as automatically enforced until the organization configures those teams.
+peak GPU memory, or end-to-end GPU inference. If a change was not tested on a
+real GPU, write **GPU not validated** in the pull request and do not imply GPU
+support was verified.

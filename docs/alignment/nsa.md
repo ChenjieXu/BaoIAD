@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/hmsch/natural-synthetic-anomalies](https://github.com/hmsch/natural-synthetic-anomalies)
 - **Source revision:** [919591685307ce030fe27cb77687509dc277189c](https://github.com/hmsch/natural-synthetic-anomalies/commit/919591685307ce030fe27cb77687509dc277189c)
 - **Config README:** [configs/nsa/README.md](../../configs/nsa/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/apple/ml-destseg](https://github.com/apple/ml-destseg)
 - **Source revision:** [f6ea31fb5b097698b195f85b1d5e3efaedce9eb6](https://github.com/apple/ml-destseg/commit/f6ea31fb5b097698b195f85b1d5e3efaedce9eb6)
 - **Config README:** [configs/destseg/README.md](../../configs/destseg/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

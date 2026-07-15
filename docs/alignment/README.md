@@ -1,14 +1,13 @@
 # Implementation provenance and reproducibility notes
 
-This directory contains public, repository-local summaries for the 37 methods in the BaoIAD inventory. Each page is derived from the machine-readable release inventory and records source provenance, implementation differences, runtime conditions, and known limitations.
+This directory contains public, repository-local summaries for the 37 methods in the BaoIAD inventory. Each page is derived from the machine-readable method status inventory and records source provenance, implementation differences, runtime conditions, and known limitations.
 
 Evidence completeness differs by method. These pages do not assert uniform reference parity or independently reproducible benchmark proof. The current inventory marks every method as either **Partially verified** or **Historical evidence**; the exact limitations remain attached to each method.
 
-Authoritative release records:
+Public records:
 
 - [Method status inventory](method_status.json)
-- [Known release exceptions](exceptions.json)
-- [Release compliance checker](../../tools/check_release_compliance.py)
+- [Known exceptions](exceptions.json)
 
 Status meanings:
 

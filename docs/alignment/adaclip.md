@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/caoyunkang/AdaCLIP](https://github.com/caoyunkang/AdaCLIP)
 - **Source revision:** [b762ac40c3f33c77e7e513e48cb436f059d456da](https://github.com/caoyunkang/AdaCLIP/commit/b762ac40c3f33c77e7e513e48cb436f059d456da)
 - **Config README:** [configs/adaclip/README.md](../../configs/adaclip/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

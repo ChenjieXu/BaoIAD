@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CATEGORY = "bottle"
 METHODS = {
     "patchcore": "configs/patchcore/patchcore_wrn50_256_mvtec_strict.py",

@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/guojiajeremy/Dinomaly](https://github.com/guojiajeremy/Dinomaly)
 - **Source revision:** [c5c76d01a2bd7212f1c4b7dfdad14902d0f48cfe](https://github.com/guojiajeremy/Dinomaly/commit/c5c76d01a2bd7212f1c4b7dfdad14902d0f48cfe)
 - **Config README:** [configs/dinomaly/README.md](../../configs/dinomaly/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

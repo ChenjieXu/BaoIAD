@@ -174,23 +174,3 @@ Override variables by setting them before sourcing:
 export BAOIAD_DATA_ROOT=/data/datasets
 source tools/env.sh
 ```
-
-### tools/smoke_test_gpu.sh
-
-Quick validation that all 37 method configs exist and are discoverable.
-
-```bash
-bash tools/smoke_test_gpu.sh [method1 method2 ...]
-```
-
-Without arguments, tests all 37 methods. With arguments, tests only the named methods. Outputs `ok` for each method that has a discoverable config, exits on first failure.
-
-### tools/smoke_test_remaining.sh
-
-Validates configs for the remaining methods not yet tested, using the same inventory-based discovery.
-
-```bash
-bash tools/smoke_test_remaining.sh
-```
-
-No arguments. Checks that each method has a discoverable config file. Writes a summary to `runs/smoke_test_summary.txt`.

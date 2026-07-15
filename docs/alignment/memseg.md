@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/TooTouch/MemSeg](https://github.com/TooTouch/MemSeg)
 - **Source revision:** [836bd465a9b14422f92666dc29dc36edce2692d0](https://github.com/TooTouch/MemSeg/commit/836bd465a9b14422f92666dc29dc36edce2692d0)
 - **Config README:** [configs/memseg/README.md](../../configs/memseg/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/open-edge-platform/anomalib](https://github.com/open-edge-platform/anomalib)
 - **Source revision:** [0ef8ab1e43340bddf4d92d1f046c3d34a83af6b0](https://github.com/open-edge-platform/anomalib/commit/0ef8ab1e43340bddf4d92d1f046c3d34a83af6b0)
 - **Config README:** [configs/padim/README.md](../../configs/padim/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

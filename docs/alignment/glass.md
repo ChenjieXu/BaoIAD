@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/cqylunlun/GLASS](https://github.com/cqylunlun/GLASS)
 - **Source revision:** [6af03b9d7f7b33a1aebd69cd4c30a41bf020a2d1](https://github.com/cqylunlun/GLASS/commit/6af03b9d7f7b33a1aebd69cd4c30a41bf020a2d1)
 - **Config README:** [configs/glass/README.md](../../configs/glass/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

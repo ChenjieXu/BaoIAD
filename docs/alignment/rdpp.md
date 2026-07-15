@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/tientrandinh/Revisiting-Reverse-Distillation](https://github.com/tientrandinh/Revisiting-Reverse-Distillation)
 - **Source revision:** [7f2ceb7c87e602617b8600e1a498f7ef7f5247d6](https://github.com/tientrandinh/Revisiting-Reverse-Distillation/commit/7f2ceb7c87e602617b8600e1a498f7ef7f5247d6)
 - **Config README:** [configs/rdpp/README.md](../../configs/rdpp/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

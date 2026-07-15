@@ -79,7 +79,7 @@ jobs:
 
       - name: Run key-method GPU smoke
         run: |
-          python tools/run_gpu_smoke.py \
+          python .github/scripts/run_gpu_smoke.py \
             --dataset-root "${BAOIAD_GPU_DATASET_ROOT}" \
             --output-dir "${GPU_EVIDENCE_DIR}" \
             --device-index 0
@@ -87,7 +87,7 @@ jobs:
       - name: Require validated real-GPU evidence
         if: always()
         run: |
-          python tools/check_gpu_evidence.py \
+          python .github/scripts/check_gpu_evidence.py \
             --repo-root . \
             --evidence "${GPU_EVIDENCE_DIR}/gpu-evidence.json" \
             --require-validated

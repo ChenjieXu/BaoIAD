@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/MediaBrain-SJTU/RegAD](https://github.com/MediaBrain-SJTU/RegAD)
 - **Source revision:** [5e2c1f8c18d302b0354471567846fee3ed2ff063](https://github.com/MediaBrain-SJTU/RegAD/commit/5e2c1f8c18d302b0354471567846fee3ed2ff063)
 - **Config README:** [configs/regad/README.md](../../configs/regad/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

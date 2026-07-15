@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/samet-akcay/ganomaly](https://github.com/samet-akcay/ganomaly)
 - **Source revision:** [78da4ea9a99f5b02ab60dd651a18def929176d77](https://github.com/samet-akcay/ganomaly/commit/78da4ea9a99f5b02ab60dd651a18def929176d77)
 - **Config README:** [configs/ganomaly/README.md](../../configs/ganomaly/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

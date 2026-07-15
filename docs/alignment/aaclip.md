@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/Mwxinnn/AA-CLIP](https://github.com/Mwxinnn/AA-CLIP)
 - **Source revision:** [53db195f230442aa118c246876c94ba1c76139cc](https://github.com/Mwxinnn/AA-CLIP/commit/53db195f230442aa118c246876c94ba1c76139cc)
 - **Config README:** [configs/aaclip/README.md](../../configs/aaclip/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/dammsi/AnomalyDINO](https://github.com/dammsi/AnomalyDINO)
 - **Source revision:** [b9d1c2648e3a5247437d4d953d907a8f3d994457](https://github.com/dammsi/AnomalyDINO/commit/b9d1c2648e3a5247437d4d953d907a8f3d994457)
 - **Config README:** [configs/anomalydino/README.md](../../configs/anomalydino/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

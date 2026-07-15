@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/VitjanZ/DRAEM](https://github.com/VitjanZ/DRAEM)
 - **Source revision:** [2dbf67397ab5c10a1494e5ae70ab59a25d7c35ef](https://github.com/VitjanZ/DRAEM/commit/2dbf67397ab5c10a1494e5ae70ab59a25d7c35ef)
 - **Config README:** [configs/draem/README.md](../../configs/draem/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

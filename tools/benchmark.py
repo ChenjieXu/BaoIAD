@@ -187,8 +187,8 @@ _DISABLED_STRICT_BENCHMARKS = {}
 def find_config(method):
     """Find the primary config file for a given method name.
 
-    Prefers configs with '256' and 'mvtec' in the name, excludes 'unified'
-    and '.bak' variants (matching smoke_test_gpu.sh behavior).
+    Prefers configs with '256' and 'mvtec' in the name and excludes 'unified'
+    and '.bak' variants.
     """
     config_dir = os.path.join(ROOT, 'configs', method)
     if not os.path.isdir(config_dir):

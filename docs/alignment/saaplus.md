@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/caoyunkang/Segment-Any-Anomaly](https://github.com/caoyunkang/Segment-Any-Anomaly)
 - **Source revision:** [ff564ed09bef91d86452f62aa1564e778580513e](https://github.com/caoyunkang/Segment-Any-Anomaly/commit/ff564ed09bef91d86452f62aa1564e778580513e)
 - **Config README:** [configs/saaplus/README.md](../../configs/saaplus/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

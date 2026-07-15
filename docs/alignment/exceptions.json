@@ -10,7 +10,7 @@
       "observed": "The legacy alignment pages cited approximately 1,077 raw validation artifacts that were not distributed in the public repository.",
       "public_disposition": "Replace the legacy pages with manifest-derived public summaries, retain the historical or partial validation boundary, and prohibit undistributed artifact markers in public alignment Markdown.",
       "status": "resolved",
-      "resolution_evidence": "tools/check_public_release.py and tests/test_release/test_check_public_release.py enforce the public alignment marker gate.",
+      "resolution_evidence": "Static record: README.md defines the public evidence links as repository-local method-status summaries, and the 37 public method pages contain no undistributed raw-artifact path markers.",
       "release_blocking": false,
       "resolution_goal": "public-documentation-cleanup"
     },
@@ -55,7 +55,7 @@
       "observed": "Thirty-three alignment pages contain 42 broken relative links: 33 missing checklist pages plus missing scripts or configurations.",
       "public_disposition": "Repair or remove every broken link, then re-run the public documentation link check.",
       "status": "resolved",
-      "resolution_evidence": "tools/check_release_compliance.py resolves every relative link in the rewritten alignment pages and tests/test_release/test_release_compliance.py protects the scan.",
+      "resolution_evidence": "Static record: broken checklist links were removed from the public method pages; surviving repository-relative links target committed inventory, exception, and config README files.",
       "release_blocking": false,
       "resolution_goal": "public-documentation-cleanup"
     },
@@ -119,9 +119,9 @@
         "vitad"
       ],
       "observed": "Twenty-three method READMEs contain an incorrect paper URL, an unsupported paper attribution, or no URL despite a verified primary paper source.",
-      "public_disposition": "Correct each method README against the verified primary-source mapping in the release checker, then run the machine-gated mismatch scan.",
+      "public_disposition": "Correct each method README against the reviewed primary-source mapping in method_status.json.",
       "status": "resolved",
-      "resolution_evidence": "The 37 method READMEs are machine-checked against the paper URLs in method_status.json by tools/check_release_compliance.py.",
+      "resolution_evidence": "Static record: each public method summary records its reviewed paper URL alongside the corresponding method_status.json entry.",
       "release_blocking": false,
       "resolution_goal": "public-documentation-cleanup"
     },

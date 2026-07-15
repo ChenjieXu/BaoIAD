@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/marco-rudolph/AST](https://github.com/marco-rudolph/AST)
 - **Source revision:** [8c243ad9adac68e874f87edc6618aa5ea2827228](https://github.com/marco-rudolph/AST/commit/8c243ad9adac68e874f87edc6618aa5ea2827228)
 - **Config README:** [configs/ast/README.md](../../configs/ast/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

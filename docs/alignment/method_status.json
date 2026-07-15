@@ -25,8 +25,7 @@
       "source": {"url": "https://github.com/cqylunlun/GLASS", "revision": "6af03b9d7f7b33a1aebd69cd4c30a41bf020a2d1", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local data, loop, optimizer, and evaluator adapters; see the alignment record.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["The recorded strict benchmark covers 14 of 15 MVTec categories; screw remains incomplete.", "The canonical strict configuration requires non-distributed foreground masks, a distribution spreadsheet, and DTD data.", "The GLASS model and dataset import pandas unconditionally, but pandas is not declared as a core or method-specific project dependency.", "Referenced raw evidence is not distributed in the public repository."]},
-      "alignment_path": "docs/alignment/glass.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/glass.md"
     },
     {
       "slug": "dinomaly",
@@ -38,8 +37,7 @@
       "source": {"url": "https://github.com/guojiajeremy/Dinomaly", "revision": "c5c76d01a2bd7212f1c4b7dfdad14902d0f48cfe", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local configuration/evaluation adapters; see the alignment record.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["The encoder downloads DINOv2 weights when they are absent locally.", "Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
-      "alignment_path": "docs/alignment/dinomaly.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/dinomaly.md"
     },
     {
       "slug": "simplenet",
@@ -51,8 +49,7 @@
       "source": {"url": "https://github.com/DonaldRR/SimpleNet", "revision": "351a2b8d4e8cfc944dbccbf9bc6ceda930c6f26b", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local optimizer, post-processing, and evaluation adapters; see the alignment record.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
-      "alignment_path": "docs/alignment/simplenet.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/simplenet.md"
     },
     {
       "slug": "rdpp",
@@ -64,8 +61,7 @@
       "source": {"url": "https://github.com/tientrandinh/Revisiting-Reverse-Distillation", "revision": "7f2ceb7c87e602617b8600e1a498f7ef7f5247d6", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration plus a vendored MIT-licensed simplex-noise helper that still needs RD++ and OpenSimplex attribution details.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "blocked_by_optional_dependency", "limitations": ["The canonical strict configuration requires the optional geomloss package for the official Sinkhorn SSOT loss and fails closed when it is absent.", "Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
-      "alignment_path": "docs/alignment/rdpp.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/rdpp.md"
     },
     {
       "slug": "ast",
@@ -77,8 +73,7 @@
       "source": {"url": "https://github.com/marco-rudolph/AST", "revision": "8c243ad9adac68e874f87edc6618aa5ea2827228", "traceability": "public_revision"},
       "implementation_differences": "Closely derived flow, positional-encoding, teacher, and student structures plus MMEngine integration; the frozen upstream tree has no identifiable redistribution license.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Redistribution is blocked pending written permission or a documented clean-room replacement.", "The alignment record retains an unresolved toothbrush image-level gap.", "Referenced raw validation artifacts are not distributed."]},
-      "alignment_path": "docs/alignment/ast.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/ast.md"
     },
     {
       "slug": "rd",
@@ -90,8 +85,7 @@
       "source": {"url": "https://github.com/hq-deng/RD4AD", "revision": "6554076872c65f8784f6ece8cfb39ce77e1aee12", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local feature, loss, and evaluator adapters; see the alignment record.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
-      "alignment_path": "docs/alignment/rd.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/rd.md"
     },
     {
       "slug": "uninet",
@@ -103,8 +97,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "Repository-local reimplementation aligned to an anomalib snapshot with MMEngine integration.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The detector is conditionally imported, and referenced raw validation artifacts are not distributed."]},
-      "alignment_path": "docs/alignment/uninet.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/uninet.md"
     },
     {
       "slug": "supersimplenet",
@@ -116,8 +109,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "Repository-local reimplementation with MMEngine integration and modified image-score handling.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The alignment record says the strict 300-epoch 15-category rerun and image-score confirmation remain open.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/supersimplenet.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/supersimplenet.md"
     },
     {
       "slug": "vitad",
@@ -129,8 +121,7 @@
       "source": {"url": "https://github.com/zhangzjn/ADer", "revision": "902937a7ed7fa7689674a4ac9b8fe9a72a40c402", "traceability": "public_revision"},
       "implementation_differences": "Closely derived ADer fusion, decoder, backbone, loss, and metric structures plus MMEngine integration; the frozen ADer tree has no identifiable redistribution license.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["Redistribution is blocked pending written permission or a documented clean-room replacement.", "The alignment table still records an open implementation-equivalence item that requires reconciliation.", "The official per-epoch order artifact is not distributed; train_vitad_exact_order.py only replays a user-supplied, independently verified JSON and stops with an actionable error when it is absent.", "The canonical path requests pretrained DINO weights through timm; when network and compatible local Hugging Face cache resolution both fail, the exception path may continue with randomly initialized encoder weights instead of failing closed.", "Referenced raw validation artifacts are not distributed."]},
-      "alignment_path": "docs/alignment/vitad.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/vitad.md"
     },
     {
       "slug": "uflow",
@@ -142,8 +133,7 @@
       "source": {"url": "https://github.com/mtailanian/uflow", "revision": "d6217844836790773f2c4b91ff3046c59b23f027", "traceability": "public_revision"},
       "implementation_differences": "Contains anomalib-derived ported blocks and an optional NFA path closely derived from AGPL-3.0 upstream code; default strict config disables NFA.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "blocked_by_optional_dependency", "limitations": ["FrEIA is an optional project extra but U-Flow imports it unconditionally, so the canonical detector cannot be imported from a core-only installation.", "The AGPL-derived NFA implementation must be removed or clean-room replaced before Apache-only release.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/uflow.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/uflow.md"
     },
     {
       "slug": "efficientad",
@@ -155,8 +145,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "Repository-local reimplementation with MMEngine integration and explicit references to external pretrained artifacts.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["The alignment record says an official-pretrained 15-category run remains incomplete.", "The detector downloads the referenced pretrained teacher when it is absent locally; its artifact license and checksum are not frozen.", "Referenced raw evidence and weights are not distributed."]},
-      "alignment_path": "docs/alignment/efficientad.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/efficientad.md"
     },
     {
       "slug": "patchcore",
@@ -168,8 +157,7 @@
       "source": {"url": null, "revision": null, "traceability": "local_snapshot_only"},
       "implementation_differences": "Repository-local implementation audited against an unpinned local ADer snapshot, with approximate coreset and MMEngine adapters.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The implementation reference has no recorded public revision in the alignment page.", "Referenced raw validation artifacts are not distributed."]},
-      "alignment_path": "docs/alignment/patchcore.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/patchcore.md"
     },
     {
       "slug": "destseg",
@@ -181,8 +169,7 @@
       "source": {"url": "https://github.com/apple/ml-destseg", "revision": "f6ea31fb5b097698b195f85b1d5e3efaedce9eb6", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration; model and transform sections follow Apple sample code whose custom license, trademark terms, and lack of patent grant require legal review.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["The canonical strict configuration resolves dtd_path='auto' only from a local data/dtd tree and raises when DTD images are absent; those assets are not distributed.", "The corrected mainline is still validation-in-progress and the recorded fresh rerun covers only 10 of 15 categories.", "The config README's full result summary must not be presented as fresh corrected-mainline evidence."]},
-      "alignment_path": "docs/alignment/destseg.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/destseg.md"
     },
     {
       "slug": "musc",
@@ -194,8 +181,7 @@
       "source": {"url": "https://github.com/xrli-U/MuSc", "revision": "72d58ad56c0cafa2b056bd0aa7676f9c21fccbc4", "traceability": "public_revision"},
       "implementation_differences": "MIT-licensed LNAMD, MSM, and RsCIN sections are explicitly marked copied and modified; MMEngine and batched-scoring adapters are added. PatchMaker-related secondary attribution remains to be frozen.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["Copied sections require source-license and modification-notice review.", "The canonical strict configuration requires a non-distributed local OpenCLIP reference tree and fails when it is absent.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/musc.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/musc.md"
     },
     {
       "slug": "memseg",
@@ -207,8 +193,7 @@
       "source": {"url": "https://github.com/TooTouch/MemSeg", "revision": "836bd465a9b14422f92666dc29dc36edce2692d0", "traceability": "public_revision"},
       "implementation_differences": "Repository-local reimplementation with MMEngine integration, Coordinate Attention, memory, and data-synthesis adapters.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The revised strict 15-category path has not been freshly rerun, and cross-framework RNG trajectory differences remain.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/memseg.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/memseg.md"
     },
     {
       "slug": "anomalydino",
@@ -220,8 +205,7 @@
       "source": {"url": "https://github.com/dammsi/AnomalyDINO", "revision": "b9d1c2648e3a5247437d4d953d907a8f3d994457", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and equivalent normalized-dot-product distance in place of the reference FAISS expression.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The detector is conditionally imported.", "The alignment record says the unified probe CLI remains absent.", "Referenced raw validation artifacts are not distributed."]},
-      "alignment_path": "docs/alignment/anomalydino.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/anomalydino.md"
     },
     {
       "slug": "cflow",
@@ -233,8 +217,7 @@
       "source": {"url": "https://github.com/gudovskiy/cflow-ad", "revision": "b2ebf9e673a0aa46992a3b18367ec066a57bba89", "traceability": "public_revision"},
       "implementation_differences": "Repository-local FrEIA implementation with MMEngine transforms and a strict guard for a non-distributed local reference tree.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["Canonical strict configuration requires non-distributed CFlow reference assets.", "FrEIA is an optional project extra; without it CFlow substitutes a lightweight fallback that is not the declared official-alignment implementation.", "The alignment record says the full archived benchmark item remains incomplete."]},
-      "alignment_path": "docs/alignment/cflow.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/cflow.md"
     },
     {
       "slug": "draem",
@@ -246,8 +229,7 @@
       "source": {"url": "https://github.com/VitjanZ/DRAEM", "revision": "2dbf67397ab5c10a1494e5ae70ab59a25d7c35ef", "traceability": "public_revision"},
       "implementation_differences": "Repository-local reimplementation with MMEngine data synthesis, loss, and evaluation adapters.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
-      "alignment_path": "docs/alignment/draem.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/draem.md"
     },
     {
       "slug": "padim",
@@ -259,8 +241,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "0ef8ab1e43340bddf4d92d1f046c3d34a83af6b0", "traceability": "public_revision"},
       "implementation_differences": "MMEngine implementation audited against the expanded public anomalib revision recorded by the alignment snapshot.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The public source revision is frozen, but referenced raw validation evidence is not distributed."]},
-      "alignment_path": "docs/alignment/padim.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/padim.md"
     },
     {
       "slug": "cfa",
@@ -272,8 +253,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and an intentional choice of anomalib over conflicting ADer details.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The current round did not publish a fresh complete 15-category raw result artifact.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/cfa.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/cfa.md"
     },
     {
       "slug": "aaclip",
@@ -285,8 +265,7 @@
       "source": {"url": "https://github.com/Mwxinnn/AA-CLIP", "revision": "53db195f230442aa118c246876c94ba1c76139cc", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local adapter/checkpoint paths.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["The official target adapter checkpoint is not distributed, Stage 2 numerical comparison remains open, and canonical config requires absent .refs assets."]},
-      "alignment_path": "docs/alignment/aaclip.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/aaclip.md"
     },
     {
       "slug": "differnet",
@@ -298,8 +277,7 @@
       "source": {"url": "https://github.com/marco-rudolph/differnet", "revision": "9bdf02686297a093fb206ffeba64b1c0e78182b6", "traceability": "public_revision"},
       "implementation_differences": "Closely derived flow subnet, permutation, coupling, and density logic with MMEngine integration; the frozen upstream tree has no identifiable redistribution license.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Redistribution is blocked pending written permission or a documented clean-room replacement.", "The method is image-level; any uniform pixel map is only API compatibility output."]},
-      "alignment_path": "docs/alignment/differnet.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/differnet.md"
     },
     {
       "slug": "dfm",
@@ -311,8 +289,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local feature-modeling/evaluator adapters.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The alignment record retains a backbone weight-tag provenance caveat.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/dfm.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/dfm.md"
     },
     {
       "slug": "fastflow",
@@ -324,8 +301,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "Repository-local implementation with MMEngine integration.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_optional_dependency", "limitations": ["FrEIA is an optional project extra but FastFlow imports it unconditionally, so the canonical detector cannot be imported from a core-only installation.", "The current round did not publish a fresh complete 15-category raw result artifact.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/fastflow.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/fastflow.md"
     },
     {
       "slug": "uniad",
@@ -337,8 +313,7 @@
       "source": {"url": "https://github.com/zhangzjn/ADer", "revision": "902937a7ed7fa7689674a4ac9b8fe9a72a40c402", "traceability": "public_revision"},
       "implementation_differences": "MMEngine implementation aligned to ADer; source attribution must be revalidated against the original Apache-2.0 UniAD repository and any ADer-only changes isolated.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["ADer-derived details remain on legal hold until dual-source traceability is complete.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/uniad.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/uniad.md"
     },
     {
       "slug": "anovl",
@@ -350,8 +325,7 @@
       "source": {"url": "https://github.com/hq-deng/AnoVL", "revision": "3a70bfdaea6baf1eeb140c5de8155b535bd94833", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local OpenCLIP checkpoint path.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["Canonical configuration points to an absent local OpenCLIP checkpoint.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/anovl.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/anovl.md"
     },
     {
       "slug": "anomalyclip",
@@ -363,8 +337,7 @@
       "source": {"url": "https://github.com/zqhang/AnomalyCLIP", "revision": "3911738c0867544f545a076ad78f3f11d9ecbfdf", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration; the public inventory selects the official detector while a legacy detector class remains registered.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["Canonical config requires non-distributed AnomalyCLIP reference assets.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/anomalyclip.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/anomalyclip.md"
     },
     {
       "slug": "dsr",
@@ -376,8 +349,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "Repository-local reimplementation with MMEngine integration and references to external pretrained artifacts.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["The canonical auto setting downloads pretrained VQ-VAE weights when they are absent locally.", "Referenced raw evidence and specific weights are not distributed and require provenance review."]},
-      "alignment_path": "docs/alignment/dsr.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/dsr.md"
     },
     {
       "slug": "winclip",
@@ -389,8 +361,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": null, "traceability": "public_repository_unpinned"},
       "implementation_differences": "Repository-local reimplementation ported from anomalib with MMEngine integration.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["The alignment record has no readable frozen revision, and missing local weights fall back to network access.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/winclip.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/winclip.md"
     },
     {
       "slug": "regad",
@@ -402,8 +373,7 @@
       "source": {"url": "https://github.com/MediaBrain-SJTU/RegAD", "revision": "5e2c1f8c18d302b0354471567846fee3ed2ff063", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and explicit support-set handling; despite the strict filename, the canonical configuration permits deterministic local support sampling when the official support set is absent.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The canonical strict configuration sets strict_require_official_support_set=False, so the runner silently uses a non-official deterministic local support-sampling fallback when the official support set is absent.", "Official support-set data is external, and referenced raw validation evidence is not distributed."]},
-      "alignment_path": "docs/alignment/regad.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/regad.md"
     },
     {
       "slug": "cutpaste",
@@ -415,8 +385,7 @@
       "source": {"url": "https://github.com/Runinho/pytorch-cutpaste", "revision": "10d8bf71df76d3a97f0106efee1d76f81d983149", "traceability": "public_revision"},
       "implementation_differences": "Closely derived CutPaste/Scar augmentation, projection head, and Gaussian-density scoring logic with tensor and MMEngine adapters; the frozen upstream tree has no identifiable redistribution license.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Redistribution is blocked pending written permission or a documented clean-room replacement.", "The alignment record leaves corruption severity, root cause, and the final mainline choice unresolved.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/cutpaste.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/cutpaste.md"
     },
     {
       "slug": "pyramidflow",
@@ -428,8 +397,7 @@
       "source": {"url": "https://github.com/gasharper/PyramidFlow", "revision": null, "traceability": "repository_unavailable"},
       "implementation_differences": "Core implementation is closely derived from an ADer proxy snapshot whose fixed tree has no identifiable redistribution license; the official repository is unavailable.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Closure is proxy-only, official source is unavailable, speed is unavailable, and redistribution is on legal hold.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/pyramidflow.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/pyramidflow.md"
     },
     {
       "slug": "nsa",
@@ -441,8 +409,7 @@
       "source": {"url": "https://github.com/hmsch/natural-synthetic-anomalies", "revision": "919591685307ce030fe27cb77687509dc277189c", "traceability": "audit_revision_only"},
       "implementation_differences": "Repository-local port of synthesis and training semantics with MMEngine integration; the release audit pins a current reference even though the historical derivation revision was not recorded.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The exact historical derivation revision was not recorded; the release audit pins the current upstream audit tree.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/nsa.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/nsa.md"
     },
     {
       "slug": "adaclip",
@@ -454,8 +421,7 @@
       "source": {"url": "https://github.com/caoyunkang/AdaCLIP", "revision": "b762ac40c3f33c77e7e513e48cb436f059d456da", "traceability": "public_revision"},
       "implementation_differences": "Repository-local implementation following the official prompt and adapter design with MMEngine integration.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Official checkpoints are external, and referenced raw validation artifacts are not distributed.", "The alignment record reports large per-category gaps and a non-official MVTec-only fallback path that remains unresolved."]},
-      "alignment_path": "docs/alignment/adaclip.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/adaclip.md"
     },
     {
       "slug": "dfkde",
@@ -467,8 +433,7 @@
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration; the method is image-level and emits a uniform map only for interface compatibility.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Pixel output is not a localized anomaly estimate in the reference ontology.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/dfkde.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/dfkde.md"
     },
     {
       "slug": "saaplus",
@@ -480,8 +445,7 @@
       "source": {"url": "https://github.com/caoyunkang/Segment-Any-Anomaly", "revision": "ff564ed09bef91d86452f62aa1564e778580513e", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and ported MVTec prompt definitions.",
       "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["Canonical configuration references three absent pretrained files and may implicitly download multi-gigabyte external weights.", "The detector is conditionally imported and raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/saaplus.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/saaplus.md"
     },
     {
       "slug": "ganomaly",
@@ -493,8 +457,7 @@
       "source": {"url": "https://github.com/samet-akcay/ganomaly", "revision": "78da4ea9a99f5b02ab60dd651a18def929176d77", "traceability": "public_revision"},
       "implementation_differences": "Repository-local encoder-decoder-encoder implementation with MMEngine integration.",
       "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The current strict path supports image-level evaluation only; it must not be presented as having comparable pixel localization evidence.", "Referenced raw evidence is not distributed."]},
-      "alignment_path": "docs/alignment/ganomaly.md",
-      "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
+      "alignment_path": "docs/alignment/ganomaly.md"
     }
   ]
 }

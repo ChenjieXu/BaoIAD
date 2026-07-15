@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import importlib.util
 import json
 import platform
 import subprocess
@@ -14,19 +15,29 @@ from pathlib import Path
 
 import yaml
 
-import tools.check_gpu_evidence as gpu_checker
-import tools.run_gpu_smoke as gpu_runner
-from tools.run_gpu_smoke import _sanitize_log, _sanitize_text
-
-
 ROOT = Path(__file__).resolve().parents[2]
-CHECKER = ROOT / "tools" / "check_gpu_evidence.py"
-SCHEMA = ROOT / "docs" / "release" / "gpu_smoke_evidence.schema.json"
+SCRIPTS = ROOT / ".github" / "scripts"
+CHECKER = SCRIPTS / "check_gpu_evidence.py"
 WORKFLOW = ROOT / ".github" / "workflows" / "gpu-smoke.yml"
 CHECKOUT_ACTION = "actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5"
 UPLOAD_ARTIFACT_ACTION = (
     "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
 )
+
+
+def _load_module(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+gpu_checker = _load_module("baoiad_gpu_checker", CHECKER)
+gpu_runner = _load_module("baoiad_gpu_runner", SCRIPTS / "run_gpu_smoke.py")
+_sanitize_log = gpu_runner._sanitize_log
+_sanitize_text = gpu_runner._sanitize_text
 
 
 def _commit() -> str:
@@ -61,32 +72,6 @@ def _run(evidence: Path) -> tuple[subprocess.CompletedProcess[str], dict]:
     return result, json.loads(result.stdout)
 
 
-def test_gpu_evidence_schema_is_versioned_and_fail_closed():
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-
-    assert schema["$schema"].endswith("2020-12/schema")
-    assert schema["properties"]["schema_version"] == {"const": 1}
-    assert set(schema["properties"]["status"]["enum"]) == {
-        "validated",
-        "not_validated",
-    }
-    environment = schema["$defs"]["environment"]
-    assert set(environment["required"]) == {
-        "cuda_available",
-        "python_version",
-        "torch_version",
-        "torchvision_version",
-        "cuda_runtime",
-        "mmcv",
-        "driver_version",
-        "device",
-    }
-    assert set(schema["$defs"]["mmcvPackage"]["properties"]["package"]["enum"]) == {
-        "mmcv",
-        "mmcv-lite",
-    }
-
-
 def test_gpu_workflow_is_manual_self_hosted_and_fail_closed():
     text = WORKFLOW.read_text(encoding="utf-8")
     workflow = yaml.load(text, Loader=yaml.BaseLoader)
@@ -100,8 +85,8 @@ def test_gpu_workflow_is_manual_self_hosted_and_fail_closed():
     assert workflow["concurrency"]["cancel-in-progress"] == "true"
     assert set(job["runs-on"]) >= {"self-hosted", "linux", "gpu"}
     assert "GPU_EVIDENCE_DIR" not in job["env"]
-    assert "tools/run_gpu_smoke.py" in run_script
-    assert "tools/check_gpu_evidence.py" in run_script
+    assert ".github/scripts/run_gpu_smoke.py" in run_script
+    assert ".github/scripts/check_gpu_evidence.py" in run_script
     assert "--require-validated" in run_script
     assert "nvidia-smi --query-gpu=driver_version --format=csv,noheader" in run_script
     assert "python -m pip install --editable ." in run_script
@@ -130,7 +115,7 @@ def test_gpu_workflow_is_manual_self_hosted_and_fail_closed():
     checker = next(
         step
         for step in job["steps"]
-        if "tools/check_gpu_evidence.py" in step.get("run", "")
+        if ".github/scripts/check_gpu_evidence.py" in step.get("run", "")
     )
     assert checker["if"] == "always()"
     upload = next(

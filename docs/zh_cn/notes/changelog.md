@@ -8,13 +8,13 @@
 
 ### 兼容性与迁移说明
 
-- 要求 Python 3.10 或更高版本；发布检查覆盖 Python 3.10 和 3.12。
+- 要求 Python 3.10 或更高版本；CI 支持环境使用 Python 3.10 和 3.12。
 - 核心环境使用 `mmcv-lite>=2.0`，不依赖编译版 MMCV 算子。
 - RegAD 默认保留确定性回退。设置 `strict_require_official_support_set=True` 后，程序会强制要求官方 support set，缺失时直接失败而不再回退。
 - ViTAD 的精确顺序评估要求用户提供已验证的 `--order-file`；BaoIAD 不生成、也不再分发该上游文件。
 - 权重默认受限加载。`--trusted-checkpoint` 仅能用于已验证的旧式 pickle 权重，因为加载这类文件可能执行代码。
 - 旧元数据中未受支持的 `mamba`、`mmpretrain` 和 `faiss-gpu` 可选依赖已不再声明。请使用已支持的 CPU FAISS 可选依赖，或在跟随上游代码时显式安装方法专用依赖。
-- 发布测试覆盖的已打包路径改用本地 SciPy/torchvision 数据增强方案，因此不再声明旧的 `imgaug` 可选依赖。旧调用方应迁移到这些路径。
+- 已打包路径改用本地 SciPy/torchvision 数据增强方案，因此不再声明旧的 `imgaug` 可选依赖。旧调用方应迁移到这些路径。
 
 ## v1.0.0 — 首次发布
 

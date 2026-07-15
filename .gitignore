@@ -1,105 +1,67 @@
-# Data
-data/
-!data/.gitkeep
-
-# Training outputs
-runs/
-results/
-
-# Python
+# Python bytecode and native extensions
 __pycache__/
-*.py[cod]
+*.py[codz]
 *$py.class
+*.so
+
+# Build and packaging outputs
+build/
+dist/
 *.egg-info/
 *.egg
-dist/
-build/
 
-# IDE
+# Test, analysis, and coverage caches
+.cache/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Environments and local secrets
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+env/
+ENV/
+
+# Editors and operating systems
 .idea/
 .vscode/
 *.swp
 *.swo
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Environment
-.env
-.venv/
-env/
-
-# OMC
-.omc/
-.omx/
-
-# Node
-node_modules/
-
-# Cache
-*.cache/
-.cache/
-
-# OS
+*~
 .DS_Store
 Thumbs.db
+Desktop.ini
 
-# Pretrained weights (large files)
-pretrained/
-pre_trained/
+# Notebook and Sphinx outputs
+.ipynb_checkpoints/
+docs/**/_build/
 
-# BERT
-bert-base-uncased/
+# Repository-local data and experiment outputs
+/data/
+/runs/
+/results/
+/artifacts/
+/work_dirs/
+/pretrained/
+/pre_trained/
 
-# Lock files (regenerated)
-requirements.lock
-package-lock.json
-
-# Logs
+# Model artifacts, logs, and process state
+*.pth
+*.pt
+*.ckpt
+*.onnx
 *.log
-
-# Sphinx build
-docs/en/_build/
-docs/zh_cn/_build/
-
-# IADBench sync artifacts
-docs/paper/
-tools/run_visa_*.sh
-scripts/
-
-# External dependencies
-groundingdino/
-
-# Agent docs
-AGENT.md
-agent.md
-
-# Dev
-CLAUDE.md
-.claude/
-.refs/
-
-# Local research and release-excluded artifacts
-README.pdf
-artifacts/
-baoiad-sota/
-curricad-sota/
-curricad_sota/
-docs/evidence/
 *.pid
-**/remote_raw/
-**/raw_results/
-work_dirs/
 
-# Research-only methods and configs excluded from the WAIC release
-baoiad/models/detectors/covad.py
-baoiad/models/detectors/nfa_dinomaly.py
-configs/covad/
-configs/nfa_dinomaly/
-configs/**/curricad_*.py
-configs/dinomaly/dinomaly_392_mvtec_ad2_r6_1*.py
-configs/dinomaly/dinomaly_392_realiad_d3_r4_1_single.py
-configs/dinomaly/dinomaly_392_visa_r3_2a_single.py
-configs/efficientad/efficientad_256_realiad_d3_r4_1_single.py
-configs/patchcore/patchcore_wrn50_256_realiad_d3_r4_1_single.py
-tools/validate_admitted37_manifest.py
+# Local frozen upstream references
+/.refs/

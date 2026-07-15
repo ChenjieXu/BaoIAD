@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/hq-deng/AnoVL](https://github.com/hq-deng/AnoVL)
 - **Source revision:** [3a70bfdaea6baf1eeb140c5de8155b535bd94833](https://github.com/hq-deng/AnoVL/commit/3a70bfdaea6baf1eeb140c5de8155b535bd94833)
 - **Config README:** [configs/anovl/README.md](../../configs/anovl/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

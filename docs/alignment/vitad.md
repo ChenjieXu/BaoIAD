@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/zhangzjn/ADer](https://github.com/zhangzjn/ADer)
 - **Source revision:** [902937a7ed7fa7689674a4ac9b8fe9a72a40c402](https://github.com/zhangzjn/ADer/commit/902937a7ed7fa7689674a4ac9b8fe9a72a40c402)
 - **Config README:** [configs/vitad/README.md](../../configs/vitad/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/gudovskiy/cflow-ad](https://github.com/gudovskiy/cflow-ad)
 - **Source revision:** [b2ebf9e673a0aa46992a3b18367ec066a57bba89](https://github.com/gudovskiy/cflow-ad/commit/b2ebf9e673a0aa46992a3b18367ec066a57bba89)
 - **Config README:** [configs/cflow/README.md](../../configs/cflow/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

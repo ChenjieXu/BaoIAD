@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/hq-deng/RD4AD](https://github.com/hq-deng/RD4AD)
 - **Source revision:** [6554076872c65f8784f6ece8cfb39ce77e1aee12](https://github.com/hq-deng/RD4AD/commit/6554076872c65f8784f6ece8cfb39ce77e1aee12)
 - **Config README:** [configs/rd/README.md](../../configs/rd/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

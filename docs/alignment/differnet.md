@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/marco-rudolph/differnet](https://github.com/marco-rudolph/differnet)
 - **Source revision:** [9bdf02686297a093fb206ffeba64b1c0e78182b6](https://github.com/marco-rudolph/differnet/commit/9bdf02686297a093fb206ffeba64b1c0e78182b6)
 - **Config README:** [configs/differnet/README.md](../../configs/differnet/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

@@ -90,7 +90,13 @@ def _section(text: str, heading: str) -> str:
 
 def residual_hits(root: Path = ROOT, paths: tuple[str, ...] | None = None) -> list[Hit]:
     if paths is None:
-        paths = ('README.md', 'README_zh-CN.md', 'docs', 'configs', 'tools/benchmark.py', 'tools/smoke_test_gpu.sh', 'tools/smoke_test_remaining.sh')
+        paths = (
+            'README.md',
+            'README_zh-CN.md',
+            'docs',
+            'configs',
+            'tools/benchmark.py',
+        )
     files: list[Path] = []
     for raw in paths:
         p = root / raw

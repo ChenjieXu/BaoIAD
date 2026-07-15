@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/DonaldRR/SimpleNet](https://github.com/DonaldRR/SimpleNet)
 - **Source revision:** [351a2b8d4e8cfc944dbccbf9bc6ceda930c6f26b](https://github.com/DonaldRR/SimpleNet/commit/351a2b8d4e8cfc944dbccbf9bc6ceda930c6f26b)
 - **Config README:** [configs/simplenet/README.md](../../configs/simplenet/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

@@ -16,7 +16,8 @@ locks the retained paths and CLI surface and documents intentional migrations.
 
 ### Compatibility and migration
 
-- Python 3.10 or newer is required; release checks target Python 3.10 and 3.12.
+- Python 3.10 or newer is required; supported CI environments use Python 3.10
+  and 3.12.
 - The core environment uses `mmcv-lite>=2.0` and does not require compiled MMCV
   operators.
 - RegAD's deterministic fallback remains available by default. Set
@@ -29,8 +30,8 @@ locks the retained paths and CLI surface and documents intentional migrations.
 - Unsupported public extras from older metadata (`mamba`, `mmpretrain`, and
   `faiss-gpu`) are no longer declared. Use the supported CPU FAISS extra or
   install method-specific dependencies explicitly when following upstream code.
-- The legacy `imgaug` extra is no longer declared because release-tested
-  packaged paths use local SciPy/torchvision augmentation alternatives. Legacy
+- The legacy `imgaug` extra is no longer declared because packaged paths use
+  local SciPy/torchvision augmentation alternatives. Legacy
   callers should migrate to those paths instead of relying on the old extra.
 
 ## v1.0.0 — Initial Release

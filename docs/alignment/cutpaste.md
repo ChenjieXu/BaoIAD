@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/Runinho/pytorch-cutpaste](https://github.com/Runinho/pytorch-cutpaste)
 - **Source revision:** [10d8bf71df76d3a97f0106efee1d76f81d983149](https://github.com/Runinho/pytorch-cutpaste/commit/10d8bf71df76d3a97f0106efee1d76f81d983149)
 - **Config README:** [configs/cutpaste/README.md](../../configs/cutpaste/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 

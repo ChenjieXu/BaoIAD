@@ -4,8 +4,7 @@ Describe the user-visible outcome and why the change is needed.
 
 ## Scope
 
-- Change type: bug fix / feature / method or config / documentation / release
-  governance / other
+- Change type: bug fix / feature / method or config / documentation / other
 - Affected methods, configs, datasets, or public APIs:
 - Compatibility or migration impact:
 
@@ -16,7 +15,7 @@ was skipped or could not run.
 
 - [ ] Relevant targeted tests pass.
 - [ ] Required offline CPU checks pass on the applicable Python versions.
-- [ ] Method inventory and public-release checks pass when applicable.
+- [ ] Method inventory checks pass when applicable.
 - [ ] English and Chinese documentation build with warnings treated as errors
       when documentation changed.
 - [ ] New or changed third-party code/assets have provenance and license notes.
@@ -34,23 +33,13 @@ Select and explain exactly one state:
 
 CPU-only checks never count as GPU validation.
 
-## Documentation and release impact
+## Documentation impact
 
 - [ ] User-facing behavior and migration notes are documented.
 - [ ] English/Chinese public invariants remain aligned where applicable.
-- [ ] Release notes are updated, or this change has no release-note impact.
-
-## Review ownership
-
-Identify required role reviews without inventing GitHub handles:
-
-- Technical maintainer:
-- Brand owner, if public identity/media changed:
-- Legal/OSS owner, if licensing/provenance changed:
-- Security owner, if security behavior changed:
-- Release owner, if release metadata or gates changed:
+- [ ] The changelog is updated, or this change has no user-visible impact.
 
 ## Known limitations
 
-State remaining risks, external approvals, unavailable hardware, or checks not
-run. Use **not validated** rather than implying success without evidence.
+State remaining risks, unavailable hardware, or checks not run. Use **not
+validated** rather than implying success without evidence.

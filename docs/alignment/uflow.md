@@ -17,7 +17,7 @@ This public summary is derived from the [method status inventory](method_status.
 - **Source repository:** [https://github.com/mtailanian/uflow](https://github.com/mtailanian/uflow)
 - **Source revision:** [d6217844836790773f2c4b91ff3046c59b23f027](https://github.com/mtailanian/uflow/commit/d6217844836790773f2c4b91ff3046c59b23f027)
 - **Config README:** [configs/uflow/README.md](../../configs/uflow/README.md)
-- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json) · [compliance checker](../../tools/check_release_compliance.py)
+- **Release records:** [method status](method_status.json) · [known exceptions](exceptions.json)
 
 ## Implementation differences
 
