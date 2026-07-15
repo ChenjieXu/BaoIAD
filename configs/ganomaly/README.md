@@ -2,7 +2,8 @@
 
 > GANomaly: Semi-Supervised Anomaly Detection
 
-- **Paper**: [GANomaly: Semi-Supervised Anomaly Detection](https://arxiv.org/abs/1805.06725)
+- **Paper**: [publication](https://arxiv.org/abs/1805.06725)
+- **Implementation source**: [upstream repository](https://github.com/samet-akcay/ganomaly); revision: `78da4ea9a99f5b02ab60dd651a18def929176d77`
 - **Category**: Reconstruction
 - **Backbone**: GAN
 
@@ -12,7 +13,7 @@ GANomaly uses an encoder-decoder-encoder GAN architecture for anomaly detection.
 
 | Config | Description |
 |--------|-------------|
-| [`ganomaly_256_mvtec_strict.py`](ganomaly_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`ganomaly_256_mvtec_strict.py`](ganomaly_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`ganomaly_256_visa.py`](ganomaly_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ GANomaly uses an encoder-decoder-encoder GAN architecture for anomaly detection.
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The alignment record is [`docs/alignment/ganomaly.md`](../../docs/alignment/ganomaly.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The [implementation provenance and reproducibility record](../../docs/alignment/ganomaly.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

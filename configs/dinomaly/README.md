@@ -2,7 +2,8 @@
 
 > Dinomaly: Less Is More in Anomaly Detection
 
-- **Paper**: [Dinomaly: Less Is More in Anomaly Detection](https://arxiv.org/abs/2405.14525)
+- **Paper**: [publication](https://arxiv.org/abs/2405.14325)
+- **Implementation source**: [upstream repository](https://github.com/guojiajeremy/Dinomaly); revision: `c5c76d01a2bd7212f1c4b7dfdad14902d0f48cfe`
 - **Category**: Knowledge Distillation
 - **Backbone**: DINOv2-ViT-B/14
 
@@ -12,7 +13,7 @@ Dinomaly uses DINOv2 as a frozen encoder with a lightweight decoder for anomaly 
 
 | Config | Description |
 |--------|-------------|
-| [`dinomaly_392_mvtec_strict.py`](dinomaly_392_mvtec_strict.py) | MVTec AD strict alignment |
+| [`dinomaly_392_mvtec_strict.py`](dinomaly_392_mvtec_strict.py) | MVTec AD reference configuration |
 | [`dinomaly_392_visa.py`](dinomaly_392_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ Dinomaly uses DINOv2 as a frozen encoder with a lightweight decoder for anomaly 
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The alignment record is [`docs/alignment/dinomaly.md`](../../docs/alignment/dinomaly.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The [implementation provenance and reproducibility record](../../docs/alignment/dinomaly.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

@@ -2,7 +2,8 @@
 
 > CFA: Coupled-Hypersphere-based Feature Adaptation for Anomaly Detection
 
-- **Paper**: [CFA: Coupled-Hypersphere-based Feature Adaptation for Anomaly Detection](https://arxiv.org/abs/2206.04603)
+- **Paper**: [publication](https://arxiv.org/abs/2206.04325)
+- **Implementation source**: [upstream repository](https://github.com/open-edge-platform/anomalib); revision: `4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a`
 - **Category**: Discriminator
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ CFA adapts features into coupled hyperspheres in a projected space for anomaly d
 
 | Config | Description |
 |--------|-------------|
-| [`cfa_256_mvtec_strict.py`](cfa_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`cfa_256_mvtec_strict.py`](cfa_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`cfa_256_visa.py`](cfa_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ CFA adapts features into coupled hyperspheres in a projected space for anomaly d
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Discriminative** family. The alignment record is [`docs/alignment/cfa.md`](../../docs/alignment/cfa.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Discriminative** family. The [implementation provenance and reproducibility record](../../docs/alignment/cfa.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

@@ -2,7 +2,8 @@
 
 > DSR: A Dual Subspace Re-projection Network for Surface Anomaly Detection
 
-- **Paper**: [DSR: A Dual Subspace Re-projection Network for Surface Anomaly Detection](https://arxiv.org/abs/2207.06608)
+- **Paper**: [publication](https://arxiv.org/abs/2208.01521)
+- **Implementation source**: [upstream repository](https://github.com/open-edge-platform/anomalib); revision: `4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a`
 - **Category**: Reconstruction
 - **Backbone**: AE + Subspace
 
@@ -12,7 +13,7 @@ DSR uses a dual subspace re-projection network that projects features onto norma
 
 | Config | Description |
 |--------|-------------|
-| [`dsr_256_mvtec_strict.py`](dsr_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`dsr_256_mvtec_strict.py`](dsr_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`dsr_256_visa.py`](dsr_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ DSR uses a dual subspace re-projection network that projects features onto norma
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The alignment record is [`docs/alignment/dsr.md`](../../docs/alignment/dsr.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The [implementation provenance and reproducibility record](../../docs/alignment/dsr.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

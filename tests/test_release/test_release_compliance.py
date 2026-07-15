@@ -397,8 +397,7 @@ def test_secondary_source_entries_cannot_be_collapsed_into_primary_sources():
     errors = checker.validate_provenance_document(document, ROOT)
 
     assert any(
-        "required secondary-source entries are missing" in error
-        and identifier in error
+        "required secondary-source entries are missing" in error and identifier in error
         for error in errors
     )
 
@@ -430,8 +429,7 @@ def test_required_external_artifact_cannot_be_omitted():
     errors = checker.validate_provenance_document(document, ROOT)
 
     assert any(
-        "required external artifact entry is missing" in error
-        and identifier in error
+        "required external artifact entry is missing" in error and identifier in error
         for error in errors
     )
 
@@ -563,23 +561,46 @@ def test_alignment_exception_cannot_be_downgraded_without_resolution_evidence():
 def test_machine_gated_alignment_items_cannot_close_on_free_form_text():
     checker = _load_checker()
     document = _read_json("docs/alignment/exceptions.json")
-    for identifier in ("ALIGN-ABSENT-EVIDENCE", "ALIGN-CLEAN-CLONE"):
-        item = next(
-            entry for entry in document["exceptions"] if entry["id"] == identifier
-        )
-        item["status"] = "resolved"
-        item["release_blocking"] = False
-        item["resolution_evidence"] = "unverified text"
+    item = next(
+        entry for entry in document["exceptions"] if entry["id"] == "ALIGN-CLEAN-CLONE"
+    )
+    item["status"] = "resolved"
+    item["release_blocking"] = False
+    item["resolution_evidence"] = "unverified text"
 
     errors = checker.validate_alignment_exceptions_document(document, ROOT)
 
     assert (
-        sum("requires a goal-specific machine gate" in error for error in errors) == 2
+        sum("requires a goal-specific machine gate" in error for error in errors) == 1
     )
 
 
-def test_broken_link_exception_cannot_resolve_while_links_still_break():
+def test_absent_evidence_exception_uses_the_alignment_marker_scan():
     checker = _load_checker()
+    document = _read_json("docs/alignment/exceptions.json")
+    item = next(
+        entry
+        for entry in document["exceptions"]
+        if entry["id"] == "ALIGN-ABSENT-EVIDENCE"
+    )
+    item["status"] = "resolved"
+    item["release_blocking"] = False
+    item["resolution_evidence"] = (
+        "G003 public documentation gate and alignment marker scan"
+    )
+
+    errors = checker.validate_alignment_exceptions_document(document, ROOT)
+
+    assert not any("undistributed artifact markers remain" in error for error in errors)
+
+
+def test_broken_link_exception_cannot_resolve_while_links_still_break(monkeypatch):
+    checker = _load_checker()
+    monkeypatch.setattr(
+        checker,
+        "_broken_alignment_links",
+        lambda _root: ["docs/alignment/glass.md -> missing.md"],
+    )
     document = _read_json("docs/alignment/exceptions.json")
     item = next(
         entry for entry in document["exceptions"] if entry["id"] == "ALIGN-BROKEN-LINKS"
@@ -593,13 +614,20 @@ def test_broken_link_exception_cannot_resolve_while_links_still_break():
     assert any("broken relative links remain" in error for error in errors)
 
 
-def test_paper_link_exception_must_match_the_readme_scan():
+def test_paper_link_exception_must_match_the_readme_scan(monkeypatch):
     checker = _load_checker()
+    monkeypatch.setattr(
+        checker,
+        "_method_readme_paper_link_mismatches",
+        lambda _root, _inventory: {"glass"},
+    )
     document = _read_json("docs/alignment/exceptions.json")
     item = next(
         entry for entry in document["exceptions"] if entry["id"] == "ALIGN-PAPER-LINKS"
     )
-    item["methods"] = item["methods"][:-1]
+    item["status"] = "open"
+    item["release_blocking"] = True
+    item["resolution_evidence"] = None
 
     errors = checker.validate_alignment_exceptions_document(document, ROOT)
 
@@ -617,18 +645,13 @@ def test_alignment_method_sets_are_bound_to_method_status_states():
         for entry in document["exceptions"]
         if entry["id"] == "ALIGN-PARTIAL-VALIDATION"
     )
-    broken_links = next(
-        entry for entry in document["exceptions"] if entry["id"] == "ALIGN-BROKEN-LINKS"
-    )
     clean_clone["methods"].remove("dinomaly")
     partial["methods"].remove("adaclip")
-    broken_links["methods"] = broken_links["methods"][:-1]
 
     errors = checker.validate_alignment_exceptions_document(document, ROOT)
 
     assert any("non-clean-clone runtime states" in error for error in errors)
     assert any("partial validation state set" in error for error in errors)
-    assert any("methods must match the broken-link scan" in error for error in errors)
 
 
 def test_pending_external_approval_must_fail_closed():

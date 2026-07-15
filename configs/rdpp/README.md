@@ -2,7 +2,8 @@
 
 > RD++: Anomaly Detection via Iterative Reverse Distillation
 
-- **Paper**: [RD++: Anomaly Detection via Iterative Reverse Distillation](https://arxiv.org/abs/2307.01348)
+- **Paper**: [publication](https://openaccess.thecvf.com/content/CVPR2023/html/Tien_Revisiting_Reverse_Distillation_for_Anomaly_Detection_CVPR_2023_paper.html)
+- **Implementation source**: [upstream repository](https://github.com/tientrandinh/Revisiting-Reverse-Distillation); revision: `7f2ceb7c87e602617b8600e1a498f7ef7f5247d6`
 - **Category**: Knowledge Distillation
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ RD++ extends Reverse Distillation with iterative approximation for anomaly detec
 
 | Config | Description |
 |--------|-------------|
-| [`rdpp_wrn50_256_mvtec_strict.py`](rdpp_wrn50_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`rdpp_wrn50_256_mvtec_strict.py`](rdpp_wrn50_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`rdpp_wrn50_256_visa.py`](rdpp_wrn50_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ RD++ extends Reverse Distillation with iterative approximation for anomaly detec
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Knowledge distillation** family. The alignment record is [`docs/alignment/rdpp.md`](../../docs/alignment/rdpp.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Knowledge distillation** family. The [implementation provenance and reproducibility record](../../docs/alignment/rdpp.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

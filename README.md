@@ -5,37 +5,42 @@
 </p>
 
 <p align="center">
-  <a href="https://baoiad.readthedocs.io/en/latest/"><img src="https://img.shields.io/badge/docs-latest-blue" alt="docs"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="license"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9%2B-blue" alt="python"></a>
-  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/pytorch-2.0%2B-orange" alt="pytorch"></a>
-  <a href="docs/alignment/README.md"><img src="https://img.shields.io/badge/methods-37-purple" alt="methods"></a>
-  <a href="https://github.com/ChenjieXu/BaoIAD"><img src="https://img.shields.io/badge/NeurIPS%202026-Under%20E%26D%20Review-red" alt="NeurIPS 2026 under review"></a>
-</p>
-
-<p align="center">
   English | <a href="README_zh-CN.md">简体中文</a>
 </p>
 
-> **📢 BaoIAD is currently under NeurIPS 2026 Evaluations and Datasets review.**
-
 <p align="center">
-  <a href="https://baoiad.readthedocs.io/en/latest/">📘 Documentation</a> |
-  <a href="docs/en/get_started.md">🛠️ Installation</a> |
-  <a href="docs/en/user_guides/train_test.md">🚀 Train & Test</a> |
-  <a href="docs/en/model_zoo.md">📚 Model Zoo</a> |
-  <a href="docs/alignment/README.md">🧭 Alignment Evidence</a>
+  <a href="https://baoiad.readthedocs.io/en/latest/"><img src="https://img.shields.io/badge/docs-latest-blue" alt="documentation"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="Apache 2.0 license"></a>
 </p>
 
-## Introduction
+BaoIAD is an MMEngine-based industrial anomaly detection benchmark with 37 repository-local method integrations across 9 families, maintained by [Baosight-xVue](https://github.com/Baosight-xVue).
 
-BaoIAD is a unified industrial anomaly detection (IAD) benchmark and toolbox built on [MMEngine](https://github.com/open-mmlab/mmengine). It provides config-driven training, testing, benchmarking, and repository-local strict-alignment evidence for commonly used IAD methods.
+Repository release checks have been executed on Python 3.10 and 3.12. Dataset adapters cover 10 public industrial anomaly-detection datasets; the datasets themselves are not distributed by this repository.
 
-Major features:
+<p align="center">
+  <a href="docs/en/get_started.md">🛠️ Installation</a> |
+  <a href="#getting-started">🚀 Getting Started</a> |
+  <a href="docs/en/model_zoo.md">📚 Model Zoo</a> |
+  <a href="https://baoiad.readthedocs.io/en/latest/">📘 Documentation</a> |
+  <a href="#contributing">🤝 Contributing</a> |
+  <a href="#citation">📝 Citation</a>
+</p>
 
-- **Config-driven methods**: each method has a dedicated `configs/<method>/README.md` with runnable config entry points.
+## Scope and limitations
+
+- BaoIAD is distributed as source code. It does not currently publish hosted checkpoints, a hosted demo, a Docker image, or a PyPI package.
+- Users must obtain each dataset and any external pretrained artifact under its original terms, then configure the corresponding local path.
+- Optional method families have different dependency and hardware requirements; installing the core package alone does not make every configuration runnable.
+- Implementation provenance and validation depth vary across the 37-method inventory. Consult the [method-status manifest](docs/alignment/method_status.json), [documented exceptions](docs/alignment/exceptions.json), and [compliance checker](tools/check_release_compliance.py) before interpreting a method as independently reproduced.
+- The visualization below is a qualitative illustration, not a uniform benchmark or ranking. It includes SPADE as an external, non-inventory reference alongside BaoIAD methods.
+
+## Capabilities
+
+BaoIAD provides config-driven training, testing, benchmarking, and repository-local implementation provenance and reproducibility notes for commonly used IAD methods.
+
+- **Config-driven methods**: each method has a dedicated `configs/<method>/README.md` with its configuration entry points and method-specific notes.
 - **Grouped model zoo**: methods are organized by modeling family so users can find related baselines quickly.
-- **Strict-alignment evidence**: [`docs/alignment/`](docs/alignment/) preserves per-method reference freezes, implementation checks, behavior probes, and archived benchmark stop-lines.
+- **Method-level records**: [`docs/alignment/`](docs/alignment/) preserves reference freezes, implementation checks, behavior probes, known gaps, and historical validation records where available.
 - **Unified benchmark tooling**: `tools/train.py`, `tools/test.py`, and `tools/benchmark.py` share the same config conventions.
 
 ## Architecture
@@ -46,7 +51,7 @@ Major features:
 
 ## Method Families
 
-BaoIAD keeps 37 methods in 9 families. Method names link to config READMEs, and `evidence` links point to repository-local alignment records. The same grouped overview is also available in the [Model Zoo](docs/en/model_zoo.md).
+BaoIAD keeps 37 method integrations in 9 families. Method names link to config READMEs, and `evidence` links point to repository-local provenance and reproducibility records whose validation depth is defined by the method-status manifest. The same grouped overview is also available in the [Model Zoo](docs/en/model_zoo.md).
 
 | **Self-supervised synthesis** | **Reconstruction / ViT** | **Discriminative** |
 | --- | --- | --- |
@@ -60,7 +65,7 @@ BaoIAD keeps 37 methods in 9 families. Method names link to config READMEs, and 
 | --- | --- | --- |
 | [PatchCore](configs/patchcore/README.md) (CVPR'2022; [evidence](docs/alignment/patchcore.md))<br>[PaDiM](configs/padim/README.md) (ICPR'2021; [evidence](docs/alignment/padim.md))<br>[DFM](configs/dfm/README.md) (ICPR'2021; [evidence](docs/alignment/dfm.md))<br>[DFKDE](configs/dfkde/README.md) (Anomalib / ICIP'2022; [evidence](docs/alignment/dfkde.md)) | [MuSc](configs/musc/README.md) (ICLR'2024; [evidence](docs/alignment/musc.md))<br>[AACLIP](configs/aaclip/README.md) (CVPR'2025; [evidence](docs/alignment/aaclip.md))<br>[AnoVL](configs/anovl/README.md) (arXiv'2023; [evidence](docs/alignment/anovl.md))<br>[AnomalyCLIP](configs/anomalyclip/README.md) (ICLR'2024; [evidence](docs/alignment/anomalyclip.md))<br>[WinCLIP](configs/winclip/README.md) (CVPR'2023; [evidence](docs/alignment/winclip.md))<br>[AdaCLIP](configs/adaclip/README.md) (ECCV'2024; [evidence](docs/alignment/adaclip.md))<br>[SAA+](configs/saaplus/README.md) (arXiv'2023; [evidence](docs/alignment/saaplus.md)) | [AnomalyDINO](configs/anomalydino/README.md) (WACV'2025; [evidence](docs/alignment/anomalydino.md))<br>[RegAD](configs/regad/README.md) (ECCV'2022; [evidence](docs/alignment/regad.md)) |
 
-## Supported Datasets
+## Dataset Configurations
 
 | Dataset | Categories | Config |
 |---------|-----------:|--------|
@@ -89,7 +94,7 @@ Please refer to [Installation](docs/en/get_started.md) for detailed instructions
 conda create -n baoiad python=3.10 -y && conda activate baoiad
 
 # Install BaoIAD
-git clone https://github.com/ChenjieXu/BaoIAD.git
+git clone https://github.com/Baosight-xVue/BaoIAD.git
 cd BaoIAD
 pip install -e .
 
@@ -137,7 +142,7 @@ python tools/test.py <config> <checkpoint> \
 <div align="center">
 <img src="resources/vis_examples/anomaly_detection_results.png" width="100%" alt="Anomaly detection visualization">
 
-*Examples: PatchCore, PaDiM, and SPADE (WideResNet-50) on MVTec AD.*
+*Qualitative output-format examples on MVTec AD. For each category, columns show the input image, ground-truth mask, anomaly heatmap overlaid on the input, and predicted mask. Rows compare PatchCore, PaDiM, and SPADE; SPADE is an external comparison baseline and is not part of BaoIAD's 37-method inventory. These examples are not a benchmark ranking or a cross-configuration performance comparison.*
 </div>
 
 ## Documentation Map
@@ -145,7 +150,7 @@ python tools/test.py <config> <checkpoint> \
 - [English docs](docs/en/index.rst)
 - [Chinese docs](docs/zh_cn/index.rst)
 - [Model zoo](docs/en/model_zoo.md)
-- [Alignment evidence](docs/alignment/README.md)
+- [Implementation provenance and reproducibility notes](docs/alignment/README.md)
 
 ## Validation
 
@@ -170,14 +175,14 @@ If you use this toolbox or benchmark in your research, please cite this GitHub r
   author       = {Chenjie Xu and Yang Zhang and Tianyun Hu and Bing Hu},
   year         = {2026},
   doi          = {10.5281/zenodo.20067087},
-  url          = {https://github.com/ChenjieXu/BaoIAD}
+  url          = {https://github.com/Baosight-xVue/BaoIAD}
 }
 ```
 
 ## License
 
-This project is released under the [Apache 2.0 license](LICENSE).
+BaoIAD-authored source code is released under the [Apache 2.0 license](LICENSE). Third-party components, datasets, pretrained artifacts, and derived media remain subject to their own terms; see [Third-party notices](THIRD_PARTY_NOTICES.md) and the [resource inventory](resources/README.md).
 
 ## Acknowledgement
 
-BaoIAD is built on top of [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv). We thank the OpenMMLab community for providing the foundational training infrastructure. We also thank the original authors of the implemented anomaly-detection methods for making their code and protocols publicly available.
+BaoIAD is maintained by the [Baosight-xVue](https://github.com/Baosight-xVue) organization and is built on top of [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv). We thank the OpenMMLab community for providing the foundational training infrastructure. We also thank the original authors of the integrated anomaly-detection methods for making their research and implementations publicly available.

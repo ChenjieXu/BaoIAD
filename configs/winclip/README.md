@@ -2,7 +2,8 @@
 
 > WinCLIP: Zero-/Few-Shot Anomaly Classification and Segmentation
 
-- **Paper**: [WinCLIP: Zero-/Few-Shot Anomaly Classification and Segmentation](https://arxiv.org/abs/2303.14814)
+- **Paper**: [publication](https://arxiv.org/abs/2303.14814)
+- **Implementation source**: [upstream repository](https://github.com/open-edge-platform/anomalib); revision not pinned in the method-status manifest
 - **Category**: Vision-Language
 - **Backbone**: OpenCLIP-ViT/L-14
 
@@ -37,6 +38,6 @@ WinCLIP performs zero-shot and few-shot anomaly detection by computing windowed 
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The alignment record is [`docs/alignment/winclip.md`](../../docs/alignment/winclip.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The [implementation provenance and reproducibility record](../../docs/alignment/winclip.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

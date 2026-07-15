@@ -1,17 +1,18 @@
 # Overview
 
-**BaoIAD** is a unified benchmark for industrial anomaly detection (IAD). It provides 37 methods across 9 families, evaluated on 10 datasets under a single, consistent MMEngine-based framework. BaoIAD is designed to make cross-method comparison fair, reproducible, and transparent.
+**BaoIAD** is an MMEngine-based benchmark toolbox for industrial anomaly detection (IAD). Its repository inventory contains 37 method integrations across 9 families and dataset adapters for 10 public datasets. Validation depth, external prerequisites, and redistribution clearance vary by method, so the inventory is not a claim that every method is independently reproduced or directly comparable from a clean clone.
 
 ## What BaoIAD Is
 
-- A **benchmark-first toolbox**: every method ships with reference-aligned configs, frozen reference outputs, and code-path parity evidence documented in [`docs/alignment/`](../alignment/).
-- A **single-framework reimplementation** of 37 IAD methods — from feature-memory (PatchCore, PaDiM) to vision-language (WinCLIP, AnomalyCLIP) — sharing a common data pipeline, training loop, and evaluation metric set.
+- A **benchmark-first toolbox**: each method has configuration entry points and a public provenance/reproducibility record under [`docs/alignment/`](../alignment/).
+- A **single-framework integration** of 37 IAD methods — from feature-memory (PatchCore, PaDiM) to vision-language (WinCLIP, AnomalyCLIP) — sharing common repository interfaces where the method permits.
 - A **config-driven** system built on MMEngine: inherit base configs for runtime, datasets, schedules, and backbones; override any field from the command line.
 
 ## What BaoIAD Is Not
 
 - Not a general-purpose training library. Configs and code are tuned for the benchmark setting (specific backbones, resolutions, hyperparameters chosen for alignment with original papers).
 - Not a deployment or inference server. The focus is on reproducible training, testing, and evaluation.
+- Not a distribution channel for datasets, pretrained checkpoints, or every optional dependency. Users must obtain external artifacts under their original terms.
 
 ## Key Features
 
@@ -21,12 +22,14 @@ Run `python tools/benchmark.py --data_root data/mvtec_ad --methods all --categor
 
 ### Alignment Evidence
 
-Every method has an alignment document under [`docs/alignment/`](../alignment/) that records:
+Every method has a public record under [`docs/alignment/`](../alignment/) that records, where available:
 
 - The original paper / code reference used
 - Config-level hyperparameter provenance
 - Code-path parity checks (forward pass, loss computation, scoring)
-- Behavior probes comparing BaoIAD outputs to frozen reference outputs
+- Known implementation differences, runtime prerequisites, and validation limitations
+
+The machine-readable [method-status manifest](../alignment/method_status.json) is the source of truth for whether a record is partially verified or historical evidence. Referenced raw research artifacts are not part of the public release.
 
 ### Config System
 

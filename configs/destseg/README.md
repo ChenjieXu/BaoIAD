@@ -2,7 +2,8 @@
 
 > DeSTSeg: Segmentation Guided Denoising for Anomaly Detection
 
-- **Paper**: [DeSTSeg: Segmentation Guided Denoising for Anomaly Detection](https://arxiv.org/abs/2304.08401)
+- **Paper**: [publication](https://arxiv.org/abs/2211.11317)
+- **Implementation source**: [upstream repository](https://github.com/apple/ml-destseg); revision: `f6ea31fb5b097698b195f85b1d5e3efaedce9eb6`
 - **Category**: Reconstruction
 - **Backbone**: ResNet-18
 
@@ -12,7 +13,7 @@ DeSTSeg combines a denoising student-teacher network with a segmentation module 
 
 | Config | Description |
 |--------|-------------|
-| [`destseg_rn18_256_mvtec_strict.py`](destseg_rn18_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`destseg_rn18_256_mvtec_strict.py`](destseg_rn18_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`destseg_rn18_256_visa.py`](destseg_rn18_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ DeSTSeg combines a denoising student-teacher network with a segmentation module 
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Knowledge distillation** family. The alignment record is [`docs/alignment/destseg.md`](../../docs/alignment/destseg.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Knowledge distillation** family. The [implementation provenance and reproducibility record](../../docs/alignment/destseg.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

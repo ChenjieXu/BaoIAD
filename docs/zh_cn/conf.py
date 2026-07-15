@@ -47,7 +47,8 @@ html_theme_options = {
     'logo_only': False,
 }
 
-html_static_path = ['_static']
+# The Chinese documentation currently has no locale-specific static assets.
+html_static_path = []
 
 # -- Options for autodoc -----------------------------------------------------
 
@@ -98,6 +99,11 @@ myst_enable_extensions = [
 ]
 
 myst_heading_anchors = 3
+
+# Many Markdown pages intentionally link to repository-root sources that are
+# outside the Sphinx source tree. Render them as ordinary links rather than
+# unresolved cross-reference targets.
+myst_all_links_external = True
 
 # -- Options for copybutton --------------------------------------------------
 

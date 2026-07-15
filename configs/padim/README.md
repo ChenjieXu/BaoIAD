@@ -2,7 +2,8 @@
 
 > PaDiM: A Patch Distribution Modeling Framework for Anomaly Detection
 
-- **Paper**: [PaDiM: A Patch Distribution Modeling Framework for Anomaly Detection](https://arxiv.org/abs/2011.08785)
+- **Paper**: [publication](https://arxiv.org/abs/2011.08785)
+- **Implementation source**: [upstream repository](https://github.com/open-edge-platform/anomalib); revision: `0ef8ab1e43340bddf4d92d1f046c3d34a83af6b0`
 - **Category**: Memory Bank
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ PaDiM models the distribution of patch-level features using multivariate Gaussia
 
 | Config | Description |
 |--------|-------------|
-| [`padim_wrn50_256_mvtec_strict.py`](padim_wrn50_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`padim_wrn50_256_mvtec_strict.py`](padim_wrn50_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`padim_wrn50_256_visa.py`](padim_wrn50_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ PaDiM models the distribution of patch-level features using multivariate Gaussia
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Feature-memory / density** family. The alignment record is [`docs/alignment/padim.md`](../../docs/alignment/padim.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Feature-memory / density** family. The [implementation provenance and reproducibility record](../../docs/alignment/padim.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

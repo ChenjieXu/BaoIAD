@@ -2,7 +2,8 @@
 
 > CutPaste: Self-Supervised Learning for Anomaly Detection and Segmentation
 
-- **Paper**: [CutPaste: Self-Supervised Learning for Anomaly Detection and Segmentation](https://arxiv.org/abs/2104.02515)
+- **Paper**: [publication](https://arxiv.org/abs/2104.04015)
+- **Implementation source**: [upstream repository](https://github.com/Runinho/pytorch-cutpaste); revision: `10d8bf71df76d3a97f0106efee1d76f81d983149`
 - **Category**: Other
 - **Backbone**: ResNet-18
 
@@ -12,7 +13,7 @@ CutPaste creates synthetic anomalies by cut-and-paste augmentation of training p
 
 | Config | Description |
 |--------|-------------|
-| [`cutpaste_rn18_256_mvtec_strict.py`](cutpaste_rn18_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`cutpaste_rn18_256_mvtec_strict.py`](cutpaste_rn18_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`cutpaste_rn18_256_visa.py`](cutpaste_rn18_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ CutPaste creates synthetic anomalies by cut-and-paste augmentation of training p
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The alignment record is [`docs/alignment/cutpaste.md`](../../docs/alignment/cutpaste.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The [implementation provenance and reproducibility record](../../docs/alignment/cutpaste.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

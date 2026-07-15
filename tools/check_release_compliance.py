@@ -28,11 +28,11 @@ PROVENANCE_PATH = Path("third_party/provenance.json")
 ASSET_APPROVALS_PATH = Path("resources/asset_approvals.json")
 EXTERNAL_APPROVALS_PATH = Path("docs/release/external_approvals.json")
 EXPECTED_MANIFEST_DIGESTS = {
-    METHOD_STATUS_PATH: "72a34e0e0abb34528ace66186e2aa17cec544e01675141fec8ccab53cab5b668",
-    ALIGNMENT_EXCEPTIONS_PATH: "49b3c37f27c8371cac0a113ab77a37a8b0c4906c630ba790adb71d6e06c8cbeb",
-    PROVENANCE_PATH: "cbff0d690f35a2f1fdf69445e8d3daf99317306bfbe61db3a595fcdc08fabb63",
+    METHOD_STATUS_PATH: "1022349a9050a35dfdbb68f514fc0b6974b14542b00ad536132d3f3aed1907a1",
+    ALIGNMENT_EXCEPTIONS_PATH: "a74d6e88c79e2c3b9d5bb03f67bbed03d2acd5db512fbf8b31705d7826032199",
+    PROVENANCE_PATH: "0745e3f7692ce3396a51415474780692d188c20305da315bcf132ec9ed08f070",
     ASSET_APPROVALS_PATH: "d1a27f9981e7643bd261235f789606418e45cf01a1a5327e9fd66ad53f0e76d1",
-    EXTERNAL_APPROVALS_PATH: "5493b0f48814c2b16b3e48f991c4e0b74ffb60fad1b681828ed65781d7d6fb5f",
+    EXTERNAL_APPROVALS_PATH: "c497eca58b5c25ba95f64dd76967eec6272d79aa53381506b331fc96dffc017e",
 }
 
 EXPECTED_ASSETS = {
@@ -488,7 +488,7 @@ EXPECTED_EXTERNAL_ARTIFACTS = {
 }
 ALLOWED_VERIFICATION_STATES = {"historical_evidence", "partial"}
 EXPECTED_VERIFICATION_STATE_DEFINITIONS = {
-    "historical_evidence": "The repository contains an alignment narrative, but referenced raw .refs/runs artifacts are not distributed and the claim is not independently verifiable from a public clone.",
+    "historical_evidence": "The repository contains an implementation narrative, but the referenced raw validation artifacts are not distributed and the claim is not independently verifiable from a public clone.",
     "partial": "The alignment narrative itself records incomplete coverage, a missing fresh rerun, proxy-only evidence, a missing source/checkpoint, or a restricted evaluation path.",
 }
 EXPECTED_PARTIAL_METHODS = {
@@ -519,7 +519,7 @@ ALLOWED_RUNTIME_STATES = {
     "network_dependent",
 }
 EXPECTED_RUNTIME_STATE_DEFINITIONS = {
-    "not_assessed": "G002 did not establish a clean-clone runtime blocker beyond the separately recorded evidence and license limitations.",
+    "not_assessed": "Runtime availability has not been fully assessed; no clean-clone blocker was established beyond the separately recorded evidence and license limitations.",
     "blocked_by_undistributed_assets": "The canonical path requires local assets, checkpoints, support sets, or datasets that are not distributed with the repository.",
     "blocked_by_optional_dependency": "The canonical implementation imports or requires a project extra that a core installation does not provide.",
     "network_dependent": "The canonical path may download a model or other external artifact when it is absent locally.",
@@ -568,7 +568,7 @@ ALLOWED_INCORPORATION_MODES = {
     "vendored_then_modified",
 }
 ACCEPTED_LIMITATION_IDS = {"ALIGN-PARTIAL-VALIDATION"}
-MACHINE_GATED_ALIGNMENT_IDS = {"ALIGN-ABSENT-EVIDENCE", "ALIGN-CLEAN-CLONE"}
+MACHINE_GATED_ALIGNMENT_IDS = {"ALIGN-CLEAN-CLONE"}
 CLEAN_CLONE_MANUAL_METHODS = {
     # RegAD remains importable, but the strict-named config silently substitutes a
     # non-official support-set sampler when the undistributed official set is absent.
@@ -683,6 +683,25 @@ def _broken_alignment_links(root: Path) -> list[str]:
             if not resolved.exists():
                 broken.append(f"{document.relative_to(root).as_posix()} -> {path_text}")
     return broken
+
+
+def _undistributed_alignment_artifact_mentions(root: Path) -> list[str]:
+    """Return internal evidence markers that cannot ship as public proof."""
+    markers = (
+        ".refs/",
+        "runs/alignment",
+        "runs/benchmark",
+        "manuscript evidence workspace",
+        "playbook",
+        "agent handoff",
+    )
+    mentions: list[str] = []
+    for document in sorted((root / "docs" / "alignment").glob("*.md")):
+        text = document.read_text(encoding="utf-8").lower()
+        for marker in markers:
+            if marker in text:
+                mentions.append(f"{document.relative_to(root).as_posix()} -> {marker}")
+    return mentions
 
 
 def _config_model_types(path: Path) -> tuple[list[str], list[str]]:
@@ -1115,6 +1134,13 @@ def validate_alignment_exceptions_document(
                 errors.append(
                     "alignment exception ALIGN-PAPER-LINKS: "
                     f"{len(mismatches)} README paper-link mismatches remain"
+                )
+        if identifier == "ALIGN-ABSENT-EVIDENCE" and status == "resolved":
+            internal_mentions = _undistributed_alignment_artifact_mentions(root)
+            if internal_mentions:
+                errors.append(
+                    "alignment exception ALIGN-ABSENT-EVIDENCE: "
+                    f"{len(internal_mentions)} undistributed artifact markers remain"
                 )
         if identifier == "ALIGN-BROKEN-LINKS" and isinstance(methods, list):
             broken_link_methods = {
@@ -1568,9 +1594,11 @@ def validate_provenance_document(
             f"{missing_secondary_sources}"
         )
 
-    for identifier, (expected_kind, expected_url, expected_path) in (
-        EXPECTED_EXTERNAL_ARTIFACTS.items()
-    ):
+    for identifier, (
+        expected_kind,
+        expected_url,
+        expected_path,
+    ) in EXPECTED_EXTERNAL_ARTIFACTS.items():
         entry = entries_by_id.get(identifier)
         if entry is None:
             errors.append(

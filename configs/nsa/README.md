@@ -2,7 +2,8 @@
 
 > NSA: Natural Synthetic Anomalies for Self-Supervised Anomaly Detection and Segmentation
 
-- **Paper**: [NSA: Natural Synthetic Anomalies for Self-Supervised Anomaly Detection and Segmentation](https://arxiv.org/abs/2109.15222)
+- **Paper**: [publication](https://arxiv.org/abs/2109.15222)
+- **Implementation source**: [upstream repository](https://github.com/hmsch/natural-synthetic-anomalies); revision: `919591685307ce030fe27cb77687509dc277189c`
 - **Category**: Other
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ NSA generates natural synthetic anomalies by pasting patches from other images o
 
 | Config | Description |
 |--------|-------------|
-| [`nsa_rn18_256_mvtec_strict.py`](nsa_rn18_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`nsa_rn18_256_mvtec_strict.py`](nsa_rn18_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`nsa_rn18_256_visa.py`](nsa_rn18_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ NSA generates natural synthetic anomalies by pasting patches from other images o
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The alignment record is [`docs/alignment/nsa.md`](../../docs/alignment/nsa.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The [implementation provenance and reproducibility record](../../docs/alignment/nsa.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

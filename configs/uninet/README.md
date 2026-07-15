@@ -2,7 +2,8 @@
 
 > UniNet: Unified Architecture for Anomaly Detection
 
-- **Paper**: [UniNet: Unified Architecture for Anomaly Detection](https://arxiv.org/abs/2405.01827)
+- **Paper**: [publication](https://openaccess.thecvf.com/content/CVPR2025/html/Wei_UniNet_A_Contrastive_Learning-guided_Unified_Framework_with_Feature_Selection_for_CVPR_2025_paper.html)
+- **Implementation source**: [upstream repository](https://github.com/open-edge-platform/anomalib); revision: `4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a`
 - **Category**: Other
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ UniNet provides a unified architecture for anomaly detection that supports multi
 
 | Config | Description |
 |--------|-------------|
-| [`uninet_256_mvtec_strict.py`](uninet_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`uninet_256_mvtec_strict.py`](uninet_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`uninet_256_visa.py`](uninet_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ UniNet provides a unified architecture for anomaly detection that supports multi
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Hybrid / unified** family. The alignment record is [`docs/alignment/uninet.md`](../../docs/alignment/uninet.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Hybrid / unified** family. The [implementation provenance and reproducibility record](../../docs/alignment/uninet.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

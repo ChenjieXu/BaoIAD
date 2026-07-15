@@ -2,7 +2,8 @@
 
 > MuSc: Mutual Scoring of Pseudo Pairs for Zero-Shot Anomaly Classification and Segmentation
 
-- **Paper**: [MuSc: Mutual Scoring of Pseudo Pairs for Zero-Shot Anomaly Classification and Segmentation](https://arxiv.org/abs/2405.01827)
+- **Paper**: [publication](https://arxiv.org/abs/2401.16753)
+- **Implementation source**: [upstream repository](https://github.com/xrli-U/MuSc); revision: `72d58ad56c0cafa2b056bd0aa7676f9c21fccbc4`
 - **Category**: Vision-Language
 - **Backbone**: OpenCLIP-ViT/L-14
 
@@ -12,7 +13,7 @@ MuSc performs zero-shot anomaly detection by mutual scoring of pseudo-pairs betw
 
 | Config | Description |
 |--------|-------------|
-| [`musc_vitl14_336_518_mvtec_strict.py`](musc_vitl14_336_518_mvtec_strict.py) | MVTec AD strict alignment |
+| [`musc_vitl14_336_518_mvtec_strict.py`](musc_vitl14_336_518_mvtec_strict.py) | MVTec AD reference configuration |
 | [`musc_vitl14_336_518_visa.py`](musc_vitl14_336_518_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ MuSc performs zero-shot anomaly detection by mutual scoring of pseudo-pairs betw
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The alignment record is [`docs/alignment/musc.md`](../../docs/alignment/musc.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The [implementation provenance and reproducibility record](../../docs/alignment/musc.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

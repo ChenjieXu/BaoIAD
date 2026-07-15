@@ -2,7 +2,8 @@
 
 > Same Same But DifferNet: Unsupervised Anomaly Detection
 
-- **Paper**: [Same Same But DifferNet: Unsupervised Anomaly Detection](https://arxiv.org/abs/2008.12577)
+- **Paper**: [publication](https://arxiv.org/abs/2008.12577)
+- **Implementation source**: [upstream repository](https://github.com/marco-rudolph/differnet); revision: `9bdf02686297a093fb206ffeba64b1c0e78182b6`
 - **Category**: Normalizing Flow
 - **Backbone**: ResNet-18
 
@@ -12,7 +13,7 @@ DifferNet uses a pre-trained teacher and a student network with different archit
 
 | Config | Description |
 |--------|-------------|
-| [`differnet_alexnet_256_mvtec_strict.py`](differnet_alexnet_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`differnet_alexnet_256_mvtec_strict.py`](differnet_alexnet_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`differnet_alexnet_256_visa.py`](differnet_alexnet_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ DifferNet uses a pre-trained teacher and a student network with different archit
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Normalizing flow** family. The alignment record is [`docs/alignment/differnet.md`](../../docs/alignment/differnet.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Normalizing flow** family. The [implementation provenance and reproducibility record](../../docs/alignment/differnet.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

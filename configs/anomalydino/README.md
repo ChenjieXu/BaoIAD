@@ -2,7 +2,8 @@
 
 > AnomalyDINO: DINOv2 for Anomaly Detection
 
-- **Paper**: [AnomalyDINO: DINOv2 for Anomaly Detection](https://arxiv.org/abs/2405.14525)
+- **Paper**: [publication](https://arxiv.org/abs/2405.14529)
+- **Implementation source**: [upstream repository](https://github.com/dammsi/AnomalyDINO); revision: `b9d1c2648e3a5247437d4d953d907a8f3d994457`
 - **Category**: Vision-Language
 - **Backbone**: DINOv2-ViT/L-14
 
@@ -12,7 +13,7 @@ AnomalyDINO leverages DINOv2's self-supervised features for anomaly detection by
 
 | Config | Description |
 |--------|-------------|
-| [`anomalydino_vitb14_448_mvtec_strict.py`](anomalydino_vitb14_448_mvtec_strict.py) | MVTec AD strict alignment |
+| [`anomalydino_vitb14_448_mvtec_strict.py`](anomalydino_vitb14_448_mvtec_strict.py) | MVTec AD reference configuration |
 | [`anomalydino_vitb14_448_visa.py`](anomalydino_vitb14_448_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ AnomalyDINO leverages DINOv2's self-supervised features for anomaly detection by
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Few-shot / registration** family. The alignment record is [`docs/alignment/anomalydino.md`](../../docs/alignment/anomalydino.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Few-shot / registration** family. The [implementation provenance and reproducibility record](../../docs/alignment/anomalydino.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

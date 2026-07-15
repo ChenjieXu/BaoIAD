@@ -2,7 +2,7 @@
 
 BaoIAD provides `tools/benchmark.py` to train and evaluate methods across categories in a single sweep. It orchestrates per-method subprocess runs, parses metrics from the output, and writes a structured JSON results file.
 
-The method inventory is sourced from [`baoiad/method_inventory.py`](../../baoiad/method_inventory.py) — `--methods all` selects those 37 repo-local method slugs, not the contents of the `configs/` directory.
+The method inventory is sourced from [`baoiad/method_inventory.py`](../../../baoiad/method_inventory.py) — `--methods all` selects those 37 repo-local method slugs, not the contents of the `configs/` directory.
 
 ## Quick Start
 

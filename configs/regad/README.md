@@ -2,7 +2,8 @@
 
 > RegAD: Registration Based Few-Shot Anomaly Detection
 
-- **Paper**: [RegAD: Registration Based Few-Shot Anomaly Detection](https://arxiv.org/abs/2207.01878)
+- **Paper**: [publication](https://arxiv.org/abs/2207.07361)
+- **Implementation source**: [upstream repository](https://github.com/MediaBrain-SJTU/RegAD); revision: `5e2c1f8c18d302b0354471567846fee3ed2ff063`
 - **Category**: Memory Bank
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ RegAD performs few-shot anomaly detection by learning spatial registration betwe
 
 | Config | Description |
 |--------|-------------|
-| [`regad_wrn50_256_mvtec_strict.py`](regad_wrn50_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`regad_wrn50_256_mvtec_strict.py`](regad_wrn50_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`regad_wrn50_256_visa.py`](regad_wrn50_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ RegAD performs few-shot anomaly detection by learning spatial registration betwe
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Few-shot / registration** family. The alignment record is [`docs/alignment/regad.md`](../../docs/alignment/regad.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Few-shot / registration** family. The [implementation provenance and reproducibility record](../../docs/alignment/regad.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

@@ -2,7 +2,8 @@
 
 > Deep Feature Modeling for Anomaly Detection
 
-- **Paper**: [Deep Feature Modeling for Anomaly Detection](https://arxiv.org/abs/1909.10786)
+- **Paper**: [publication](https://arxiv.org/abs/1909.11786)
+- **Implementation source**: [upstream repository](https://github.com/open-edge-platform/anomalib); revision: `4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a`
 - **Category**: Memory Bank
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ DFM fits a linear subspace to deep features of normal samples using PCA, then de
 
 | Config | Description |
 |--------|-------------|
-| [`dfm_256_mvtec_strict.py`](dfm_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`dfm_256_mvtec_strict.py`](dfm_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`dfm_256_visa.py`](dfm_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ DFM fits a linear subspace to deep features of normal samples using PCA, then de
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Feature-memory / density** family. The alignment record is [`docs/alignment/dfm.md`](../../docs/alignment/dfm.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Feature-memory / density** family. The [implementation provenance and reproducibility record](../../docs/alignment/dfm.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

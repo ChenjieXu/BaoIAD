@@ -2,7 +2,8 @@
 
 > DRAEM -- A discriminatively trained reconstruction embedding for surface anomaly detection
 
-- **Paper**: [DRAEM -- A discriminatively trained reconstruction embedding for surface anomaly detection](https://arxiv.org/abs/2108.07610)
+- **Paper**: [publication](https://arxiv.org/abs/2108.07610)
+- **Implementation source**: [upstream repository](https://github.com/VitjanZ/DRAEM); revision: `2dbf67397ab5c10a1494e5ae70ab59a25d7c35ef`
 - **Category**: Reconstruction
 - **Backbone**: AE
 
@@ -12,7 +13,7 @@ DRAEM trains a reconstruction network alongside a discriminative network for ano
 
 | Config | Description |
 |--------|-------------|
-| [`draem_256_mvtec_strict.py`](draem_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`draem_256_mvtec_strict.py`](draem_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`draem_256_visa.py`](draem_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ DRAEM trains a reconstruction network alongside a discriminative network for ano
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The alignment record is [`docs/alignment/draem.md`](../../docs/alignment/draem.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The [implementation provenance and reproducibility record](../../docs/alignment/draem.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

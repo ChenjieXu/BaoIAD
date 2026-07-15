@@ -2,7 +2,8 @@
 
 > UniAD: A Unified Model for Multi-class Anomaly Detection
 
-- **Paper**: [UniAD: A Unified Model for Multi-class Anomaly Detection](https://arxiv.org/abs/2206.03687)
+- **Paper**: [publication](https://arxiv.org/abs/2206.03687)
+- **Implementation source**: [upstream repository](https://github.com/zhangzjn/ADer); revision: `902937a7ed7fa7689674a4ac9b8fe9a72a40c402`
 - **Category**: Other
 - **Backbone**: EffNet-B4
 
@@ -12,7 +13,7 @@ UniAD performs multi-class anomaly detection using a unified transformer-based a
 
 | Config | Description |
 |--------|-------------|
-| [`uniad_wrn50_256_mvtec_strict.py`](uniad_wrn50_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`uniad_wrn50_256_mvtec_strict.py`](uniad_wrn50_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`uniad_wrn50_256_visa.py`](uniad_wrn50_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ UniAD performs multi-class anomaly detection using a unified transformer-based a
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The alignment record is [`docs/alignment/uniad.md`](../../docs/alignment/uniad.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The [implementation provenance and reproducibility record](../../docs/alignment/uniad.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

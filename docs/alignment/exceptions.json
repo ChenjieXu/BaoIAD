@@ -7,12 +7,12 @@
       "id": "ALIGN-ABSENT-EVIDENCE",
       "kind": "non_public_evidence",
       "methods": "all_37",
-      "observed": "Every method alignment page cites at least one .refs, runs/alignment, or runs/benchmark artifact that is not distributed in the public repository; the audit counted approximately 1,077 path mentions.",
-      "public_disposition": "Treat alignment pages as historical implementation notes, not independently reproducible proof. Remove blanket strict-alignment claims and do not mark public_evidence true unless release artifacts are actually published.",
-      "status": "open",
-      "resolution_evidence": null,
-      "release_blocking": true,
-      "resolution_goal": "G003"
+      "observed": "The legacy alignment pages cited approximately 1,077 raw validation artifacts that were not distributed in the public repository.",
+      "public_disposition": "Replace the legacy pages with manifest-derived public summaries, retain the historical or partial validation boundary, and prohibit undistributed artifact markers in public alignment Markdown.",
+      "status": "resolved",
+      "resolution_evidence": "tools/check_public_release.py and tests/test_release/test_check_public_release.py enforce the public alignment marker gate.",
+      "release_blocking": false,
+      "resolution_goal": "public-documentation-cleanup"
     },
     {
       "id": "ALIGN-BROKEN-LINKS",
@@ -54,10 +54,10 @@
       ],
       "observed": "Thirty-three alignment pages contain 42 broken relative links: 33 missing checklist pages plus missing scripts or configurations.",
       "public_disposition": "Repair or remove every broken link, then re-run the public documentation link check.",
-      "status": "open",
-      "resolution_evidence": null,
-      "release_blocking": true,
-      "resolution_goal": "G003"
+      "status": "resolved",
+      "resolution_evidence": "tools/check_release_compliance.py resolves every relative link in the rewritten alignment pages and tests/test_release/test_release_compliance.py protects the scan.",
+      "release_blocking": false,
+      "resolution_goal": "public-documentation-cleanup"
     },
     {
       "id": "ALIGN-PARTIAL-VALIDATION",
@@ -88,7 +88,7 @@
       "status": "accepted_public_limitation",
       "resolution_evidence": "docs/alignment/method_status.json records public_evidence=false and method-specific limitations for every affected method.",
       "release_blocking": false,
-      "resolution_goal": "G003"
+      "resolution_goal": "public-claim-boundary"
     },
     {
       "id": "ALIGN-PAPER-LINKS",
@@ -120,10 +120,10 @@
       ],
       "observed": "Twenty-three method READMEs contain an incorrect paper URL, an unsupported paper attribution, or no URL despite a verified primary paper source.",
       "public_disposition": "Correct each method README against the verified primary-source mapping in the release checker, then run the machine-gated mismatch scan.",
-      "status": "open",
-      "resolution_evidence": null,
-      "release_blocking": true,
-      "resolution_goal": "G003"
+      "status": "resolved",
+      "resolution_evidence": "The 37 method READMEs are machine-checked against the paper URLs in method_status.json by tools/check_release_compliance.py.",
+      "release_blocking": false,
+      "resolution_goal": "public-documentation-cleanup"
     },
     {
       "id": "ALIGN-CLEAN-CLONE",
@@ -152,7 +152,7 @@
       "status": "open",
       "resolution_evidence": null,
       "release_blocking": true,
-      "resolution_goal": "G004"
+      "resolution_goal": "runtime-and-packaging-audit"
     }
   ]
 }

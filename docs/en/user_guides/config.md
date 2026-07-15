@@ -44,7 +44,7 @@ Fields defined in the current config override inherited values of the same name.
 ```
 configs/_base_/
 ├── backbones/
-│   ├── wide_resnet50_unified.py    # WRN-50-2 (standardized for fair comparison)
+│   ├── wide_resnet50_unified.py    # WRN-50-2 (repository-standardized settings)
 │   ├── wide_resnet50.py            # WRN-50-2 (default)
 │   ├── wide_resnet50_raw.py        # WRN-50-2 (raw, no preprocessing)
 │   ├── resnet18.py                 # ResNet-18
@@ -209,7 +209,7 @@ python tools/train.py <config> --work-dir runs/bottle \
 BaoIAD provides two config variants for most methods:
 
 - **`*_strict.py`** (e.g., `patchcore_wrn50_256_mvtec_strict.py`): Reference configs that align with the original paper implementation, using whatever backbone, resolution, and hyperparameters the original authors specified. These are the configs used for alignment evidence in [`docs/alignment/`](../../../docs/alignment/).
-- **`*_unified.py`** or configs without `strict` suffix: Configs using a standardized WRN-50-2 backbone (`configs/_base_/backbones/wide_resnet50_unified.py`) for fair cross-method comparison. These share the same backbone initialization across all methods.
+- **`*_unified.py`** or configs without a `strict` suffix: Configs using repository-standardized settings such as `configs/_base_/backbones/wide_resnet50_unified.py`. Shared initialization removes one source of variation but does not by itself guarantee that different methods are directly or fairly comparable.
 
 Use `strict` configs when reproducing a specific paper's results. Use unified configs when comparing methods head-to-head.
 

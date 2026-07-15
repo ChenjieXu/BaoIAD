@@ -2,7 +2,8 @@
 
 > AnoVL: Self-Supervised Anomaly Detection by Contrastive Learning
 
-- **Paper**: [AnoVL: Self-Supervised Anomaly Detection by Contrastive Learning](https://arxiv.org/abs/2308.15939)
+- **Paper**: [publication](https://arxiv.org/abs/2308.15939)
+- **Implementation source**: [upstream repository](https://github.com/hq-deng/AnoVL); revision: `3a70bfdaea6baf1eeb140c5de8155b535bd94833`
 - **Category**: Vision-Language
 - **Backbone**: OpenCLIP-ViT/L-14
 
@@ -12,7 +13,7 @@ AnoVL performs self-supervised anomaly detection by contrastive learning of visu
 
 | Config | Description |
 |--------|-------------|
-| [`anovl_vitb16plus_240_mvtec_strict.py`](anovl_vitb16plus_240_mvtec_strict.py) | MVTec AD strict alignment |
+| [`anovl_vitb16plus_240_mvtec_strict.py`](anovl_vitb16plus_240_mvtec_strict.py) | MVTec AD reference configuration |
 | [`anovl_vitb16plus_240_visa.py`](anovl_vitb16plus_240_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ AnoVL performs self-supervised anomaly detection by contrastive learning of visu
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The alignment record is [`docs/alignment/anovl.md`](../../docs/alignment/anovl.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The [implementation provenance and reproducibility record](../../docs/alignment/anovl.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

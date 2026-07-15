@@ -1,8 +1,8 @@
 BaoIAD documentation
 ====================
 
-BaoIAD is a self-contained industrial anomaly detection benchmark.
-The repo-local method inventory contains 37 methods grouped into 9 families.
+BaoIAD is a source-distributed industrial anomaly detection benchmark toolbox.
+The repository inventory contains 37 method integrations grouped into 9 families; external datasets, pretrained artifacts, and optional dependencies are obtained separately.
 
 .. toctree::
    :maxdepth: 1

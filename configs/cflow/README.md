@@ -2,7 +2,8 @@
 
 > CFlow-AD: Real-Time Unsupervised Anomaly Detection with Localization via Conditional Normalizing Flows
 
-- **Paper**: [CFlow-AD: Real-Time Unsupervised Anomaly Detection with Localization via Conditional Normalizing Flows](https://arxiv.org/abs/2107.12571)
+- **Paper**: [publication](https://arxiv.org/abs/2107.12571)
+- **Implementation source**: [upstream repository](https://github.com/gudovskiy/cflow-ad); revision: `b2ebf9e673a0aa46992a3b18367ec066a57bba89`
 - **Category**: Normalizing Flow
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ CFlow-AD detects anomalies by estimating the likelihood of visual features using
 
 | Config | Description |
 |--------|-------------|
-| [`cflow_mvtec_strict.py`](cflow_mvtec_strict.py) | MVTec AD strict alignment |
+| [`cflow_mvtec_strict.py`](cflow_mvtec_strict.py) | MVTec AD reference configuration |
 | [`cflow_visa.py`](cflow_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ CFlow-AD detects anomalies by estimating the likelihood of visual features using
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Normalizing flow** family. The alignment record is [`docs/alignment/cflow.md`](../../docs/alignment/cflow.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Normalizing flow** family. The [implementation provenance and reproducibility record](../../docs/alignment/cflow.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

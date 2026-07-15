@@ -2,7 +2,8 @@
 
 > PyramidFlow: High-Resolution Defect Contrastive Localization using Pyramid Normalizing Flow
 
-- **Paper**: [PyramidFlow: High-Resolution Defect Contrastive Localization using Pyramid Normalizing Flow](https://arxiv.org/abs/2306.02612)
+- **Paper**: [publication](https://arxiv.org/abs/2303.02595)
+- **Implementation source**: [upstream repository](https://github.com/gasharper/PyramidFlow); revision not pinned in the method-status manifest
 - **Category**: Normalizing Flow
 - **Backbone**: WRN-50-2
 
@@ -12,8 +13,8 @@ PyramidFlow performs anomaly detection using pyramid normalizing flows that mode
 
 | Config | Description |
 |--------|-------------|
-| [`pyramidflow_fnf_256_mvtec_strict.py`](pyramidflow_fnf_256_mvtec_strict.py) | MVTec AD strict alignment (FNF backbone) |
-| [`pyramidflow_resnet18_1024_mvtec_strict.py`](pyramidflow_resnet18_1024_mvtec_strict.py) | MVTec AD strict alignment |
+| [`pyramidflow_fnf_256_mvtec_strict.py`](pyramidflow_fnf_256_mvtec_strict.py) | MVTec AD reference configuration (FNF backbone) |
+| [`pyramidflow_resnet18_1024_mvtec_strict.py`](pyramidflow_resnet18_1024_mvtec_strict.py) | MVTec AD reference configuration |
 | [`pyramidflow_resnet18_1024_visa.py`](pyramidflow_resnet18_1024_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -40,6 +41,6 @@ No speed benchmark is available for PyramidFlow, so no latency or FPS value is r
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Normalizing flow** family. The alignment record is [`docs/alignment/pyramidflow.md`](../../docs/alignment/pyramidflow.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Normalizing flow** family. The [implementation provenance and reproducibility record](../../docs/alignment/pyramidflow.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

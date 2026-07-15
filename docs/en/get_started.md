@@ -12,7 +12,7 @@
 Clone the repository and install BaoIAD in editable mode:
 
 ```bash
-git clone https://github.com/ChenjieXu/BaoIAD.git
+git clone https://github.com/Baosight-xVue/BaoIAD.git
 cd BaoIAD
 pip install -e .
 ```

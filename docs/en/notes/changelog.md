@@ -9,7 +9,7 @@ Release of the BaoIAD unified industrial anomaly detection benchmark.
 - **37 methods** across 9 families: feature-memory, knowledge distillation, normalizing flow, reconstruction, self-supervised synthesis, discriminative, vision-language, few-shot, and hybrid/unified.
 - **10 supported datasets**: MVTec AD, VisA, BTech, MVTec 3D AD, MVTec LOCO, MPDD, MVTec AD 2, Kolektor, VAD, Real-IAD.
 - **Unified evaluation pipeline** with image-level metrics (AUROC, F1-max, AP, ECE, FPR@95TPR) and pixel-level metrics (AUROC, F1-max, AP, AUPRO, AUPIMO, ECE).
-- **Strict alignment evidence** for all 37 methods, including reference freezes, code-path parity checks, and behavior probes.
+- **Implementation provenance and reproducibility records** for the 37-method inventory, with method-specific validation states and known limitations.
 - **Benchmark runner** (`tools/benchmark.py`) for large-scale evaluation across methods and categories.
 - **Speed benchmark** support for inference latency and throughput measurement.
 - **MMEngine-based architecture** with scoped registries for models, datasets, transforms, metrics, hooks, and visualizers.

@@ -2,7 +2,8 @@
 
 > SimpleNet: A Simple Network for Image Anomaly Detection and Localization
 
-- **Paper**: [SimpleNet: A Simple Network for Image Anomaly Detection and Localization](https://arxiv.org/abs/2303.15140)
+- **Paper**: [publication](https://arxiv.org/abs/2303.15140)
+- **Implementation source**: [upstream repository](https://github.com/DonaldRR/SimpleNet); revision: `351a2b8d4e8cfc944dbccbf9bc6ceda930c6f26b`
 - **Category**: Discriminator
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ SimpleNet adds a simple feature adaptor and discriminator on top of a frozen pre
 
 | Config | Description |
 |--------|-------------|
-| [`simplenet_wrn50_288_mvtec_strict.py`](simplenet_wrn50_288_mvtec_strict.py) | MVTec AD strict alignment |
+| [`simplenet_wrn50_288_mvtec_strict.py`](simplenet_wrn50_288_mvtec_strict.py) | MVTec AD reference configuration |
 | [`simplenet_wrn50_288_visa.py`](simplenet_wrn50_288_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ SimpleNet adds a simple feature adaptor and discriminator on top of a frozen pre
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Discriminative** family. The alignment record is [`docs/alignment/simplenet.md`](../../docs/alignment/simplenet.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Discriminative** family. The [implementation provenance and reproducibility record](../../docs/alignment/simplenet.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

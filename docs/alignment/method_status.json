@@ -5,11 +5,11 @@
   "assessed_base": "upstream/master@e93614a01204c441fc85511765879ae031a360bb",
   "scope_note": "This manifest freezes the structural 37-method public scope without claiming uniform runtime availability, validation depth, or redistribution clearance.",
   "state_definitions": {
-    "historical_evidence": "The repository contains an alignment narrative, but referenced raw .refs/runs artifacts are not distributed and the claim is not independently verifiable from a public clone.",
+    "historical_evidence": "The repository contains an implementation narrative, but the referenced raw validation artifacts are not distributed and the claim is not independently verifiable from a public clone.",
     "partial": "The alignment narrative itself records incomplete coverage, a missing fresh rerun, proxy-only evidence, a missing source/checkpoint, or a restricted evaluation path."
   },
   "runtime_state_definitions": {
-    "not_assessed": "G002 did not establish a clean-clone runtime blocker beyond the separately recorded evidence and license limitations.",
+    "not_assessed": "Runtime availability has not been fully assessed; no clean-clone blocker was established beyond the separately recorded evidence and license limitations.",
     "blocked_by_undistributed_assets": "The canonical path requires local assets, checkpoints, support sets, or datasets that are not distributed with the repository.",
     "blocked_by_optional_dependency": "The canonical implementation imports or requires a project extra that a core installation does not provide.",
     "network_dependent": "The canonical path may download a model or other external artifact when it is absent locally."
@@ -37,7 +37,7 @@
       "paper_url": "https://arxiv.org/abs/2405.14325",
       "source": {"url": "https://github.com/guojiajeremy/Dinomaly", "revision": "c5c76d01a2bd7212f1c4b7dfdad14902d0f48cfe", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local configuration/evaluation adapters; see the alignment record.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["The encoder downloads DINOv2 weights when they are absent locally.", "Referenced raw .refs/runs artifacts are not distributed, so the alignment narrative is not independently verifiable from a public clone."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["The encoder downloads DINOv2 weights when they are absent locally.", "Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
       "alignment_path": "docs/alignment/dinomaly.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -50,7 +50,7 @@
       "paper_url": "https://arxiv.org/abs/2303.15140",
       "source": {"url": "https://github.com/DonaldRR/SimpleNet", "revision": "351a2b8d4e8cfc944dbccbf9bc6ceda930c6f26b", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local optimizer, post-processing, and evaluation adapters; see the alignment record.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw .refs/runs artifacts are not distributed, so the alignment narrative is not independently verifiable from a public clone."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
       "alignment_path": "docs/alignment/simplenet.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -63,7 +63,7 @@
       "paper_url": "https://openaccess.thecvf.com/content/CVPR2023/html/Tien_Revisiting_Reverse_Distillation_for_Anomaly_Detection_CVPR_2023_paper.html",
       "source": {"url": "https://github.com/tientrandinh/Revisiting-Reverse-Distillation", "revision": "7f2ceb7c87e602617b8600e1a498f7ef7f5247d6", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration plus a vendored MIT-licensed simplex-noise helper that still needs RD++ and OpenSimplex attribution details.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "blocked_by_optional_dependency", "limitations": ["The canonical strict configuration requires the optional geomloss package for the official Sinkhorn SSOT loss and fails closed when it is absent.", "Referenced raw .refs/runs artifacts are not distributed, so the alignment narrative is not independently verifiable from a public clone."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "blocked_by_optional_dependency", "limitations": ["The canonical strict configuration requires the optional geomloss package for the official Sinkhorn SSOT loss and fails closed when it is absent.", "Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
       "alignment_path": "docs/alignment/rdpp.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -76,7 +76,7 @@
       "paper_url": "https://arxiv.org/abs/2210.07829",
       "source": {"url": "https://github.com/marco-rudolph/AST", "revision": "8c243ad9adac68e874f87edc6618aa5ea2827228", "traceability": "public_revision"},
       "implementation_differences": "Closely derived flow, positional-encoding, teacher, and student structures plus MMEngine integration; the frozen upstream tree has no identifiable redistribution license.",
-      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Redistribution is blocked pending written permission or a documented clean-room replacement.", "The alignment record retains an unresolved toothbrush image-level gap.", "Referenced raw .refs/runs artifacts are not distributed."]},
+      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Redistribution is blocked pending written permission or a documented clean-room replacement.", "The alignment record retains an unresolved toothbrush image-level gap.", "Referenced raw validation artifacts are not distributed."]},
       "alignment_path": "docs/alignment/ast.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -89,7 +89,7 @@
       "paper_url": "https://arxiv.org/abs/2201.10703",
       "source": {"url": "https://github.com/hq-deng/RD4AD", "revision": "6554076872c65f8784f6ece8cfb39ce77e1aee12", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and repository-local feature, loss, and evaluator adapters; see the alignment record.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw .refs/runs artifacts are not distributed, so the alignment narrative is not independently verifiable from a public clone."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
       "alignment_path": "docs/alignment/rd.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -102,7 +102,7 @@
       "paper_url": "https://openaccess.thecvf.com/content/CVPR2025/html/Wei_UniNet_A_Contrastive_Learning-guided_Unified_Framework_with_Feature_Selection_for_CVPR_2025_paper.html",
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a", "traceability": "public_revision"},
       "implementation_differences": "Repository-local reimplementation aligned to an anomalib snapshot with MMEngine integration.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The detector is conditionally imported, and referenced raw .refs/runs artifacts are not distributed."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The detector is conditionally imported, and referenced raw validation artifacts are not distributed."]},
       "alignment_path": "docs/alignment/uninet.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -128,7 +128,7 @@
       "paper_url": "https://arxiv.org/abs/2312.07495",
       "source": {"url": "https://github.com/zhangzjn/ADer", "revision": "902937a7ed7fa7689674a4ac9b8fe9a72a40c402", "traceability": "public_revision"},
       "implementation_differences": "Closely derived ADer fusion, decoder, backbone, loss, and metric structures plus MMEngine integration; the frozen ADer tree has no identifiable redistribution license.",
-      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["Redistribution is blocked pending written permission or a documented clean-room replacement.", "The alignment table still records an open implementation-equivalence item that requires reconciliation.", "The canonical path requests pretrained DINO weights through timm; when network and compatible local Hugging Face cache resolution both fail, the exception path may continue with randomly initialized encoder weights instead of failing closed.", "Referenced raw .refs/runs artifacts are not distributed."]},
+      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "network_dependent", "limitations": ["Redistribution is blocked pending written permission or a documented clean-room replacement.", "The alignment table still records an open implementation-equivalence item that requires reconciliation.", "The canonical path requests pretrained DINO weights through timm; when network and compatible local Hugging Face cache resolution both fail, the exception path may continue with randomly initialized encoder weights instead of failing closed.", "Referenced raw validation artifacts are not distributed."]},
       "alignment_path": "docs/alignment/vitad.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -167,7 +167,7 @@
       "paper_url": "https://arxiv.org/abs/2106.08265",
       "source": {"url": null, "revision": null, "traceability": "local_snapshot_only"},
       "implementation_differences": "Repository-local implementation audited against an unpinned local ADer snapshot, with approximate coreset and MMEngine adapters.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The implementation reference has no recorded public revision in the alignment page.", "Referenced raw .refs/runs artifacts are not distributed."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The implementation reference has no recorded public revision in the alignment page.", "Referenced raw validation artifacts are not distributed."]},
       "alignment_path": "docs/alignment/patchcore.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -180,7 +180,7 @@
       "paper_url": "https://arxiv.org/abs/2211.11317",
       "source": {"url": "https://github.com/apple/ml-destseg", "revision": "f6ea31fb5b097698b195f85b1d5e3efaedce9eb6", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration; model and transform sections follow Apple sample code whose custom license, trademark terms, and lack of patent grant require legal review.",
-      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["The canonical strict configuration resolves dtd_path='auto' only from a local data/dtd tree and raises when DTD images are absent; those assets are not distributed.", "The corrected mainline is still playbook-in-progress and the recorded fresh rerun covers only 10 of 15 categories.", "The config README's full result summary must not be presented as fresh corrected-mainline evidence."]},
+      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["The canonical strict configuration resolves dtd_path='auto' only from a local data/dtd tree and raises when DTD images are absent; those assets are not distributed.", "The corrected mainline is still validation-in-progress and the recorded fresh rerun covers only 10 of 15 categories.", "The config README's full result summary must not be presented as fresh corrected-mainline evidence."]},
       "alignment_path": "docs/alignment/destseg.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -219,7 +219,7 @@
       "paper_url": "https://arxiv.org/abs/2405.14529",
       "source": {"url": "https://github.com/dammsi/AnomalyDINO", "revision": "b9d1c2648e3a5247437d4d953d907a8f3d994457", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and equivalent normalized-dot-product distance in place of the reference FAISS expression.",
-      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The detector is conditionally imported.", "The alignment record says the unified probe CLI remains absent.", "Referenced raw .refs/runs artifacts are not distributed."]},
+      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The detector is conditionally imported.", "The alignment record says the unified probe CLI remains absent.", "Referenced raw validation artifacts are not distributed."]},
       "alignment_path": "docs/alignment/anomalydino.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -232,7 +232,7 @@
       "paper_url": "https://arxiv.org/abs/2107.12571",
       "source": {"url": "https://github.com/gudovskiy/cflow-ad", "revision": "b2ebf9e673a0aa46992a3b18367ec066a57bba89", "traceability": "public_revision"},
       "implementation_differences": "Repository-local FrEIA implementation with MMEngine transforms and a strict guard for a non-distributed local reference tree.",
-      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["Canonical strict configuration requires absent .refs/cflow-ad assets.", "FrEIA is an optional project extra; without it CFlow substitutes a lightweight fallback that is not the declared official-alignment implementation.", "The alignment record says the full archived benchmark item remains incomplete."]},
+      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["Canonical strict configuration requires non-distributed CFlow reference assets.", "FrEIA is an optional project extra; without it CFlow substitutes a lightweight fallback that is not the declared official-alignment implementation.", "The alignment record says the full archived benchmark item remains incomplete."]},
       "alignment_path": "docs/alignment/cflow.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -245,7 +245,7 @@
       "paper_url": "https://arxiv.org/abs/2108.07610",
       "source": {"url": "https://github.com/VitjanZ/DRAEM", "revision": "2dbf67397ab5c10a1494e5ae70ab59a25d7c35ef", "traceability": "public_revision"},
       "implementation_differences": "Repository-local reimplementation with MMEngine data synthesis, loss, and evaluation adapters.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw .refs/runs artifacts are not distributed, so the alignment narrative is not independently verifiable from a public clone."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Referenced raw validation artifacts are not distributed, so the implementation narrative is not independently verifiable from a public clone."]},
       "alignment_path": "docs/alignment/draem.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -258,7 +258,7 @@
       "paper_url": "https://arxiv.org/abs/2011.08785",
       "source": {"url": "https://github.com/open-edge-platform/anomalib", "revision": "0ef8ab1e43340bddf4d92d1f046c3d34a83af6b0", "traceability": "public_revision"},
       "implementation_differences": "MMEngine implementation audited against the expanded public anomalib revision recorded by the alignment snapshot.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The public source revision is frozen, but referenced raw .refs/runs evidence is not distributed."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The public source revision is frozen, but referenced raw validation evidence is not distributed."]},
       "alignment_path": "docs/alignment/padim.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -362,7 +362,7 @@
       "paper_url": "https://arxiv.org/abs/2310.18961",
       "source": {"url": "https://github.com/zqhang/AnomalyCLIP", "revision": "3911738c0867544f545a076ad78f3f11d9ecbfdf", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration; the public inventory selects the official detector while a legacy detector class remains registered.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["Canonical config requires absent .refs/AnomalyCLIP assets.", "Referenced raw evidence is not distributed."]},
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "blocked_by_undistributed_assets", "limitations": ["Canonical config requires non-distributed AnomalyCLIP reference assets.", "Referenced raw evidence is not distributed."]},
       "alignment_path": "docs/alignment/anomalyclip.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -401,7 +401,7 @@
       "paper_url": "https://arxiv.org/abs/2207.07361",
       "source": {"url": "https://github.com/MediaBrain-SJTU/RegAD", "revision": "5e2c1f8c18d302b0354471567846fee3ed2ff063", "traceability": "public_revision"},
       "implementation_differences": "MMEngine integration and explicit support-set handling; despite the strict filename, the canonical configuration permits deterministic local support sampling when the official support set is absent.",
-      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The canonical strict configuration sets strict_require_official_support_set=False, so the runner silently uses a non-official deterministic local support-sampling fallback when the official support set is absent.", "Official support-set data is external, and referenced raw .refs/runs evidence is not distributed."]},
+      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The canonical strict configuration sets strict_require_official_support_set=False, so the runner silently uses a non-official deterministic local support-sampling fallback when the official support set is absent.", "Official support-set data is external, and referenced raw validation evidence is not distributed."]},
       "alignment_path": "docs/alignment/regad.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -439,8 +439,8 @@
       "detector_module": "baoiad.models.detectors.nsa",
       "paper_url": "https://arxiv.org/abs/2109.15222",
       "source": {"url": "https://github.com/hmsch/natural-synthetic-anomalies", "revision": "919591685307ce030fe27cb77687509dc277189c", "traceability": "audit_revision_only"},
-      "implementation_differences": "Repository-local port of synthesis and training semantics with MMEngine integration; G002 pins an audit reference even though the historical derivation revision was not recorded.",
-      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The exact historical derivation revision was not recorded; G002 pins the current upstream audit tree.", "Referenced raw evidence is not distributed."]},
+      "implementation_differences": "Repository-local port of synthesis and training semantics with MMEngine integration; the release audit pins a current reference even though the historical derivation revision was not recorded.",
+      "validation": {"state": "historical_evidence", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["The exact historical derivation revision was not recorded; the release audit pins the current upstream audit tree.", "Referenced raw evidence is not distributed."]},
       "alignment_path": "docs/alignment/nsa.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },
@@ -453,7 +453,7 @@
       "paper_url": "https://arxiv.org/abs/2407.15795",
       "source": {"url": "https://github.com/caoyunkang/AdaCLIP", "revision": "b762ac40c3f33c77e7e513e48cb436f059d456da", "traceability": "public_revision"},
       "implementation_differences": "Repository-local implementation following the official prompt and adapter design with MMEngine integration.",
-      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Official checkpoints are external, and referenced raw .refs/runs artifacts are not distributed.", "The alignment record reports large per-category gaps and a non-official MVTec-only fallback path that remains unresolved."]},
+      "validation": {"state": "partial", "public_evidence": false, "runtime_state": "not_assessed", "limitations": ["Official checkpoints are external, and referenced raw validation artifacts are not distributed.", "The alignment record reports large per-category gaps and a non-official MVTec-only fallback path that remains unresolved."]},
       "alignment_path": "docs/alignment/adaclip.md",
       "license_review": {"status": "pending_external_review", "approval_id": "APP-THIRD-PARTY", "release_blocking": true}
     },

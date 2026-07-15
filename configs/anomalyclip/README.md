@@ -2,7 +2,8 @@
 
 > AnomalyCLIP: Object-Agnostic Prompt Learning for Zero-Shot Anomaly Detection
 
-- **Paper**: [AnomalyCLIP: Object-Agnostic Prompt Learning for Zero-Shot Anomaly Detection](https://arxiv.org/abs/2403.02199)
+- **Paper**: [publication](https://arxiv.org/abs/2310.18961)
+- **Implementation source**: [upstream repository](https://github.com/zqhang/AnomalyCLIP); revision: `3911738c0867544f545a076ad78f3f11d9ecbfdf`
 - **Category**: Vision-Language
 - **Backbone**: OpenCLIP-ViT/L-14
 
@@ -12,7 +13,7 @@ AnomalyCLIP learns object-agnostic text prompts that generalize across categorie
 
 | Config | Description |
 |--------|-------------|
-| [`anomalyclip_vitl14_336_518_mvtec_strict.py`](anomalyclip_vitl14_336_518_mvtec_strict.py) | MVTec AD strict alignment |
+| [`anomalyclip_vitl14_336_518_mvtec_strict.py`](anomalyclip_vitl14_336_518_mvtec_strict.py) | MVTec AD reference configuration |
 | [`anomalyclip_vitl14_336_518_visa.py`](anomalyclip_vitl14_336_518_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ AnomalyCLIP learns object-agnostic text prompts that generalize across categorie
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The alignment record is [`docs/alignment/anomalyclip.md`](../../docs/alignment/anomalyclip.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The [implementation provenance and reproducibility record](../../docs/alignment/anomalyclip.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

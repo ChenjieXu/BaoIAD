@@ -2,7 +2,8 @@
 
 > ViTAD: Vision Transformer for Anomaly Detection
 
-- **Paper**: [ViTAD: Vision Transformer for Anomaly Detection](https://arxiv.org/abs/2404.09163)
+- **Paper**: [publication](https://arxiv.org/abs/2312.07495)
+- **Implementation source**: [upstream repository](https://github.com/zhangzjn/ADer); revision: `902937a7ed7fa7689674a4ac9b8fe9a72a40c402`
 - **Category**: Other
 - **Backbone**: ViT-AD
 
@@ -12,7 +13,7 @@ ViTAD uses a Vision Transformer as the backbone for anomaly detection with a mas
 
 | Config | Description |
 |--------|-------------|
-| [`vitad_256_mvtec_strict.py`](vitad_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`vitad_256_mvtec_strict.py`](vitad_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`vitad_256_visa.py`](vitad_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ ViTAD uses a Vision Transformer as the backbone for anomaly detection with a mas
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The alignment record is [`docs/alignment/vitad.md`](../../docs/alignment/vitad.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The [implementation provenance and reproducibility record](../../docs/alignment/vitad.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

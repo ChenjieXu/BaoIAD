@@ -781,7 +781,7 @@
         "baoiad/models/detectors/glass.py:186-229 (GLASS FocalLoss source chain; exact statement-level comparison remains pending)"
       ],
       "source": {"name": "hsuxu/Loss_ToolBox-PyTorch historical FocalLoss lineage", "url": "https://github.com/hsuxu/Loss_ToolBox-PyTorch", "revision": null},
-      "license": {"spdx": null, "status": "needs_external_review", "evidence": "The repository HEAD audited during G002 is Apache-2.0, while the historical FocalLoss/FocalLoss.py lineage named by downstream sources existed under an MIT snapshot. The exact source revision for the three local variants is not proven, so no SPDX conclusion is frozen."},
+      "license": {"spdx": null, "status": "needs_external_review", "evidence": "The repository HEAD examined during the release audit is Apache-2.0, while the historical FocalLoss/FocalLoss.py lineage named by downstream sources existed under an MIT snapshot. The exact source revision for the three local variants is not proven, so no SPDX conclusion is frozen."},
       "incorporation": {"mode": "multiple_closely_derived_implementations", "modified": true},
       "obligations": ["Freeze the exact historical FocalLoss revision and its applicable license, retain the correct notice, mark all three local variants as modified, and complete exact source-range comparison before approval."],
       "disposition": "keep_with_attribution",

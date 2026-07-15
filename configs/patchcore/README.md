@@ -2,7 +2,8 @@
 
 > PatchCore: Towards Total Recall in Industrial Anomaly Detection
 
-- **Paper**: [PatchCore: Towards Total Recall in Industrial Anomaly Detection](https://arxiv.org/abs/2106.08265)
+- **Paper**: [publication](https://arxiv.org/abs/2106.08265)
+- **Implementation source**: Not recorded in the method-status manifest.
 - **Category**: Memory Bank
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ PatchCore builds a memory bank of core patch features from normal training data 
 
 | Config | Description |
 |--------|-------------|
-| [`patchcore_wrn50_256_mvtec_strict.py`](patchcore_wrn50_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`patchcore_wrn50_256_mvtec_strict.py`](patchcore_wrn50_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`patchcore_wrn50_256_visa.py`](patchcore_wrn50_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ PatchCore builds a memory bank of core patch features from normal training data 
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Feature-memory / density** family. The alignment record is [`docs/alignment/patchcore.md`](../../docs/alignment/patchcore.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Feature-memory / density** family. The [implementation provenance and reproducibility record](../../docs/alignment/patchcore.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

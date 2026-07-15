@@ -12,6 +12,7 @@ import argparse
 import fnmatch
 import json
 import os
+import re
 import stat
 import subprocess
 import sys
@@ -21,6 +22,49 @@ from typing import Any
 
 class ReleasePolicyError(ValueError):
     """Raised when the release policy itself is invalid."""
+
+
+OFFICIAL_REPOSITORY_URL = "https://github.com/Baosight-xVue/BaoIAD"
+REQUIRED_PUBLIC_DOCUMENTS = {
+    "README.md",
+    "README_zh-CN.md",
+    "CITATION.cff",
+    "docs/en/get_started.md",
+    "docs/zh_cn/get_started.md",
+    "docs/alignment/README.md",
+}
+PUBLIC_DOCUMENT_SUFFIXES = {".md", ".rst", ".cff"}
+CASE_SENSITIVE_INTERNAL_DOCUMENT_MARKERS = ("/mnt/", "/Users/", "/home/")
+CASE_INSENSITIVE_INTERNAL_DOCUMENT_MARKERS = (
+    "xuchenjie",
+    "chenjiexu",
+    "manuscript evidence workspace",
+    "gh-proxy.com",
+)
+ALIGNMENT_INTERNAL_MARKERS = (
+    ".refs/",
+    "runs/alignment",
+    "runs/benchmark",
+    "playbook",
+    "agent handoff",
+)
+REVIEW_STATUS_PATTERN = re.compile(
+    r"(?:under[\s_-]*review|neurips[\s_-]*review|审稿中|评审中)", re.IGNORECASE
+)
+BAOIAD_GITHUB_URL_PATTERN = re.compile(
+    r"https?://github\.com/([^/\s)\]\"'>]+)/BaoIAD\b", re.IGNORECASE
+)
+ENGLISH_SCOPE_HEADING = re.compile(
+    r"^##\s+Scope and limitations\s*$", re.IGNORECASE | re.MULTILINE
+)
+CHINESE_SCOPE_HEADING = re.compile(
+    r"^##\s+(?:范围与局限|适用范围与限制)\s*$", re.MULTILINE
+)
+BLANKET_ALIGNMENT_PATTERNS = (
+    re.compile(r"strict-alignment evidence for the 37", re.IGNORECASE),
+    re.compile(r"why a method is considered strictly aligned", re.IGNORECASE),
+    re.compile(r"all\s+(?:the\s+)?37.{0,80}strictly aligned", re.IGNORECASE),
+)
 
 
 def _git(repo_root: Path, *args: str) -> bytes:
@@ -45,20 +89,7 @@ def _nul_fields(data: bytes) -> list[str]:
     ]
 
 
-def _diff_paths(repo_root: Path, base_ref: str) -> set[str]:
-    fields = _nul_fields(
-        _git(
-            repo_root,
-            "diff",
-            "--name-status",
-            "-z",
-            "--find-renames",
-            "--find-copies",
-            "--find-copies-harder",
-            base_ref,
-            "--",
-        )
-    )
+def _name_status_paths(fields: list[str]) -> set[str]:
     paths: set[str] = set()
     index = 0
     while index < len(fields):
@@ -71,6 +102,21 @@ def _diff_paths(repo_root: Path, base_ref: str) -> set[str]:
             )
         paths.update(fields[index : index + path_count])
         index += path_count
+    return paths
+
+
+def _diff_paths(repo_root: Path, base_ref: str) -> set[str]:
+    paths: set[str] = set()
+    common_args = (
+        "--name-status",
+        "-z",
+        "--find-renames",
+        "--find-copies",
+        "--find-copies-harder",
+    )
+    for comparison in (("--cached", base_ref), (base_ref,)):
+        fields = _nul_fields(_git(repo_root, "diff", *common_args, *comparison, "--"))
+        paths.update(_name_status_paths(fields))
 
     paths.update(
         _nul_fields(_git(repo_root, "ls-files", "--others", "--exclude-standard", "-z"))
@@ -204,6 +250,96 @@ def _validate_exceptions(
     return exceptions, errors
 
 
+def _validate_public_documentation(
+    repo_root: Path, candidate_paths: set[str]
+) -> list[str]:
+    """Validate the public documentation surface against release invariants."""
+    errors: list[str] = []
+    missing = sorted(REQUIRED_PUBLIC_DOCUMENTS - candidate_paths)
+    if missing:
+        errors.append("missing required public documents: " + ", ".join(missing))
+
+    documents: dict[str, str] = {}
+    public_paths = sorted(
+        path
+        for path in candidate_paths
+        if Path(path).suffix.lower() in PUBLIC_DOCUMENT_SUFFIXES
+    )
+    for path in public_paths:
+        document_path = repo_root / path
+        if not document_path.is_file() or document_path.is_symlink():
+            errors.append(f"public document is not a regular file: {path}")
+            continue
+        try:
+            text = document_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as exc:
+            errors.append(f"cannot read public document {path}: {exc}")
+            continue
+        documents[path] = text
+
+        normalized = text.lower()
+        for marker in CASE_SENSITIVE_INTERNAL_DOCUMENT_MARKERS:
+            if marker in text:
+                errors.append(
+                    f"public document contains internal marker {marker}: {path}"
+                )
+        for marker in CASE_INSENSITIVE_INTERNAL_DOCUMENT_MARKERS:
+            if marker in normalized:
+                errors.append(
+                    f"public document contains internal marker {marker}: {path}"
+                )
+        if path.startswith("docs/alignment/"):
+            for marker in ALIGNMENT_INTERNAL_MARKERS:
+                if marker in normalized:
+                    errors.append(
+                        "alignment document contains internal evidence marker "
+                        f"{marker}: {path}"
+                    )
+
+    for readme_path in ("README.md", "README_zh-CN.md"):
+        text = documents.get(readme_path)
+        if text is None:
+            continue
+        if REVIEW_STATUS_PATTERN.search(text):
+            errors.append(f"public README contains review-status text: {readme_path}")
+        for match in BAOIAD_GITHUB_URL_PATTERN.finditer(text):
+            if match.group(1).lower() != "baosight-xvue":
+                errors.append(
+                    "public README contains a non-organization BaoIAD URL: "
+                    f"{readme_path}"
+                )
+                break
+
+    english_readme = documents.get("README.md")
+    if english_readme is not None and not ENGLISH_SCOPE_HEADING.search(english_readme):
+        errors.append("README.md is missing the Scope and limitations section")
+
+    chinese_readme = documents.get("README_zh-CN.md")
+    if chinese_readme is not None and not CHINESE_SCOPE_HEADING.search(chinese_readme):
+        errors.append("README_zh-CN.md is missing the Scope and limitations section")
+
+    for path in (
+        "CITATION.cff",
+        "docs/en/get_started.md",
+        "docs/zh_cn/get_started.md",
+    ):
+        text = documents.get(path)
+        if text is not None and OFFICIAL_REPOSITORY_URL not in text:
+            errors.append(
+                f"public document does not use {OFFICIAL_REPOSITORY_URL}: {path}"
+            )
+
+    alignment_readme = documents.get("docs/alignment/README.md")
+    if alignment_readme is not None and any(
+        pattern.search(alignment_readme) for pattern in BLANKET_ALIGNMENT_PATTERNS
+    ):
+        errors.append(
+            "docs/alignment/README.md makes a blanket strict-alignment claim "
+            "for the 37-method inventory"
+        )
+    return errors
+
+
 def validate_release(repo_root: Path, policy_path: Path) -> dict[str, Any]:
     repo_root = repo_root.resolve()
     policy_path = policy_path.resolve()
@@ -266,12 +402,23 @@ def validate_release(repo_root: Path, policy_path: Path) -> dict[str, Any]:
     unstaged_paths = set(
         _nul_fields(_git(repo_root, "diff", "--name-only", "-z", "--"))
     )
+    divergent_paths = sorted(changed_paths & tracked_paths & unstaged_paths)
+    for path in divergent_paths:
+        errors.append(f"changed tracked path has staged/worktree divergence: {path}")
+    recreated_deleted_paths = sorted(
+        path
+        for path in (changed_paths & base_paths) - tracked_paths
+        if os.path.lexists(repo_root / path)
+    )
+    for path in recreated_deleted_paths:
+        errors.append(f"staged deletion has worktree recreation: {path}")
     present_changed_paths = {
         path
         for path in changed_paths
         if path in tracked_paths or os.path.lexists(repo_root / path)
     }
     candidate_paths = tracked_paths | present_changed_paths
+    errors.extend(_validate_public_documentation(repo_root, tracked_paths))
 
     for path in sorted(candidate_paths):
         if path in banned_paths:
@@ -298,10 +445,6 @@ def validate_release(repo_root: Path, policy_path: Path) -> dict[str, Any]:
                 errors.append(f"added path has unsupported git mode {mode}: {path}")
             size_text = _git(repo_root, "cat-file", "-s", object_id).decode().strip()
             sizes["index"] = int(size_text)
-        if entries:
-            if path in unstaged_paths:
-                errors.append(f"added path has staged/worktree divergence: {path}")
-
         worktree_path = repo_root / path
         if os.path.lexists(worktree_path):
             metadata = worktree_path.lstat()

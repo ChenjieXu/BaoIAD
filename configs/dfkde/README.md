@@ -2,7 +2,8 @@
 
 > Deep Feature Kernel Density Estimation for Anomaly Detection
 
-- **Paper**: [Deep Feature Kernel Density Estimation for Anomaly Detection](https://arxiv.org/abs/1909.10786)
+- **Paper**: Not recorded in the method-status manifest.
+- **Implementation source**: [upstream repository](https://github.com/open-edge-platform/anomalib); revision: `4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a`
 - **Category**: Memory Bank
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ DFKDE applies kernel density estimation on deep features extracted from a pre-tr
 
 | Config | Description |
 |--------|-------------|
-| [`dfkde_256_mvtec_strict.py`](dfkde_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`dfkde_256_mvtec_strict.py`](dfkde_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`dfkde_256_visa.py`](dfkde_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ DFKDE applies kernel density estimation on deep features extracted from a pre-tr
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Feature-memory / density** family. The alignment record is [`docs/alignment/dfkde.md`](../../docs/alignment/dfkde.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Feature-memory / density** family. The [implementation provenance and reproducibility record](../../docs/alignment/dfkde.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

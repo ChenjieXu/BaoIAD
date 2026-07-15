@@ -2,7 +2,8 @@
 
 > AdaCLIP: Adaptive Vision-Language Model for Anomaly Detection
 
-- **Paper**: [AdaCLIP: Adaptive Vision-Language Model for Anomaly Detection](https://arxiv.org/abs/2409.18928)
+- **Paper**: [publication](https://arxiv.org/abs/2407.15795)
+- **Implementation source**: [upstream repository](https://github.com/caoyunkang/AdaCLIP); revision: `b762ac40c3f33c77e7e513e48cb436f059d456da`
 - **Category**: Vision-Language
 - **Backbone**: OpenCLIP-ViT/L-14
 
@@ -12,7 +13,7 @@ AdaCLIP adaptively adjusts CLIP's visual and textual representations using learn
 
 | Config | Description |
 |--------|-------------|
-| [`adaclip_vitl14_336_518_mvtec_strict.py`](adaclip_vitl14_336_518_mvtec_strict.py) | MVTec AD strict alignment |
+| [`adaclip_vitl14_336_518_mvtec_strict.py`](adaclip_vitl14_336_518_mvtec_strict.py) | MVTec AD reference configuration |
 | [`adaclip_vitl14_336_518_visa.py`](adaclip_vitl14_336_518_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ AdaCLIP adaptively adjusts CLIP's visual and textual representations using learn
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The alignment record is [`docs/alignment/adaclip.md`](../../docs/alignment/adaclip.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The [implementation provenance and reproducibility record](../../docs/alignment/adaclip.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

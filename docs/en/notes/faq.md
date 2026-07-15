@@ -2,9 +2,9 @@
 
 ## What is BaoIAD?
 
-BaoIAD is a unified industrial anomaly detection (IAD) benchmark built on MMEngine. It provides **37 methods** across **9 families**, evaluated on multiple datasets (MVTec AD, VisA, and others) with a standardized training, testing, and evaluation pipeline. Every method ships with strict-aligned configs, frozen reference evidence, and reproducible benchmark scripts.
+BaoIAD is an industrial anomaly detection (IAD) benchmark toolbox built on MMEngine. Its repository inventory contains **37 method integrations** across **9 families**, with configuration entry points for multiple datasets. Runtime prerequisites and validation depth vary by method; consult the method-status manifest instead of assuming uniform reproducibility.
 
-The method inventory lives in [`baoiad/method_inventory.py`](../../baoiad/method_inventory.py). The 9 method families are:
+The method inventory lives in [`baoiad/method_inventory.py`](../../../baoiad/method_inventory.py). The 9 method families are:
 
 | Family | Methods |
 |--------|---------|
@@ -20,24 +20,24 @@ The method inventory lives in [`baoiad/method_inventory.py`](../../baoiad/method
 
 ## What is the difference between strict and unified configs?
 
-BaoIAD provides per-dataset configs for each method. For MVTec AD, configs are marked `_strict` (e.g., `patchcore_wrn50_256_mvtec_strict.py`), meaning they replicate the original paper's hyperparameters exactly. VisA configs use the BaoIAD unified settings (same backbone, resolution, and training schedule) for fair cross-method comparison.
+BaoIAD provides per-dataset configuration entry points. The `_strict` suffix (for example, `patchcore_wrn50_256_mvtec_strict.py`) identifies a reference-oriented configuration; it is a naming convention, not proof that every upstream hyperparameter, runtime path, or published result is reproduced. Unified configs standardize selected repository settings, but do not by themselves establish cross-method comparability.
 
-Use strict configs when you need to reproduce original paper numbers. Use unified configs for fair cross-method benchmarking.
+Use reference-oriented configs when investigating method-specific settings, and inspect the corresponding provenance record and limitations before interpreting results. Use unified configs only when the standardized choices are suitable for the comparison you intend to make.
 
 ## How many methods are included?
 
-**37 methods**. See the full list in [`baoiad/method_inventory.py`](../../baoiad/method_inventory.py). Each entry has a slug, display name, family, config paths, and links to its config README and alignment evidence.
+**37 methods**. See the full list in [`baoiad/method_inventory.py`](../../../baoiad/method_inventory.py). Each entry has a slug, display name, family, config paths, and links to its config README and provenance record.
 
 ## What is alignment evidence?
 
-Each method has an alignment record in [`docs/alignment/`](../alignment/) that documents how the BaoIAD implementation matches the original paper. These records include:
+Each method has a provenance and reproducibility record in [`docs/alignment/`](../../alignment/) that documents the public source, implementation differences, runtime state, and known limitations.
 
-- **Reference freeze**: the commit hash and source used for migration
-- **Code-path parity check**: verified that forward/backward paths match the original
-- **Behavior probes**: numerical spot-checks on intermediate outputs
-- **Benchmark stop-line**: the point at which alignment was declared
+- **Public source**: the paper and implementation source recorded by the release inventory
+- **Implementation differences**: the repository adapters or deviations known at release time
+- **Runtime state**: optional dependencies, external artifacts, or network behavior
+- **Limitations**: the method-specific boundary for historical or partial validation
 
-See [`docs/alignment/README.md`](../alignment/README.md) for the full table of methods and links.
+See [`docs/alignment/README.md`](../../alignment/README.md) for the full table of methods and links.
 
 ## What does `--methods all` mean?
 
@@ -64,14 +64,14 @@ python tools/train.py configs/patchcore/patchcore_wrn50_256_mvtec_strict.py \
 
 Each method directory under `configs/` contains separate configs for MVTec AD (`_mvtec_strict.py`) and VisA (`_visa.py`). Choose based on your target dataset:
 
-- **MVTec AD** configs: tuned for the original paper's settings (strict alignment)
-- **VisA** configs: unified settings for fair comparison across methods
+- **MVTec AD** configs: intended to follow method-specific reference settings; consult the method-status manifest and record for validation limits
+- **VisA** configs: repository-standardized settings; suitability for a cross-method comparison still depends on method prerequisites and protocol choices
 
 Point your data root to the appropriate dataset via `BAOIAD_DATA_ROOT` or `--cfg-options`.
 
-## How do I reproduce benchmark results from the paper?
+## How do I run a benchmark workflow?
 
-1. Install with all optional dependencies:
+1. Install the core package and the extras required by the selected methods. The `[all]` extra covers common optional families but does not guarantee every external artifact or platform-specific dependency:
    ```bash
    pip install -e ".[all]"
    ```
@@ -113,7 +113,7 @@ Yes. BaoIAD supports custom datasets through the MMEngine dataset registry. See 
 
 ## What metrics does BaoIAD compute?
 
-The [`AnomalyDetectionMetric`](../../baoiad/evaluation/ad_metric.py) class computes the following:
+The [`AnomalyDetectionMetric`](../../../baoiad/evaluation/ad_metric.py) class computes the following:
 
 **Image-level:**
 - `image_auroc` — Area Under the ROC Curve

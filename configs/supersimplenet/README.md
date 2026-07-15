@@ -2,7 +2,8 @@
 
 > SuperSimpleNet: Unifying Unsupervised and Supervised Learning for Fast Anomaly Detection
 
-- **Paper**: [SuperSimpleNet: Unifying Unsupervised and Supervised Learning for Fast Anomaly Detection](https://arxiv.org/abs/2407.02959)
+- **Paper**: [publication](https://arxiv.org/abs/2408.03143)
+- **Implementation source**: [upstream repository](https://github.com/open-edge-platform/anomalib); revision: `4f6af1acb0ee7b81f54cda036dd9f1c27f63b69a`
 - **Category**: Discriminator
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ SuperSimpleNet unifies unsupervised and supervised anomaly detection in a single
 
 | Config | Description |
 |--------|-------------|
-| [`supersimplenet_256_mvtec_strict.py`](supersimplenet_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`supersimplenet_256_mvtec_strict.py`](supersimplenet_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`supersimplenet_256_visa.py`](supersimplenet_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ SuperSimpleNet unifies unsupervised and supervised anomaly detection in a single
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Discriminative** family. The alignment record is [`docs/alignment/supersimplenet.md`](../../docs/alignment/supersimplenet.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Discriminative** family. The [implementation provenance and reproducibility record](../../docs/alignment/supersimplenet.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

@@ -25,7 +25,7 @@ Adding a new method to BaoIAD involves several steps. Follow this checklist to e
 
 BaoIAD follows the **MMEngine** framework conventions:
 
-- **Registry pattern**: All models, datasets, transforms, metrics, and hooks must be registered using the scoped registries in [`baoiad/registry.py`](../../baoiad/registry.py) (scope `'baoiad'`).
+- **Registry pattern**: All models, datasets, transforms, metrics, and hooks must be registered using the scoped registries in [`baoiad/registry.py`](../../../baoiad/registry.py) (scope `'baoiad'`).
 - **Config-driven**: Every experiment is defined by an MMEngine config file. Use `_base_` inheritance from `configs/_base_/` where possible.
 - **Detector interface**: Detectors should subclass `BaseDetector` from `baoiad.models.detectors.base` and implement `forward_train()` and `forward_test()`.
 - **Type annotations**: Use Python type hints for function signatures.
@@ -53,7 +53,7 @@ Tests should cover at minimum:
 
 ## Method Inventory Update Process
 
-The method inventory in [`baoiad/method_inventory.py`](../../baoiad/method_inventory.py) is the single source of truth for all methods in the benchmark. When adding a method:
+The method inventory in [`baoiad/method_inventory.py`](../../../baoiad/method_inventory.py) is the single source of truth for all methods in the benchmark. When adding a method:
 
 1. Choose a unique, lowercase `slug` (e.g., `patchcore`, `efficientad`).
 2. Set the `display` name to the official paper name.

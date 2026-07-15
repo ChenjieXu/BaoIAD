@@ -114,7 +114,7 @@ python tools/test.py configs/patchcore/patchcore_wrn50_256_mvtec_strict.py runs/
 
 **Symptom:** Training or testing completes but no images are saved.
 
-**Solution:** The visualization hook is **disabled by default** in [`configs/_base_/default_runtime.py`](../../configs/_base_/default_runtime.py). Enable it via config override:
+**Solution:** The visualization hook is **disabled by default** in [`configs/_base_/default_runtime.py`](../../../configs/_base_/default_runtime.py). Enable it via config override:
 
 ```bash
 python tools/test.py <config> <checkpoint> \

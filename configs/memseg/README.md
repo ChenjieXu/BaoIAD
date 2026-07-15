@@ -2,7 +2,8 @@
 
 > MemSeg: A Memory-based Segmentation Method for Anomaly Detection
 
-- **Paper**: [MemSeg: A Memory-based Segmentation Method for Anomaly Detection](https://arxiv.org/abs/2206.13116)
+- **Paper**: [publication](https://arxiv.org/abs/2205.00908)
+- **Implementation source**: [upstream repository](https://github.com/TooTouch/MemSeg); revision: `836bd465a9b14422f92666dc29dc36edce2692d0`
 - **Category**: Reconstruction
 - **Backbone**: ResNet-18
 
@@ -12,7 +13,7 @@ MemSeg uses a memory bank of normal feature descriptors to guide a segmentation 
 
 | Config | Description |
 |--------|-------------|
-| [`memseg_rn18_256_mvtec_strict.py`](memseg_rn18_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`memseg_rn18_256_mvtec_strict.py`](memseg_rn18_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`memseg_rn18_256_visa.py`](memseg_rn18_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ MemSeg uses a memory bank of normal feature descriptors to guide a segmentation 
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The alignment record is [`docs/alignment/memseg.md`](../../docs/alignment/memseg.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Reconstruction / ViT** family. The [implementation provenance and reproducibility record](../../docs/alignment/memseg.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

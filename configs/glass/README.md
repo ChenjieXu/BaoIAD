@@ -2,7 +2,8 @@
 
 > GLASS: GLobal Attention-based Anomaly Detection
 
-- **Paper**: [GLASS: GLobal Attention-based Anomaly Detection](https://arxiv.org/abs/2402.12650)
+- **Paper**: [publication](https://arxiv.org/abs/2407.09359)
+- **Implementation source**: [upstream repository](https://github.com/cqylunlun/GLASS); revision: `6af03b9d7f7b33a1aebd69cd4c30a41bf020a2d1`
 - **Category**: Other
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ GLASS generates anomalies via global attention-based Perlin noise masks and DTD 
 
 | Config | Description |
 |--------|-------------|
-| [`glass_wrn50_288_mvtec_strict.py`](glass_wrn50_288_mvtec_strict.py) | MVTec AD strict alignment |
+| [`glass_wrn50_288_mvtec_strict.py`](glass_wrn50_288_mvtec_strict.py) | MVTec AD reference configuration |
 | [`glass_wrn50_288_visa.py`](glass_wrn50_288_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ GLASS generates anomalies via global attention-based Perlin noise masks and DTD 
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The alignment record is [`docs/alignment/glass.md`](../../docs/alignment/glass.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Self-supervised synthesis** family. The [implementation provenance and reproducibility record](../../docs/alignment/glass.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

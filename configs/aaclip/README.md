@@ -2,7 +2,8 @@
 
 > AACLIP: Attentive-Affinitive CLIP for Zero-Shot Anomaly Detection
 
-- **Paper**: [AACLIP: Attentive-Affinitive CLIP for Zero-Shot Anomaly Detection](https://arxiv.org/abs/2410.17513)
+- **Paper**: [publication](https://arxiv.org/abs/2503.06661)
+- **Implementation source**: [upstream repository](https://github.com/Mwxinnn/AA-CLIP); revision: `53db195f230442aa118c246876c94ba1c76139cc`
 - **Category**: Vision-Language
 - **Backbone**: OpenCLIP-ViT/L-14
 
@@ -13,7 +14,7 @@ AACLIP learns attentive-affinitive visual and textual prompts to align CLIP feat
 | Config | Description |
 |--------|-------------|
 | [`aaclip_vitl14_336_256_mvtec.py`](aaclip_vitl14_336_256_mvtec.py) | MVTec AD |
-| [`aaclip_vitl14_336_518_mvtec_strict.py`](aaclip_vitl14_336_518_mvtec_strict.py) | MVTec AD strict alignment |
+| [`aaclip_vitl14_336_518_mvtec_strict.py`](aaclip_vitl14_336_518_mvtec_strict.py) | MVTec AD reference configuration |
 | [`aaclip_vitl14_336_518_visa_32shot_stage1.py`](aaclip_vitl14_336_518_visa_32shot_stage1.py) | VisA, Stage 1, 32-shot |
 | [`aaclip_vitl14_336_518_visa_32shot_stage2.py`](aaclip_vitl14_336_518_visa_32shot_stage2.py) | VisA, Stage 2, 32-shot |
 | [`aaclip_vitl14_336_518_visa_fullshot_stage1.py`](aaclip_vitl14_336_518_visa_fullshot_stage1.py) | VisA, Stage 1, full-shot |
@@ -41,6 +42,6 @@ AACLIP learns attentive-affinitive visual and textual prompts to align CLIP feat
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The alignment record is [`docs/alignment/aaclip.md`](../../docs/alignment/aaclip.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The [implementation provenance and reproducibility record](../../docs/alignment/aaclip.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

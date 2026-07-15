@@ -1,41 +1,46 @@
 # BaoIAD
 
 <p align="center">
-  <img src="resources/baoiad-hero.png" width="900" alt="BaoIAD Industrial Anomaly Detection Benchmark">
-</p>
-
-<p align="center">
-  <a href="https://baoiad.readthedocs.io/en/latest/"><img src="https://img.shields.io/badge/docs-latest-blue" alt="docs"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="license"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9%2B-blue" alt="python"></a>
-  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/pytorch-2.0%2B-orange" alt="pytorch"></a>
-  <a href="docs/alignment/README.md"><img src="https://img.shields.io/badge/methods-37-purple" alt="methods"></a>
-  <a href="https://github.com/ChenjieXu/BaoIAD"><img src="https://img.shields.io/badge/NeurIPS%202026-Under%20E%26D%20Review-red" alt="NeurIPS 2026 under review"></a>
+  <img src="resources/baoiad-hero.png" width="900" alt="BaoIAD 工业异常检测基准">
 </p>
 
 <p align="center">
   <a href="README.md">English</a> | 简体中文
 </p>
 
-> **📢 BaoIAD 目前正在 NeurIPS 2026 Evaluations and Datasets 审稿中。**
-
 <p align="center">
-  <a href="https://baoiad.readthedocs.io/en/latest/">📘 文档</a> |
-  <a href="docs/zh_cn/get_started.md">🛠️ 安装</a> |
-  <a href="docs/zh_cn/user_guides/train_test.md">🚀 训练与测试</a> |
-  <a href="docs/zh_cn/model_zoo.md">📚 模型库</a> |
-  <a href="docs/alignment/README.md">🧭 对齐证据</a>
+  <a href="https://baoiad.readthedocs.io/en/latest/"><img src="https://img.shields.io/badge/docs-latest-blue" alt="在线文档"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="Apache 2.0 许可证"></a>
 </p>
 
-## 简介
+BaoIAD 是基于 MMEngine 的工业异常检测基准，在 9 个方法家族中提供 37 个仓库内方法集成，由 [Baosight-xVue](https://github.com/Baosight-xVue) 组织维护。
 
-BaoIAD 是一个基于 [MMEngine](https://github.com/open-mmlab/mmengine) 的工业异常检测统一基准与工具箱。仓库提供配置化训练、测试、批量基准流程，并为常用 IAD 方法固定保存仓库内严格对齐证据。
+仓库发布检查已在 Python 3.10 和 3.12 上执行。仓库包含 10 个公开工业异常检测数据集的适配器，但不分发数据集本身。
 
-主要特性：
+<p align="center">
+  <a href="docs/zh_cn/get_started.md">🛠️ 安装</a> |
+  <a href="#快速开始">🚀 快速开始</a> |
+  <a href="docs/zh_cn/model_zoo.md">📚 模型库</a> |
+  <a href="https://baoiad.readthedocs.io/en/latest/">📘 文档</a> |
+  <a href="#贡献">🤝 贡献</a> |
+  <a href="#引用">📝 引用</a>
+</p>
 
-- **配置化方法入口**：每个方法目录都有 `configs/<method>/README.md`，列出可运行配置。
+## 范围与局限
+
+- BaoIAD 以源码形式分发，目前不提供托管权重、在线 Demo、Docker 镜像或 PyPI 包。
+- 用户需按原始条款获取各数据集和外部预训练资产，并配置对应的本地路径。
+- 不同可选方法家族的依赖和硬件要求不同；仅安装核心包并不意味着所有配置都可直接运行。
+- 37 个方法的实现溯源和验证深度并不相同。在将某个方法解读为已独立复现前，请核对[方法状态清单](docs/alignment/method_status.json)、[已记录例外](docs/alignment/exceptions.json)和[合规检查器](tools/check_release_compliance.py)。
+- 下方可视化为定性示例，不是统一基准或方法排名；其中 SPADE 是与 BaoIAD 方法并列展示的外部、非清单参考方法。
+
+## 主要能力
+
+BaoIAD 提供配置化训练、测试、批量基准流程，并为常用 IAD 方法保存仓库内实现溯源与可复现性记录。
+
+- **配置化方法入口**：每个方法目录都有 `configs/<method>/README.md`，列出配置入口和方法特有说明。
 - **按家族组织的模型库**：方法按建模思路分组，方便快速定位相关基线。
-- **严格对齐证据**：[`docs/alignment/`](docs/alignment/) 保存每个方法的 reference freeze、实现路径检查、行为 probe 和归档 benchmark stop-line。
+- **方法级记录**：[`docs/alignment/`](docs/alignment/) 按可用情况保存 reference freeze、实现检查、行为 probe、已知缺口和历史验证记录。
 - **统一基准工具**：`tools/train.py`、`tools/test.py` 和 `tools/benchmark.py` 使用一致的配置约定。
 
 ## 架构图
@@ -46,7 +51,7 @@ BaoIAD 是一个基于 [MMEngine](https://github.com/open-mmlab/mmengine) 的工
 
 ## 方法家族
 
-BaoIAD 当前保留 37 个方法，按 9 个 family 组织。方法名链接到 config README，`evidence` 链接到仓库内固定的对齐记录。同样的分组总览也保留在 [模型库](docs/zh_cn/model_zoo.md)。
+BaoIAD 当前保留 37 个方法集成，按 9 个家族组织。方法名链接到 config README，`evidence` 链接到仓库内实现溯源与可复现性记录，其验证深度以方法状态清单为准。同样的分组总览也保留在 [模型库](docs/zh_cn/model_zoo.md)。
 
 | **自监督合成** | **重建 / ViT** | **判别式方法** |
 | --- | --- | --- |
@@ -60,7 +65,7 @@ BaoIAD 当前保留 37 个方法，按 9 个 family 组织。方法名链接到 
 | --- | --- | --- |
 | [PatchCore](configs/patchcore/README.md) (CVPR'2022; [evidence](docs/alignment/patchcore.md))<br>[PaDiM](configs/padim/README.md) (ICPR'2021; [evidence](docs/alignment/padim.md))<br>[DFM](configs/dfm/README.md) (ICPR'2021; [evidence](docs/alignment/dfm.md))<br>[DFKDE](configs/dfkde/README.md) (Anomalib / ICIP'2022; [evidence](docs/alignment/dfkde.md)) | [MuSc](configs/musc/README.md) (ICLR'2024; [evidence](docs/alignment/musc.md))<br>[AACLIP](configs/aaclip/README.md) (CVPR'2025; [evidence](docs/alignment/aaclip.md))<br>[AnoVL](configs/anovl/README.md) (arXiv'2023; [evidence](docs/alignment/anovl.md))<br>[AnomalyCLIP](configs/anomalyclip/README.md) (ICLR'2024; [evidence](docs/alignment/anomalyclip.md))<br>[WinCLIP](configs/winclip/README.md) (CVPR'2023; [evidence](docs/alignment/winclip.md))<br>[AdaCLIP](configs/adaclip/README.md) (ECCV'2024; [evidence](docs/alignment/adaclip.md))<br>[SAA+](configs/saaplus/README.md) (arXiv'2023; [evidence](docs/alignment/saaplus.md)) | [AnomalyDINO](configs/anomalydino/README.md) (WACV'2025; [evidence](docs/alignment/anomalydino.md))<br>[RegAD](configs/regad/README.md) (ECCV'2022; [evidence](docs/alignment/regad.md)) |
 
-## 支持的数据集
+## 数据集配置
 
 | 数据集 | 类别数 | 配置 |
 |---------|------:|--------|
@@ -89,7 +94,7 @@ BaoIAD 当前保留 37 个方法，按 9 个 family 组织。方法名链接到 
 conda create -n baoiad python=3.10 -y && conda activate baoiad
 
 # 安装 BaoIAD
-git clone https://github.com/ChenjieXu/BaoIAD.git
+git clone https://github.com/Baosight-xVue/BaoIAD.git
 cd BaoIAD
 pip install -e .
 
@@ -137,7 +142,7 @@ python tools/test.py <config> <checkpoint> \
 <div align="center">
 <img src="resources/vis_examples/anomaly_detection_results.png" width="100%" alt="异常检测结果可视化">
 
-*示例：PatchCore、PaDiM 和 SPADE (WideResNet-50) 在 MVTec AD 数据集上的检测结果。*
+*MVTec AD 上的定性输出格式示例。每个类别依次展示输入图像、真实掩码、叠加在输入上的异常热力图和预测掩码。各行对比 PatchCore、PaDiM 与 SPADE；SPADE 是外部对比基线，不属于 BaoIAD 当前 37 方法清单。该图不构成基准排名或跨配置性能比较。*
 </div>
 
 ## 文档导航
@@ -145,7 +150,7 @@ python tools/test.py <config> <checkpoint> \
 - [英文文档](docs/en/index.rst)
 - [中文文档](docs/zh_cn/index.rst)
 - [模型库](docs/zh_cn/model_zoo.md)
-- [对齐证据](docs/alignment/README.md)
+- [实现溯源与可复现性记录](docs/alignment/README.md)
 
 ## 校验
 
@@ -165,19 +170,19 @@ python tools/benchmark.py --methods all --help
 如果您在研究中使用了本工具箱或基准评测，请引用本 GitHub 仓库。
 
 ```bibtex
-@misc{xu2026baoiad,
+@software{xu2026baoiad,
   title        = {BaoIAD: Towards Trustworthy and Reproducible Benchmarking for Industrial Anomaly Detection},
-  author       = {Chenjie Xu},
+  author       = {Chenjie Xu and Yang Zhang and Tianyun Hu and Bing Hu},
   year         = {2026},
-  howpublished = {GitHub repository},
-  url          = {https://github.com/ChenjieXu/BaoIAD}
+  doi          = {10.5281/zenodo.20067087},
+  url          = {https://github.com/Baosight-xVue/BaoIAD}
 }
 ```
 
 ## 许可证
 
-本项目基于 [Apache 2.0 许可证](LICENSE) 发布。
+BaoIAD 自有源代码基于 [Apache 2.0 许可证](LICENSE) 发布。第三方组件、数据集、预训练资产和衍生媒体仍受各自条款约束；详见[第三方声明](THIRD_PARTY_NOTICES.md)和[资源清单](resources/README.md)。
 
 ## 致谢
 
-BaoIAD 基于 [MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv) 构建。感谢 OpenMMLab 社区提供基础训练设施，也感谢所有已实现异常检测方法的原始作者公开代码和协议。
+BaoIAD 由 [Baosight-xVue](https://github.com/Baosight-xVue) 组织维护，并基于 [MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv) 构建。感谢 OpenMMLab 社区提供基础训练设施，也感谢所有已集成异常检测方法的原始作者公开研究和实现。

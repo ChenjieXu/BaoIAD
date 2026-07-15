@@ -1,58 +1,28 @@
 API 参考
 =========
 
-baoiad.models
--------------
+BaoIAD 基于 MMEngine 的 Registry 机制组织模型、数据集、转换、指标、Hook 和可视化组件。公开 API 以源码和英文 API 索引为准：
 
-.. automodule:: baoiad.models
-   :members:
-   :undoc-members:
-   :show-inheritance:
+- `英文 API 索引 <https://baoiad.readthedocs.io/en/latest/api.html>`_
+- `baoiad/registry.py <https://github.com/Baosight-xVue/BaoIAD/blob/master/baoiad/registry.py>`_
+- `baoiad/method_inventory.py <https://github.com/Baosight-xVue/BaoIAD/blob/master/baoiad/method_inventory.py>`_
 
-baoiad.models.base_ad_model
-............................
+主要命名空间
+------------
 
-.. automodule:: baoiad.models.base_ad_model
-   :members:
-   :undoc-members:
-   :show-inheritance:
+``baoiad.models``
+   检测器、骨干网络、Neck、Head 与损失函数。
 
-baoiad.models.predict_utils
-............................
+``baoiad.datasets``
+   数据集适配器、数据转换与采样器。数据集本身不随仓分发。
 
-.. automodule:: baoiad.models.predict_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+``baoiad.evaluation``
+   图像级和像素级异常检测指标。
 
-baoiad.datasets
----------------
+``baoiad.registry``
+   BaoIAD scope 下的 Registry 定义。
 
-.. automodule:: baoiad.datasets
-   :members:
-   :undoc-members:
-   :show-inheritance:
+``baoiad.structures``
+   异常检测数据样本结构。
 
-baoiad.evaluation
------------------
-
-.. automodule:: baoiad.evaluation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-baoiad.registry
----------------
-
-.. automodule:: baoiad.registry
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-baoiad.structures
------------------
-
-.. automodule:: baoiad.structures
-   :members:
-   :undoc-members:
-   :show-inheritance:
+导入这些命名空间可能需要与所选方法对应的可选依赖。如遇到条件导入或外部资产要求，请查阅方法 README 和方法状态清单。

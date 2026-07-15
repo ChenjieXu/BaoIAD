@@ -2,7 +2,8 @@
 
 > RD: Anomaly Detection via Reverse Distillation
 
-- **Paper**: [RD: Anomaly Detection via Reverse Distillation](https://arxiv.org/abs/2201.10703)
+- **Paper**: [publication](https://arxiv.org/abs/2201.10703)
+- **Implementation source**: [upstream repository](https://github.com/hq-deng/RD4AD); revision: `6554076872c65f8784f6ece8cfb39ce77e1aee12`
 - **Category**: Knowledge Distillation
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ RD detects anomalies via reverse distillation — a student network learns to in
 
 | Config | Description |
 |--------|-------------|
-| [`rd_wrn50_256_mvtec_strict.py`](rd_wrn50_256_mvtec_strict.py) | MVTec AD strict alignment |
+| [`rd_wrn50_256_mvtec_strict.py`](rd_wrn50_256_mvtec_strict.py) | MVTec AD reference configuration |
 | [`rd_wrn50_256_visa.py`](rd_wrn50_256_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ RD detects anomalies via reverse distillation — a student network learns to in
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Knowledge distillation** family. The alignment record is [`docs/alignment/rd.md`](../../docs/alignment/rd.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Knowledge distillation** family. The [implementation provenance and reproducibility record](../../docs/alignment/rd.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

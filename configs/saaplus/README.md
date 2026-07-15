@@ -2,7 +2,8 @@
 
 > SAA+: Segment Any Anomaly+
 
-- **Paper**: Preprint
+- **Paper**: [publication](https://arxiv.org/abs/2305.10724)
+- **Implementation source**: [upstream repository](https://github.com/caoyunkang/Segment-Any-Anomaly); revision: `ff564ed09bef91d86452f62aa1564e778580513e`
 - **Category**: Other
 - **Backbone**: -
 
@@ -12,7 +13,7 @@ SAA+ extends Segment Any Anomaly by combining GroundingDINO and SAM for zero-sho
 
 | Config | Description |
 |--------|-------------|
-| [`saaplus_400_mvtec_strict.py`](saaplus_400_mvtec_strict.py) | MVTec AD strict alignment |
+| [`saaplus_400_mvtec_strict.py`](saaplus_400_mvtec_strict.py) | MVTec AD reference configuration |
 | [`saaplus_400_visa.py`](saaplus_400_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ SAA+ extends Segment Any Anomaly by combining GroundingDINO and SAM for zero-sho
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The alignment record is [`docs/alignment/saaplus.md`](../../docs/alignment/saaplus.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Vision-language / foundation** family. The [implementation provenance and reproducibility record](../../docs/alignment/saaplus.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

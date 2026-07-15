@@ -26,6 +26,38 @@ class PublicReleasePolicyTest(unittest.TestCase):
         (self.repo / "base.txt").write_text("base\n", encoding="utf-8")
         (self.repo / "conflict.txt").write_text("base\n", encoding="utf-8")
         (self.repo / "large.bin").write_bytes(b"x" * 64)
+        (self.repo / "README.md").write_text(
+            "# BaoIAD\n\n## Scope and limitations\n\nPublic limits.\n",
+            encoding="utf-8",
+        )
+        (self.repo / "README_zh-CN.md").write_text(
+            "# BaoIAD\n\n## 范围与局限\n\n公开边界。\n", encoding="utf-8"
+        )
+        (self.repo / "CITATION.cff").write_text(
+            "message: Cite Chenjie Xu when using BaoIAD.\n"
+            "authors:\n  - given-names: Chenjie\n    family-names: Xu\n"
+            "repository-code: https://github.com/Baosight-xVue/BaoIAD\n",
+            encoding="utf-8",
+        )
+        docs_en = self.repo / "docs" / "en"
+        docs_en.mkdir(parents=True)
+        (docs_en / "get_started.md").write_text(
+            "git clone https://github.com/Baosight-xVue/BaoIAD.git\n",
+            encoding="utf-8",
+        )
+        docs_zh = self.repo / "docs" / "zh_cn"
+        docs_zh.mkdir(parents=True)
+        (docs_zh / "get_started.md").write_text(
+            "git clone https://github.com/Baosight-xVue/BaoIAD.git\n",
+            encoding="utf-8",
+        )
+        alignment = self.repo / "docs" / "alignment"
+        alignment.mkdir(parents=True)
+        (alignment / "README.md").write_text(
+            "# Alignment records\n\nValidation depth varies by method.\n",
+            encoding="utf-8",
+        )
+        (alignment / "status.json").write_text("{}\n", encoding="utf-8")
         self.allowlist = self.repo / "allowlist.txt"
         self.allowlist.write_text("# release diff\n", encoding="utf-8")
         self.policy_path = self.repo / "policy.json"
@@ -73,6 +105,7 @@ class PublicReleasePolicyTest(unittest.TestCase):
     def test_exact_diff_passes(self) -> None:
         (self.repo / "allowed.txt").write_text("ok\n", encoding="utf-8")
         self._write_allowlist("allowlist.txt", "allowed.txt")
+        self._git("add", "allowlist.txt")
 
         report = self._validate()
 
@@ -130,8 +163,50 @@ class PublicReleasePolicyTest(unittest.TestCase):
 
         self.assertFalse(report["ok"])
         errors = "\n".join(report["errors"])
-        self.assertIn("staged/worktree divergence: staged.bin", errors)
+        self.assertIn(
+            "changed tracked path has staged/worktree divergence: staged.bin", errors
+        )
         self.assertIn("staged.bin (index=64)", errors)
+
+    def test_tracked_document_cannot_hide_staged_content_in_worktree(self) -> None:
+        readme = self.repo / "README.md"
+        readme.write_text(
+            "# BaoIAD\n\nUnder review.\n\n"
+            "https://github.com/ChenjieXu/BaoIAD\n\n"
+            "## Scope and limitations\n",
+            encoding="utf-8",
+        )
+        self._git("add", "README.md")
+        readme.write_text(
+            "# BaoIAD\n\n## Scope and limitations\n\nPublic limits.\n",
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "README.md")
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        self.assertIn(
+            "changed tracked path has staged/worktree divergence: README.md",
+            report["errors"],
+        )
+
+    def test_staged_deletion_cannot_hide_behind_worktree_recreation(self) -> None:
+        self._git("rm", "README.md")
+        (self.repo / "README.md").write_text(
+            "# BaoIAD\n\n## Scope and limitations\n\nPublic limits.\n",
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "README.md")
+        self._git("add", "allowlist.txt")
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        self.assertIn(
+            "staged deletion has worktree recreation: README.md", report["errors"]
+        )
+        self.assertIn("missing required public documents: README.md", report["errors"])
 
     def test_broken_symlink_is_rejected(self) -> None:
         (self.repo / "bad.pth").symlink_to("missing-target")
@@ -201,6 +276,191 @@ class PublicReleasePolicyTest(unittest.TestCase):
         self.assertFalse(report["ok"])
         self.assertIn(
             "release branch mismatch: expected other-release, got test-release",
+            report["errors"],
+        )
+
+    def test_readmes_reject_review_status_and_personal_repository_url(self) -> None:
+        (self.repo / "README.md").write_text(
+            "# BaoIAD\n\nUnder-Review at NeurIPS.\n\n"
+            "https://github.com/ChenjieXu/BaoIAD\n\n"
+            "## Scope and limitations\n",
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "README.md")
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        errors = "\n".join(report["errors"])
+        self.assertIn("public README contains review-status text: README.md", errors)
+        self.assertIn(
+            "public README contains a non-organization BaoIAD URL: README.md",
+            errors,
+        )
+        self.assertIn(
+            "public document contains internal marker chenjiexu: README.md", errors
+        )
+
+    def test_chinese_readme_rejects_review_status(self) -> None:
+        (self.repo / "README_zh-CN.md").write_text(
+            "# BaoIAD\n\n论文审稿中，项目评审中。\n\n## 范围与局限\n",
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "README_zh-CN.md")
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        self.assertIn(
+            "public README contains review-status text: README_zh-CN.md",
+            report["errors"],
+        )
+
+    def test_citation_and_get_started_require_organization_repository_url(self) -> None:
+        (self.repo / "CITATION.cff").write_text(
+            "authors:\n  - given-names: Chenjie\n    family-names: Xu\n",
+            encoding="utf-8",
+        )
+        (self.repo / "docs" / "en" / "get_started.md").write_text(
+            "Clone the public repository.\n", encoding="utf-8"
+        )
+        (self.repo / "docs" / "zh_cn" / "get_started.md").write_text(
+            "克隆公开仓库。\n", encoding="utf-8"
+        )
+        self._write_allowlist(
+            "allowlist.txt",
+            "CITATION.cff",
+            "docs/en/get_started.md",
+            "docs/zh_cn/get_started.md",
+        )
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        errors = "\n".join(report["errors"])
+        self.assertIn(
+            "public document does not use "
+            "https://github.com/Baosight-xVue/BaoIAD: CITATION.cff",
+            errors,
+        )
+        self.assertIn(
+            "public document does not use "
+            "https://github.com/Baosight-xVue/BaoIAD: docs/en/get_started.md",
+            errors,
+        )
+        self.assertIn(
+            "public document does not use "
+            "https://github.com/Baosight-xVue/BaoIAD: docs/zh_cn/get_started.md",
+            errors,
+        )
+
+    def test_bilingual_readmes_require_scope_and_limitations_sections(self) -> None:
+        (self.repo / "README.md").write_text("# BaoIAD\n", encoding="utf-8")
+        (self.repo / "README_zh-CN.md").write_text("# BaoIAD\n", encoding="utf-8")
+        self._write_allowlist("allowlist.txt", "README.md", "README_zh-CN.md")
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        errors = "\n".join(report["errors"])
+        self.assertIn("README.md is missing the Scope and limitations section", errors)
+        self.assertIn(
+            "README_zh-CN.md is missing the Scope and limitations section", errors
+        )
+
+    def test_public_documents_reject_internal_paths_users_and_proxy(self) -> None:
+        alignment_readme = self.repo / "docs" / "alignment" / "README.md"
+        alignment_readme.write_text(
+            "/mnt/data /Users/person /home/person xuchenjie chenjiexu\n"
+            "manuscript evidence workspace https://gh-proxy.com/upstream\n",
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "docs/alignment/README.md")
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        errors = "\n".join(report["errors"])
+        for marker in (
+            "/mnt/",
+            "/Users/",
+            "/home/",
+            "xuchenjie",
+            "chenjiexu",
+            "manuscript evidence workspace",
+            "gh-proxy.com",
+        ):
+            self.assertIn(
+                f"public document contains internal marker {marker}: "
+                "docs/alignment/README.md",
+                errors,
+            )
+
+    def test_author_display_name_is_not_treated_as_an_internal_username(self) -> None:
+        (self.repo / "CITATION.cff").write_text(
+            "authors:\n  - given-names: Chenjie\n    family-names: Xu\n"
+            "repository-code: https://github.com/Baosight-xVue/BaoIAD\n",
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "CITATION.cff")
+        self._git("add", "CITATION.cff", "allowlist.txt")
+
+        report = self._validate()
+
+        self.assertTrue(report["ok"], report["errors"])
+
+    def test_alignment_documents_reject_internal_evidence_markers(self) -> None:
+        alignment_readme = self.repo / "docs" / "alignment" / "README.md"
+        alignment_readme.write_text(
+            ".refs/upstream runs/alignment runs/benchmark playbook agent handoff\n",
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "docs/alignment/README.md")
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        errors = "\n".join(report["errors"])
+        for marker in (
+            ".refs/",
+            "runs/alignment",
+            "runs/benchmark",
+            "playbook",
+            "agent handoff",
+        ):
+            self.assertIn(
+                "alignment document contains internal evidence marker "
+                f"{marker}: docs/alignment/README.md",
+                errors,
+            )
+
+    def test_alignment_json_is_not_scanned_as_public_documentation(self) -> None:
+        status = self.repo / "docs" / "alignment" / "status.json"
+        status.write_text(
+            '{"internal_note": ".refs/upstream and agent handoff"}\n',
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "docs/alignment/status.json")
+        self._git("add", "docs/alignment/status.json", "allowlist.txt")
+
+        report = self._validate()
+
+        self.assertTrue(report["ok"], report["errors"])
+
+    def test_alignment_index_rejects_blanket_strict_alignment_claim(self) -> None:
+        alignment_readme = self.repo / "docs" / "alignment" / "README.md"
+        alignment_readme.write_text(
+            "This directory records strict-alignment evidence for the 37 methods.\n",
+            encoding="utf-8",
+        )
+        self._write_allowlist("allowlist.txt", "docs/alignment/README.md")
+
+        report = self._validate()
+
+        self.assertFalse(report["ok"])
+        self.assertIn(
+            "docs/alignment/README.md makes a blanket strict-alignment claim "
+            "for the 37-method inventory",
             report["errors"],
         )
 

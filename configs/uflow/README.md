@@ -2,7 +2,8 @@
 
 > U-Flow: A U-shaped Normalizing Flow for Anomaly Detection
 
-- **Paper**: [U-Flow: A U-shaped Normalizing Flow for Anomaly Detection](https://arxiv.org/abs/2207.09506)
+- **Paper**: [publication](https://arxiv.org/abs/2211.12353)
+- **Implementation source**: [upstream repository](https://github.com/mtailanian/uflow); revision: `d6217844836790773f2c4b91ff3046c59b23f027`
 - **Category**: Normalizing Flow
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ U-Flow uses a U-shaped normalizing flow architecture that models features at mul
 
 | Config | Description |
 |--------|-------------|
-| [`uflow_mcait_448_mvtec_strict.py`](uflow_mcait_448_mvtec_strict.py) | MVTec AD strict alignment |
+| [`uflow_mcait_448_mvtec_strict.py`](uflow_mcait_448_mvtec_strict.py) | MVTec AD reference configuration |
 | [`uflow_mcait_448_visa.py`](uflow_mcait_448_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ U-Flow uses a U-shaped normalizing flow architecture that models features at mul
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Normalizing flow** family. The alignment record is [`docs/alignment/uflow.md`](../../docs/alignment/uflow.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Normalizing flow** family. The [implementation provenance and reproducibility record](../../docs/alignment/uflow.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **historical evidence**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->

@@ -2,7 +2,8 @@
 
 > AST: Asymmetric Student-Teacher for Anomaly Detection
 
-- **Paper**: [AST: Asymmetric Student-Teacher for Anomaly Detection](https://arxiv.org/abs/2207.06808)
+- **Paper**: [publication](https://arxiv.org/abs/2210.07829)
+- **Implementation source**: [upstream repository](https://github.com/marco-rudolph/AST); revision: `8c243ad9adac68e874f87edc6618aa5ea2827228`
 - **Category**: Knowledge Distillation
 - **Backbone**: WRN-50-2
 
@@ -12,7 +13,7 @@ AST uses an asymmetric student-teacher architecture for anomaly detection. The k
 
 | Config | Description |
 |--------|-------------|
-| [`ast_effnet_b5_768_mvtec_strict.py`](ast_effnet_b5_768_mvtec_strict.py) | MVTec AD strict alignment |
+| [`ast_effnet_b5_768_mvtec_strict.py`](ast_effnet_b5_768_mvtec_strict.py) | MVTec AD reference configuration |
 | [`ast_effnet_b5_768_visa.py`](ast_effnet_b5_768_visa.py) | VisA |
 
 <!-- BaoIAD repo-local evidence: start -->
@@ -37,6 +38,6 @@ AST uses an asymmetric student-teacher architecture for anomaly detection. The k
 
 ### Alignment note
 
-This method is part of the repo-local BaoIAD inventory under the **Knowledge distillation** family. The alignment record is [`docs/alignment/ast.md`](../../docs/alignment/ast.md); it preserves the detailed strict-alignment evidence, including reference freeze notes, code-path checks, probes, and archived benchmark stop-lines.
+This method is part of the repo-local BaoIAD inventory under the **Knowledge distillation** family. The [implementation provenance and reproducibility record](../../docs/alignment/ast.md) is indexed by the [public method-status manifest](../../docs/alignment/method_status.json). Its manifest validation state is **partially verified**. Referenced raw evidence is not distributed with this repository. The result tables above are historical repository summaries, not a unified public ranking, and should be interpreted according to that manifest state.
 
 <!-- BaoIAD repo-local evidence: end -->
