@@ -8,10 +8,10 @@ version = "0.1.0"
 description = "BaoIAD: Unified Industrial Anomaly Detection Benchmark (OpenMMLab style)"
 readme = "README.md"
 license = {text = "Apache-2.0"}
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "mmengine>=0.10",
-    "mmcv>=2.0",
+    "mmcv-lite>=2.0",
     "torch>=2.0",
     "torchvision",
     "timm>=0.9",
@@ -20,25 +20,21 @@ dependencies = [
     "scikit-learn",
     "einops",
     "opencv-python-headless",
+    "numpy",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff", "pre-commit"]
-flow = ["FrEIA>=0.2"]
+flow = ["FrEIA>=0.2", "networkx", "mpmath", "scikit-image"]
 vl = ["open_clip_torch"]
-saa = ["groundingdino", "segment-anything"]
+saa = ["groundingdino-py==0.4.0", "segment-anything==1.0"]
 geomloss = ["geomloss"]
-imgaug = ["imgaug", "openpyxl"]
-mamba = ["mamba-ssm"]
-mmpretrain = ["mmpretrain>=1.0"]
+glass = ["pandas", "openpyxl"]
+visualization = ["matplotlib"]
 faiss-cpu = ["faiss-cpu"]
-faiss-gpu = ["numpy<2", "faiss-gpu==1.7.2"]
 all = [
-    "baoiad[flow,vl,saa,geomloss,imgaug,mmpretrain,faiss-cpu]",
+    "baoiad[flow,vl,saa,geomloss,glass,visualization,faiss-cpu]",
 ]
 
 [tool.setuptools.packages.find]
 include = ["baoiad*"]
-
-[tool.uv.extra-build-dependencies]
-mmcv = ["setuptools"]

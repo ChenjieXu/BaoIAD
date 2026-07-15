@@ -15,7 +15,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from tqdm import tqdm
+try:
+    from tqdm import tqdm
+except ModuleNotFoundError:
+    def tqdm(iterable, *args, **kwargs):
+        """Return the iterable unchanged when progress reporting is unavailable."""
+        return iterable
 
 from baoiad.structures import ADDataSample
 from baoiad.registry import MODELS

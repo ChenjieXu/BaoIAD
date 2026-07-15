@@ -158,6 +158,28 @@ class ThresholdMask(BaseTransform):
 
 
 @TRANSFORMS.register_module(force=True)
+class CenterCrop(BaseTransform):
+    """Center-crop image and mask arrays with the BaoIAD config ``size`` API."""
+
+    def __init__(self, size: Union[int, Tuple[int, int]]) -> None:
+        self.size = (size, size) if isinstance(size, int) else tuple(size)
+
+    def _crop(self, arr: np.ndarray) -> np.ndarray:
+        crop_h, crop_w = self.size
+        h, w = arr.shape[:2]
+        top = max(0, (h - crop_h) // 2)
+        left = max(0, (w - crop_w) // 2)
+        return arr[top : top + min(crop_h, h), left : left + min(crop_w, w), ...]
+
+    def transform(self, results: Dict) -> Dict:
+        results['img'] = self._crop(results['img'])
+        results['img_shape'] = results['img'].shape[:2]
+        if 'gt_mask' in results:
+            results['gt_mask'] = self._crop(results['gt_mask'])
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
 class RandomRotation(BaseTransform):
     """Random rotation augmentation.
 
@@ -184,6 +206,32 @@ class RandomRotation(BaseTransform):
                 borderMode=cv2.BORDER_CONSTANT,
                 borderValue=0,
             )
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
+class ScaleNormalizeAD(BaseTransform):
+    """Scale image and mask arrays to the ``[0, 1]`` float convention."""
+
+    def __init__(
+        self,
+        keys: Sequence[str] = ('img',),
+        mask_keys: Sequence[str] = ('gt_mask',),
+    ) -> None:
+        self.keys = tuple(keys)
+        self.mask_keys = tuple(mask_keys)
+
+    @staticmethod
+    def _scale(arr: np.ndarray) -> np.ndarray:
+        out = arr.astype(np.float32)
+        if out.size and float(np.nanmax(out)) > 1.0:
+            out = out / 255.0
+        return np.clip(out, 0.0, 1.0).astype(np.float32)
+
+    def transform(self, results: Dict) -> Dict:
+        for key in (*self.keys, *self.mask_keys):
+            if key in results:
+                results[key] = self._scale(results[key])
         return results
 
 
@@ -299,4 +347,237 @@ class OpenCLIPPreprocessAD(BaseTransform):
             mask_tensor = self._to_tensor(self._mask_crop(self._mask_resize(Image.fromarray(mask))))
             results['gt_mask'] = mask_tensor.squeeze(0).numpy().astype(np.float32)
 
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
+class GenerateRDPPNoise(BaseTransform):
+    """Generate the official RD++ simplex-noise image branch."""
+
+    def __init__(
+        self,
+        octaves: int = 6,
+        persistence: float = 0.6,
+        amplitude: float = 0.2,
+        min_patch_size: int = 10,
+    ) -> None:
+        self.octaves = int(octaves)
+        self.persistence = float(persistence)
+        self.amplitude = float(amplitude)
+        self.min_patch_size = int(min_patch_size)
+        self.simplex_noise = Simplex_CLASS()
+
+    def transform(self, results: Dict) -> Dict:
+        img = results['img'].astype(np.float32)
+        if img.ndim != 3 or img.shape[2] != 3:
+            raise ValueError(f'GenerateRDPPNoise expects HWC RGB image, got shape {img.shape!r}.')
+
+        h, w, _ = img.shape
+        patch_h_high = max(self.min_patch_size + 1, int(h // 8))
+        patch_w_high = max(self.min_patch_size + 1, int(w // 8))
+        h_noise = np.random.randint(self.min_patch_size, patch_h_high)
+        w_noise = np.random.randint(self.min_patch_size, patch_w_high)
+
+        start_h_high = max(2, h - h_noise)
+        start_w_high = max(2, w - w_noise)
+        start_h = np.random.randint(1, start_h_high)
+        start_w = np.random.randint(1, start_w_high)
+
+        simplex_noise = self.simplex_noise.rand_3d_octaves(
+            (3, h_noise, w_noise),
+            self.octaves,
+            self.persistence,
+        ).transpose(1, 2, 0).astype(np.float32)
+
+        img_noise = img.copy()
+        img_noise[
+            start_h:start_h + h_noise,
+            start_w:start_w + w_noise,
+            :,
+        ] += self.amplitude * simplex_noise
+
+        results['img'] = img
+        results['img_noise'] = img_noise
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
+class RandomCrop(BaseTransform):
+    """Random crop image and mask to a fixed size.
+
+    Args:
+        size: Target (height, width) or single int for square crop.
+    """
+
+    def __init__(self, size: Union[int, Tuple[int, int]]) -> None:
+        if isinstance(size, int):
+            size = (size, size)
+        self.size = size
+
+    def transform(self, results: Dict) -> Dict:
+        h, w = results['img'].shape[:2]
+        th, tw = self.size
+
+        # Handle case where target size is larger than image
+        if th >= h or tw >= w:
+            # Just return as-is (will be handled by Resize if needed)
+            results['img_shape'] = (h, w)
+            return results
+
+        # Random crop coordinates
+        i = np.random.randint(0, h - th + 1)
+        j = np.random.randint(0, w - tw + 1)
+
+        results['img'] = results['img'][i:i + th, j:j + tw]
+        if 'gt_mask' in results:
+            results['gt_mask'] = results['gt_mask'][i:i + th, j:j + tw]
+
+        results['img_shape'] = self.size
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
+class RandomVerticalFlip(BaseTransform):
+    """Random vertical flip with probability p.
+
+    Args:
+        p: Probability of flip.
+    """
+
+    def __init__(self, p: float = 0.5) -> None:
+        self.p = p
+
+    def transform(self, results: Dict) -> Dict:
+        if np.random.random() < self.p:
+            results['img'] = np.flipud(results['img']).copy()
+            if 'gt_mask' in results:
+                results['gt_mask'] = np.flipud(results['gt_mask']).copy()
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
+class RandomHorizontalFlip(BaseTransform):
+    """Random horizontal flip with probability p."""
+
+    def __init__(self, p: float = 0.5) -> None:
+        self.p = p
+
+    def transform(self, results: Dict) -> Dict:
+        if np.random.random() < self.p:
+            results['img'] = np.fliplr(results['img']).copy()
+            if 'gt_mask' in results:
+                results['gt_mask'] = np.fliplr(results['gt_mask']).copy()
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
+class PyramidFlowStrictTrainTransform(BaseTransform):
+    """Paper-aligned texture augmentation for PyramidFlow strict training.
+
+    The paper states that textural classes use flips and rotations with
+    probability 0.5, while object classes do not use augmentation.
+    """
+
+    TEXTURES = {'carpet', 'grid', 'leather', 'tile', 'wood'}
+
+    def __init__(
+        self,
+        flip_p: float = 0.5,
+        rotation_p: float = 0.5,
+        rotation_degrees: float = 180.0,
+    ) -> None:
+        self.flip_p = flip_p
+        self.rotation_p = rotation_p
+        self.random_horizontal_flip = RandomHorizontalFlip(p=1.0)
+        self.random_rotation = RandomRotation(degrees=rotation_degrees)
+
+    def transform(self, results: Dict) -> Dict:
+        cls_name = results.get('cls_name', None)
+        if cls_name not in self.TEXTURES:
+            return results
+
+        if np.random.random() < self.flip_p:
+            results = self.random_horizontal_flip.transform(results)
+        if np.random.random() < self.rotation_p:
+            results = self.random_rotation.transform(results)
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
+class NSATransform(BaseTransform):
+    """Category-aware transform for NSA training.
+
+    Applies different transforms based on category type:
+    - Unaligned objects (bottle, hazelnut, metal_nut, screw):
+      RandomRotation(5) + CenterCrop(230) + RandomCrop(224)
+    - Aligned objects (cable, capsule, pill, transistor, toothbrush, zipper):
+      CenterCrop(230) + RandomCrop(224)
+    - Textures (carpet, grid, leather, tile, wood):
+      Resize(264) + RandomVerticalFlip + RandomCrop(256)
+
+    This matches the reference implementation from train_mvtec.py.
+    Note: Original NSA uses res=264 for textures, then RandomCrop(256).
+    """
+
+    UNALIGNED_OBJECTS = {'bottle', 'hazelnut', 'metal_nut', 'screw'}
+    ALIGNED_OBJECTS = {'cable', 'capsule', 'pill', 'transistor', 'toothbrush', 'zipper'}
+    TEXTURES = {'carpet', 'grid', 'leather', 'tile', 'wood'}
+
+    def __init__(self) -> None:
+        self.random_rotation = RandomRotation(degrees=5)
+        self.center_crop_230 = CenterCrop(size=230)
+        self.random_crop_224 = RandomCrop(size=224)
+        self.random_crop_256 = RandomCrop(size=256)
+        self.random_vertical_flip = RandomVerticalFlip(p=0.5)
+        # Textures need resize to 264 before RandomCrop(256) (original uses res=264)
+        self.resize_264 = ResizeAD(size=264)
+
+    def transform(self, results: Dict) -> Dict:
+        cls_name = results.get('cls_name', None)
+
+        if cls_name in self.UNALIGNED_OBJECTS:
+            # Unaligned objects: RandomRotation + CenterCrop + RandomCrop(224)
+            results = self.random_rotation.transform(results)
+            results = self.center_crop_230.transform(results)
+            results = self.random_crop_224.transform(results)
+        elif cls_name in self.ALIGNED_OBJECTS:
+            # Aligned objects: CenterCrop + RandomCrop(224)
+            results = self.center_crop_230.transform(results)
+            results = self.random_crop_224.transform(results)
+        elif cls_name in self.TEXTURES:
+            # Textures: Resize(264) + RandomVerticalFlip + RandomCrop(256)
+            # Original NSA uses res=264 for textures, then RandomCrop(256)
+            results = self.resize_264.transform(results)
+            results = self.random_vertical_flip.transform(results)
+            results = self.random_crop_256.transform(results)
+        else:
+            # Default: use 224x224 pipeline
+            results = self.center_crop_230.transform(results)
+            results = self.random_crop_224.transform(results)
+
+        return results
+
+
+@TRANSFORMS.register_module(force=True)
+class NSATestTransform(BaseTransform):
+    """Category-aware test transform for NSA.
+
+    - Objects: Resize to 224x224
+    - Textures: Resize to 256x256
+    """
+
+    TEXTURES = {'carpet', 'grid', 'leather', 'tile', 'wood'}
+
+    def transform(self, results: Dict) -> Dict:
+        cls_name = results.get('cls_name', None)
+        size = 256 if cls_name in self.TEXTURES else 224
+
+        h, w = size, size
+        results['img'] = cv2.resize(results['img'], (w, h), interpolation=cv2.INTER_LINEAR)
+        results['img_shape'] = (h, w)
+
+        if 'gt_mask' in results:
+            results['gt_mask'] = cv2.resize(
+                results['gt_mask'], (w, h), interpolation=cv2.INTER_NEAREST,
+            )
         return results

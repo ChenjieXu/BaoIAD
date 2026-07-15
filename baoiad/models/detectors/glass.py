@@ -7,7 +7,6 @@ from typing import Optional
 
 import cv2
 import numpy as np
-import pandas as pd
 import scipy.ndimage as ndimage
 import torch
 import torch.nn as nn
@@ -16,6 +15,7 @@ from mmengine.optim import OptimWrapperDict
 
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
+from baoiad.optional import require_optional_module
 from baoiad.utils.glass_utils import (
     distribution_judge,
     resolve_dtd_texture_paths,
@@ -471,7 +471,9 @@ class GLASSDetector(BaseADModel):
     def _distribution_from_file(self, meta_path: str, class_key: str) -> int:
         if not meta_path:
             raise FileNotFoundError('GLASS strict training requires a distribution metadata path.')
-        frame = pd.read_excel(meta_path)
+        pandas = require_optional_module(
+            'pandas', extra='glass', feature='GLASS distribution metadata')
+        frame = pandas.read_excel(meta_path)
         row = frame.loc[frame['Class'] == class_key]
         if row.empty:
             raise KeyError(f'GLASS distribution metadata has no row for {class_key!r} in {meta_path}.')

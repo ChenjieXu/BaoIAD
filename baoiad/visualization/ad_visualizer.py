@@ -6,10 +6,16 @@ from typing import List, Optional, Sequence
 import cv2
 import numpy as np
 import torch
-from matplotlib import cm
 from mmengine.visualization import Visualizer
 
+from baoiad.optional import require_optional_module
 from baoiad.registry import VISUALIZERS
+
+
+def _jet_colormap(values: np.ndarray) -> np.ndarray:
+    color_maps = require_optional_module(
+        'matplotlib.cm', extra='visualization', feature='BaoIAD visualization')
+    return color_maps.jet(values)
 
 
 @VISUALIZERS.register_module(force=True)
@@ -66,7 +72,7 @@ class ADVisualizer(Visualizer):
         else:
             amap = np.zeros_like(amap)
 
-        heatmap = (cm.jet(amap)[:, :, :3] * 255).astype(np.uint8)
+        heatmap = (_jet_colormap(amap)[:, :, :3] * 255).astype(np.uint8)
 
         overlay = (image.astype(np.float64) * (1 - alpha) + heatmap.astype(np.float64) * alpha)
         overlay = np.clip(overlay, 0, 255).astype(np.uint8)
@@ -94,14 +100,14 @@ class ADVisualizer(Visualizer):
     @staticmethod
     def _apply_jet(norm_map: np.ndarray) -> np.ndarray:
         """Apply jet colormap → (H, W, 3) uint8 BGR."""
-        rgb = (cm.jet(norm_map)[:, :, :3] * 255).astype(np.uint8)
+        rgb = (_jet_colormap(norm_map)[:, :, :3] * 255).astype(np.uint8)
         return cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
 
     def _make_colorbar(self, width: int) -> np.ndarray:
         """Create a horizontal jet colorbar of shape (_CBAR_H, width, 3)."""
         grad = np.linspace(0, 1, width).reshape(1, -1)
         grad = np.repeat(grad, self._CBAR_H, axis=0)
-        bar = (cm.jet(grad)[:, :, :3] * 255).astype(np.uint8)
+        bar = (_jet_colormap(grad)[:, :, :3] * 255).astype(np.uint8)
         return cv2.cvtColor(bar, cv2.COLOR_RGB2BGR)
 
     def _put_text_center(self, canvas: np.ndarray, text: str, y: int, x_start: int, x_end: int,
@@ -209,7 +215,6 @@ class ADVisualizer(Visualizer):
             parts.append(f'GT: {"anomaly" if gt_label else "normal"}')
         if pred_score is not None:
             judgement = 'ANOMALY' if pred_score >= threshold else 'NORMAL'
-            color = (0, 0, 255) if pred_score >= threshold else (0, 200, 0)
             parts.append(judgement)
         title_text = '  |  '.join(parts) if parts else ''
         if title_text:

@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict
 
-import pandas as pd
+from baoiad.optional import require_optional_module
 
 
 def _resolve_dtd_images_root(dtd_root: Path) -> Path | None:
@@ -40,7 +40,9 @@ def collect_glass_asset_report(
     required_fg_classes: list[str] = []
     distribution_rows = []
     if distribution_path.is_file():
-        df = pd.read_excel(distribution_path)
+        pandas = require_optional_module(
+            'pandas', extra='glass', feature='GLASS asset validation')
+        df = pandas.read_excel(distribution_path)
         distribution_rows = df[['Class', 'Distribution', 'Foreground']].to_dict(orient='records')
         required_fg_classes = sorted(
             row['Class'].replace('mvtec_', '', 1)

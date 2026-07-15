@@ -472,8 +472,11 @@
     {
       "id": "TP-CODE-RDPP-NOISE",
       "kind": "vendored_code",
-      "paths": ["baoiad/utils/rdpp_noise.py"],
-      "ranges": ["baoiad/utils/rdpp_noise.py:1-875"],
+      "paths": ["baoiad/utils/rdpp_noise.py", "baoiad/datasets/transforms/augmentation.py"],
+      "ranges": [
+        "baoiad/utils/rdpp_noise.py:1-875",
+        "baoiad/datasets/transforms/augmentation.py:353-401 (RD++ simplex-noise transform adapter restored from repository history)"
+      ],
       "source": {"name": "tientrandinh/Revisiting-Reverse-Distillation simplex-noise helper", "url": "https://github.com/tientrandinh/Revisiting-Reverse-Distillation", "revision": "7f2ceb7c87e602617b8600e1a498f7ef7f5247d6"},
       "license": {"spdx": "MIT", "status": "confirmed", "evidence": "The frozen RD++ repository is MIT-licensed. The file also marks lmas/opensimplex as a source, whose MIT attribution and exact revision remain to be frozen."},
       "incorporation": {"mode": "vendored_then_modified", "modified": true},
@@ -700,8 +703,12 @@
     {
       "id": "TP-CODE-NSA",
       "kind": "ported_code",
-      "paths": ["baoiad/models/detectors/nsa.py", "baoiad/datasets/nsa_dataset.py"],
-      "ranges": ["baoiad/models/detectors/nsa.py:45-112,481-687,1008-1090; remaining official-aligned path pending exact comparison", "baoiad/datasets/nsa_dataset.py:entire official-semantics adapter"],
+      "paths": ["baoiad/models/detectors/nsa.py", "baoiad/datasets/nsa_dataset.py", "baoiad/datasets/transforms/augmentation.py"],
+      "ranges": [
+        "baoiad/models/detectors/nsa.py:45-112,481-687,1008-1090; remaining official-aligned path pending exact comparison",
+        "baoiad/datasets/nsa_dataset.py:entire official-semantics adapter",
+        "baoiad/datasets/transforms/augmentation.py:404-470,506-583 (NSA crop, flip, and category-aware preprocessing adapters restored from repository history)"
+      ],
       "source": {"name": "hmsch/natural-synthetic-anomalies", "url": "https://github.com/hmsch/natural-synthetic-anomalies", "revision": "919591685307ce030fe27cb77687509dc277189c"},
       "license": {"spdx": "MIT", "status": "confirmed", "evidence": "The frozen NSA tree includes an MIT license. Local constants identify the original NSA task, patch_ex is explicitly reference-aligned, and the dataset mirrors upstream sampling behavior."},
       "incorporation": {"mode": "ported_and_modified", "modified": true},
@@ -724,7 +731,7 @@
         "baoiad/models/detectors/glass.py:255-771 <- glass.py:37-610 (official-aligned architecture, embedding, GAS/LAS training, and prediction flow; exact enclosing-wrapper range comparison remains pending)",
         "baoiad/datasets/glass_dataset.py:30-52 <- datasets/mvtec.py:145-170 (official three-of-nine texture augmenter; adapted)",
         "baoiad/datasets/glass_dataset.py:144-165 <- datasets/mvtec.py:122-143 (base image and mask transforms; local affine core at lines 146-155 maps to upstream lines 123-131)",
-        "baoiad/datasets/glass_dataset.py:298-366 <- datasets/mvtec.py:172-212 (training texture/foreground/Perlin synthesis and test-mask assembly; adapted to BaseDataset and fail-closed assets)",
+        "baoiad/datasets/glass_dataset.py:296-353 <- datasets/mvtec.py:172-212 (training texture/foreground/Perlin synthesis and test-mask assembly; adapted to BaseDataset and fail-closed assets)",
         "baoiad/utils/glass_utils.py:71-115 <- perlin.py:48-73 (linear interpolation and NumPy Perlin generator; local dot/interpolation core at lines 104-114 maps to upstream lines 64-73)",
         "baoiad/utils/glass_utils.py:118-193 <- perlin.py:7-45 (rotated threshold and paired foreground-aware Perlin masks; adapted with bounded retries)",
         "baoiad/utils/glass_utils.py:209-241 <- utils.py:14-57 (frequency-distribution classifier; local density core at lines 227-239 maps to upstream lines 34-47)",

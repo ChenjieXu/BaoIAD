@@ -2,6 +2,9 @@ from baoiad.datasets.transforms.augmentation import (  # noqa: F401
     GenerateRDPPNoise,
     NormalizeAD,
     OpenCLIPPreprocessAD,
+    CenterCrop,
+    NSATestTransform,
+    NSATransform,
     PyramidFlowStrictTrainTransform,
     RandomCrop,
     RandomHorizontalFlip,
@@ -10,9 +13,6 @@ from baoiad.datasets.transforms.augmentation import (  # noqa: F401
     RandomVerticalFlip,
     ResizeAD,
     ScaleNormalizeAD,
-    CenterCrop,
-    NSATransform,
-    NSATestTransform,
 )
 from baoiad.datasets.transforms.cflow import CFlowOfficialTransform  # noqa: F401
 from baoiad.datasets.transforms.destseg import (  # noqa: F401

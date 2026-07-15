@@ -17,8 +17,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from scipy.ndimage import median_filter
-from skimage.filters import median as sk_median
-from skimage.morphology import disk as sk_disk
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import BaseADModel
@@ -31,6 +29,12 @@ except ImportError:
     cv2 = None
 
 logger = logging.getLogger(__name__)
+
+
+def _median_filter_disk(image: np.ndarray, radius: int) -> np.ndarray:
+    coordinates = np.ogrid[-radius:radius + 1, -radius:radius + 1]
+    footprint = coordinates[0] ** 2 + coordinates[1] ** 2 <= radius ** 2
+    return median_filter(image, footprint=footprint)
 
 CV2_NORMAL_CLONE = cv2.NORMAL_CLONE if HAS_CV2 else 1
 CV2_MIXED_CLONE = cv2.MIXED_CLONE if HAS_CV2 else 2
@@ -572,7 +576,7 @@ def _official_patch_ex(
             axis=-1,
             keepdims=True,
         )
-        label[..., 0] = sk_median(label[..., 0], sk_disk(5))
+        label[..., 0] = _median_filter_disk(label[..., 0], radius=5)
         if label_mode == 'logistic-intensity':
             label = label_mask / (1 + np.exp(-k * (label - x0)))
     elif label_mode == 'binary':

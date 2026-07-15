@@ -128,3 +128,90 @@ class PackDRAEMInputs(BaseTransform):
             inputs=img,
             data_samples=data_sample,
         )
+
+
+@TRANSFORMS.register_module(force=True)
+class PackGLASSInputs(BaseTransform):
+    """Pack GLASS strict inputs including image-space augmentation metadata."""
+
+    def transform(self, results: Dict) -> Dict:
+        img = results['img']
+        if isinstance(img, np.ndarray):
+            if img.ndim == 2:
+                img = img[..., np.newaxis]
+            if img.ndim == 3 and img.shape[-1] <= 4:
+                img = img.transpose(2, 0, 1)
+            img = torch.from_numpy(img).contiguous().float()
+
+        data_sample = ADDataSample()
+        data_sample.set_metainfo({
+            'cls_name': results.get('cls_name', ''),
+            'img_path': results.get('img_path', ''),
+            'defect_type': results.get('defect_type', ''),
+        })
+        data_sample.gt_label = results.get('gt_label', 0)
+
+        if 'gt_mask' in results:
+            gt_mask = results['gt_mask']
+            if isinstance(gt_mask, np.ndarray):
+                gt_mask = torch.from_numpy(gt_mask).float()
+            data_sample.gt_mask = gt_mask
+
+        if 'aug' in results:
+            aug = results['aug']
+            if isinstance(aug, np.ndarray):
+                if aug.ndim == 2:
+                    aug = aug[..., np.newaxis]
+                if aug.ndim == 3 and aug.shape[-1] <= 4:
+                    aug = aug.transpose(2, 0, 1)
+                aug = torch.from_numpy(aug).contiguous().float()
+            data_sample.set_metainfo({'aug': aug})
+
+        if 'mask_s' in results:
+            mask_s = results['mask_s']
+            if isinstance(mask_s, np.ndarray):
+                mask_s = torch.from_numpy(mask_s).float()
+            data_sample.set_metainfo({'mask_s': mask_s})
+
+        return dict(inputs=img, data_samples=data_sample)
+
+
+@TRANSFORMS.register_module(force=True)
+class PackRDPPInputs(BaseTransform):
+    """Pack strict RD++ inputs with the auxiliary noisy image branch."""
+
+    def transform(self, results: Dict) -> Dict:
+        img = results['img']
+        if isinstance(img, np.ndarray):
+            if img.ndim == 2:
+                img = img[..., np.newaxis]
+            if img.ndim == 3 and img.shape[-1] <= 4:
+                img = img.transpose(2, 0, 1)
+            img = torch.from_numpy(img).contiguous().float()
+
+        if 'img_noise' not in results:
+            raise ValueError('PackRDPPInputs requires `img_noise` in results.')
+        img_noise = results['img_noise']
+        if isinstance(img_noise, np.ndarray):
+            if img_noise.ndim == 2:
+                img_noise = img_noise[..., np.newaxis]
+            if img_noise.ndim == 3 and img_noise.shape[-1] <= 4:
+                img_noise = img_noise.transpose(2, 0, 1)
+            img_noise = torch.from_numpy(img_noise).contiguous().float()
+
+        data_sample = ADDataSample()
+        data_sample.set_metainfo({
+            'cls_name': results.get('cls_name', ''),
+            'img_path': results.get('img_path', ''),
+            'defect_type': results.get('defect_type', ''),
+            'img_noise': img_noise,
+        })
+        data_sample.gt_label = results.get('gt_label', 0)
+
+        if 'gt_mask' in results:
+            mask = results['gt_mask']
+            if isinstance(mask, np.ndarray):
+                mask = torch.from_numpy(mask).float()
+            data_sample.gt_mask = mask
+
+        return dict(inputs=img, data_samples=data_sample)

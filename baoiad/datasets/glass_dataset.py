@@ -9,15 +9,15 @@ from __future__ import annotations
 
 import os
 import os.path as osp
-from typing import Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence
 
 import numpy as np
-import pandas as pd
 import torch
 from PIL import Image
 from torchvision import transforms
 
 from baoiad.datasets.base_ad_dataset import BaseADDataset
+from baoiad.optional import require_optional_module
 from baoiad.registry import DATASETS
 from baoiad.utils.glass_utils import (
     IMAGENET_MEAN,
@@ -121,10 +121,6 @@ class GLASSDataset(BaseADDataset):
         if split == 'train' and self.fg != 0:
             if not self.fg_mask_root:
                 self.fg_mask_root = osp.join(data_root, 'fg_mask')
-            if self.strict_assets_required and not osp.isdir(self.fg_mask_root):
-                raise FileNotFoundError(
-                    f'GLASS strict training requires foreground masks at {self.fg_mask_root}.'
-                )
 
         if split == 'train' and (self.distribution in {0, 4} or self.fg == 2):
             if not self.distribution_meta_path:
@@ -139,7 +135,9 @@ class GLASSDataset(BaseADDataset):
 
         self._distribution_meta = None
         if self.distribution_meta_path and osp.isfile(self.distribution_meta_path):
-            self._distribution_meta = pd.read_excel(self.distribution_meta_path)
+            pandas = require_optional_module(
+                'pandas', extra='glass', feature='GLASS distribution metadata')
+            self._distribution_meta = pandas.read_excel(self.distribution_meta_path)
 
         self._global_resize_arg = (self.base_resize, self.base_resize) if self.distribution == 1 else self.base_resize
         self._base_transform = transforms.Compose([
@@ -247,7 +245,7 @@ class GLASSDataset(BaseADDataset):
             transforms.ToTensor(),
         ])
 
-    def _distribution_row(self, cls_name: str) -> pd.Series:
+    def _distribution_row(self, cls_name: str) -> Any:
         if self._distribution_meta is None:
             raise FileNotFoundError(
                 'GLASS distribution metadata is required for the selected training mode.'
