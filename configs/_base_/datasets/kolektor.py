@@ -1,4 +1,6 @@
-data_root = 'data/kolektor'
+from baoiad.paths import resolve_data_root
+
+data_root = str(resolve_data_root('kolektor'))
 img_size = 256
 
 train_pipeline = [

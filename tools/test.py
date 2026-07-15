@@ -81,9 +81,14 @@ def _apply_runtime_overrides(cfg: Config) -> None:
 def main():
     args = parse_args()
 
-    import baoiad  # noqa: F401 - trigger registry
+    from baoiad import register_all_modules
+
+    register_all_modules()
 
     cfg = Config.fromfile(args.config)
+    from baoiad.config import apply_data_root_overrides
+
+    apply_data_root_overrides(cfg)
     if args.cfg_options:
         cfg.merge_from_dict(args.cfg_options)
     if args.work_dir:

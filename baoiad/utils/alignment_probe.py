@@ -580,6 +580,9 @@ def probe_config(
     from baoiad.registry import MODELS
 
     cfg = Config.fromfile(config_path)
+    from baoiad.config import apply_data_root_overrides
+
+    apply_data_root_overrides(cfg)
     if cfg_options:
         cfg.merge_from_dict(cfg_options)
 

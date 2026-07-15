@@ -1,7 +1,7 @@
 default_scope = 'baoiad'
 
 custom_imports = dict(
-    imports=['baoiad'],
+    imports=['baoiad.registration'],
     allow_failed_imports=False,
 )
 

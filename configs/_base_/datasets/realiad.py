@@ -1,4 +1,6 @@
-data_root = 'data/Real-IAD'
+from baoiad.paths import resolve_data_root
+
+data_root = str(resolve_data_root('Real-IAD'))
 img_size = 256
 resolution = '256'
 

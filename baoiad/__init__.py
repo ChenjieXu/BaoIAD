@@ -1,33 +1,30 @@
-"""BaoIAD: Unified Industrial Anomaly Detection Benchmark."""
+"""BaoIAD: Unified Industrial Anomaly Detection Benchmark.
 
-import os
+The top-level package deliberately stays lightweight. Runtime registries are
+loaded explicitly through :func:`register_all_modules` or by importing
+``baoiad.registration`` from an MMEngine config.
+"""
 
-from baoiad.utils.compat import ensure_legacy_imgaug_compat
+from baoiad.paths import get_data_root
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"
+BAOIAD_DATA_ROOT = str(get_data_root())
 
-# Data root resolution: prefer env var, fallback to data/ directory
-BAOIAD_DATA_ROOT = os.environ.get(
-    'BAOIAD_DATA_ROOT',
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data'),
-)
+_MODULES_REGISTERED = False
 
-# HF mirror is opt-in — only set if user explicitly requests it
-if os.environ.get('BAOIAD_USE_MIRROR') == '1':
-    os.environ.setdefault('HF_ENDPOINT', 'https://hf-mirror.com')
 
-# DEPRECATED SHIM: legacy imgaug-based paths still require these compatibility
-# aliases during import. Remove this once the repo no longer depends on imgaug.
-ensure_legacy_imgaug_compat()
+def register_all_modules() -> None:
+    """Import BaoIAD runtime modules and populate the MMEngine registries."""
+    global _MODULES_REGISTERED
+    if _MODULES_REGISTERED:
+        return
 
-from . import engine, evaluation, models, structures, visualization  # noqa: F401
-from . import datasets  # noqa: F401
+    from baoiad.utils.compat import ensure_legacy_imgaug_compat
 
-__all__ = [
-    'datasets',
-    'engine',
-    'evaluation',
-    'models',
-    'structures',
-    'visualization',
-]
+    ensure_legacy_imgaug_compat()
+    from . import datasets, engine, evaluation, models, structures, visualization  # noqa: F401
+
+    _MODULES_REGISTERED = True
+
+
+__all__ = ["BAOIAD_DATA_ROOT", "__version__", "get_data_root", "register_all_modules"]

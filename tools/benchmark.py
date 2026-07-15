@@ -233,7 +233,11 @@ def disabled_strict_benchmark_reason(method, config_path):
 def _load_config(config_path):
     """Load a config once for metadata checks."""
     try:
-        return Config.fromfile(config_path)
+        cfg = Config.fromfile(config_path)
+        from baoiad.config import apply_data_root_overrides
+
+        apply_data_root_overrides(cfg)
+        return cfg
     except Exception:
         return None
 
@@ -741,7 +745,9 @@ def _run_direct_patchcore(config_path, data_root, category, device,
     from mmengine.registry import init_default_scope
     from mmengine.runner import Runner
 
-    import baoiad  # noqa: F401
+    from baoiad import register_all_modules
+
+    register_all_modules()
     from baoiad.registry import METRICS, MODELS
     from baoiad.utils.alignment_probe import set_global_seed
 

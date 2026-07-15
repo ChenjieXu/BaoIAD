@@ -1,4 +1,6 @@
-data_root = 'data/mvtec_ad_2'
+from baoiad.paths import resolve_data_root
+
+data_root = str(resolve_data_root('mvtec_ad_2'))
 img_size = 256
 
 train_pipeline = [

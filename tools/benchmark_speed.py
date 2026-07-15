@@ -25,9 +25,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 os.environ.setdefault('HF_HUB_OFFLINE', '1')
 
-import baoiad  # noqa: F401 — trigger registry
-from mmengine.config import Config
-from baoiad.registry import MODELS
+from baoiad import register_all_modules  # noqa: E402
+
+register_all_modules()
+from mmengine.config import Config  # noqa: E402
+from baoiad.config import apply_data_root_overrides  # noqa: E402
+from baoiad.registry import MODELS  # noqa: E402
 
 MVTEC_CATEGORIES = [
     'bottle', 'cable', 'capsule', 'carpet', 'grid',
@@ -51,7 +54,7 @@ def find_config(method):
     config_dir = os.path.join(ROOT, 'configs', method)
     if not os.path.isdir(config_dir):
         return None
-    for pat in [f'*mvtec_strict*.py', f'*mvtec*.py']:
+    for pat in ['*mvtec_strict*.py', '*mvtec*.py']:
         matches = [m for m in glob.glob(os.path.join(config_dir, pat))
                    if '__pycache__' not in m]
         if matches:
@@ -211,6 +214,7 @@ def benchmark_one(method, data_root, device, warmup=10, runs=100):
     print(f"[BENCH] {method}  ({os.path.basename(cfg_path)})")
 
     cfg = Config.fromfile(cfg_path)
+    apply_data_root_overrides(cfg)
     img_size = get_img_size(cfg)
     model_type = cfg.get('model', {}).get('type', '')
     is_vl = model_type in VL_MODEL_TYPES
