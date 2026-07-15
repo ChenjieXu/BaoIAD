@@ -15,6 +15,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from baoiad.checkpoint import (
+    CheckpointError,
+    load_checkpoint as load_baoiad_checkpoint,
+)
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import VisionLanguageADModel
@@ -453,7 +457,8 @@ class AnomalyCLIPDetector(VisionLanguageADModel):
             from prompt_ensemble import AnomalyCLIP_PromptLearner
 
             # Load checkpoint
-            checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
+            checkpoint = load_baoiad_checkpoint(
+                checkpoint_path, map_location='cpu')
             prompt_learner_state = checkpoint.get('prompt_learner', checkpoint)
 
             # Create prompt learner with same architecture
@@ -482,6 +487,8 @@ class AnomalyCLIPDetector(VisionLanguageADModel):
             logger.warning(f"Could not load official prompt learner: {e}")
             logger.warning("Falling back to zero-shot mode")
             self._official_prompt_learner = None
+        except CheckpointError:
+            raise
         except Exception as e:
             logger.warning(f"Error loading official prompt learner: {e}")
             import traceback

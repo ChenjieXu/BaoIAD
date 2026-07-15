@@ -157,22 +157,23 @@ python tools/train_regad_strict.py configs/regad/regad_wrn50_256_mvtec_strict.py
 
 **When to use**: Always use this script for RegAD configs. It does not use the MMEngine `Runner`; instead it runs a custom training loop to match the official RegAD protocol exactly.
 
-### tools/train_vitad_exact_order.py — ViTAD Official Sample Order
+### tools/train_vitad_exact_order.py — ViTAD Verified Sample Order Replay
 
-ViTAD's official training uses a specific per-epoch sample ordering. This script:
+ViTAD's official training uses a specific per-epoch sample ordering. BaoIAD does not generate or distribute that artifact. Given a user-supplied order JSON whose origin has been verified, this script:
 
-1. Dumps the official sample order to a JSON file using `tools/vitad_dump_official_order.py`.
-2. Overrides the sampler to `PerEpochOrderSampler` with the generated order file.
-3. Runs training with the exact official sample ordering.
+1. Refuses to start when the order file is missing.
+2. Overrides the sampler to `PerEpochOrderSampler` with the supplied file.
+3. Replays the recorded per-epoch ordering during training.
 
 ```bash
 python tools/train_vitad_exact_order.py configs/vitad/vitad_256_mvtec_strict.py \
+    --order-file /path/to/verified_vitad_order.json \
     --work-dir runs/vitad_bottle
 ```
 
-**Arguments**: Same as `tools/train.py` (`config`, `--work-dir`, `--resume`, `--cpu`, `--cfg-options`).
+**Arguments**: Same as `tools/train.py`, plus `--order-file`. Standard MMEngine resume checkpoints may contain Python objects; use `--trusted-checkpoint` only after verifying their origin and integrity.
 
-**When to use**: Use this script when strict alignment with the official ViTAD training procedure is required.
+**When to use**: Use this script only when a verified order artifact is available. Supplying an arbitrary JSON does not establish official equivalence.
 
 ## Resume Training
 

@@ -11,6 +11,7 @@ import torch
 
 from mmengine.model import BaseModule
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.registry import MODELS
 
 
@@ -135,7 +136,8 @@ class OpenCLIPBackbone(BaseModule):
                         model_name, **create_kwargs
                     )
                 # Manually load checkpoint with TorchScript handling
-                ckpt = torch.load(effective_pretrained, map_location='cpu', weights_only=False)
+                ckpt = load_baoiad_checkpoint(
+                    effective_pretrained, map_location='cpu')
                 if hasattr(ckpt, 'state_dict'):
                     sd = ckpt.state_dict()
                 elif isinstance(ckpt, dict) and 'state_dict' in ckpt:

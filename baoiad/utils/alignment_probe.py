@@ -16,21 +16,6 @@ from mmengine.config import Config, DictAction
 from mmengine.registry import init_default_scope
 from mmengine.runner import Runner
 
-_original_torch_load = torch.load
-
-
-def _torch_load_compat(f, map_location=None, pickle_module=None, *, weights_only=None, **kwargs):
-    return _original_torch_load(
-        f,
-        map_location=map_location,
-        pickle_module=pickle_module,
-        weights_only=False,
-        **kwargs,
-    )
-
-
-torch.load = _torch_load_compat
-
 
 def set_global_seed(seed: int) -> None:
     """Set Python / NumPy / Torch RNG state for reproducible diagnostics."""
@@ -572,8 +557,35 @@ def probe_config(
     cfg_options: dict[str, Any] | None = None,
     output: str | None = None,
     offline: bool = False,
+    trusted_checkpoint: bool = False,
 ) -> Dict[str, Any]:
-    """Run a lightweight structural probe on one config."""
+    """Run a lightweight structural probe under a scoped checkpoint policy."""
+    from baoiad.checkpoint import checkpoint_loading_policy
+
+    with checkpoint_loading_policy(trusted_checkpoint):
+        return _probe_config_impl(
+            config_path=config_path,
+            splits=splits,
+            max_batch_size=max_batch_size,
+            device=device,
+            seed=seed,
+            cfg_options=cfg_options,
+            output=output,
+            offline=offline,
+        )
+
+
+def _probe_config_impl(
+    config_path: str,
+    splits: Sequence[str] = ('train', 'test'),
+    max_batch_size: int = 2,
+    device: str = 'auto',
+    seed: int | None = None,
+    cfg_options: dict[str, Any] | None = None,
+    output: str | None = None,
+    offline: bool = False,
+) -> Dict[str, Any]:
+    """Implement the probe while the caller owns checkpoint policy scope."""
     from baoiad.runtime import configure_offline_mode
 
     configure_offline_mode(offline)
@@ -760,6 +772,11 @@ def parse_args() -> argparse.Namespace:
         help='Disable model-hub and BaoIAD-managed downloads for this process.',
     )
     parser.add_argument(
+        '--trusted-checkpoint',
+        action='store_true',
+        help='Allow legacy pickle checkpoints from a verified source (can execute code).',
+    )
+    parser.add_argument(
         '--cfg-options',
         nargs='+',
         action=DictAction,
@@ -779,6 +796,7 @@ def main() -> None:
         cfg_options=args.cfg_options,
         output=args.output,
         offline=args.offline,
+        trusted_checkpoint=args.trusted_checkpoint,
     )
     print(json.dumps(report, indent=2))
     if not report['passed']:

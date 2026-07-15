@@ -100,16 +100,19 @@ class TestTIMMBackbone(TestCase):
         self.assertFalse(strict)
         self.assertIn('conv.weight', state_dict)
 
-    def test_load_checkpoint_forces_weights_only_false(self):
+    def test_load_checkpoint_uses_baoiad_policy(self):
         fake_net = _FakeNet()
         backbone = TIMMBackbone.__new__(TIMMBackbone)
         nn.Module.__init__(backbone)
         backbone.net = fake_net
 
-        with patch('torch.load', return_value={'state_dict': {'module.weight': torch.ones(1)}}) as mocked_load:
+        with patch(
+            'baoiad.models.backbones.timm_backbone.load_baoiad_checkpoint',
+            return_value={'state_dict': {'module.weight': torch.ones(1)}},
+        ) as mocked_load:
             TIMMBackbone._load_checkpoint(backbone, 'dummy.pth', strict=False)
 
-        mocked_load.assert_called_once_with('dummy.pth', map_location='cpu', weights_only=False)
+        mocked_load.assert_called_once_with('dummy.pth', map_location='cpu')
         state_dict, strict = fake_net.loaded_state_dict
         self.assertFalse(strict)
         self.assertIn('weight', state_dict)
@@ -165,10 +168,14 @@ class TestTIMMBackbone(TestCase):
         nn.Module.__init__(backbone)
         backbone.net = fake_net
 
-        with patch('safetensors.torch.load_file', return_value={'module.weight': torch.ones(1)}) as mocked_load:
+        with patch(
+            'baoiad.models.backbones.timm_backbone.load_baoiad_checkpoint',
+            return_value={'module.weight': torch.ones(1)},
+        ) as mocked_load:
             TIMMBackbone._load_checkpoint(backbone, 'dummy.safetensors', strict=False)
 
-        mocked_load.assert_called_once_with('dummy.safetensors', device='cpu')
+        mocked_load.assert_called_once_with(
+            'dummy.safetensors', map_location='cpu')
         state_dict, strict = fake_net.loaded_state_dict
         self.assertFalse(strict)
         self.assertIn('weight', state_dict)

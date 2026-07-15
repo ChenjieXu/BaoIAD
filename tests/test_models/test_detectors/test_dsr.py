@@ -6,11 +6,13 @@ import warnings
 from pathlib import Path
 from unittest import TestCase
 
+import pytest
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 import baoiad  # noqa: F401
+from baoiad.checkpoint import CheckpointLoadError
 from baoiad.models.detectors.dsr import (
     DSRDetector,
     DiscreteLatentModel,
@@ -259,10 +261,38 @@ def test_auto_pretrained_loading_retries_download_for_incompatible_local_checkpo
 
     monkeypatch.setattr(DSRDetector, '_resolve_vqvae_path', staticmethod(lambda _: 'bad_local.pckl'))
     monkeypatch.setattr('baoiad.models.detectors.dsr._download_vqvae_weights', lambda **kwargs: 'downloaded_good.pckl')
-    monkeypatch.setattr('baoiad.models.detectors.dsr.torch.load', fake_load)
+    monkeypatch.setattr(
+        'baoiad.models.detectors.dsr.load_baoiad_checkpoint', fake_load)
 
     with warnings.catch_warnings():
         warnings.simplefilter('error')
         _build_model(pretrained_vqvae_path='auto')
 
     assert load_calls == ['bad_local.pckl', 'downloaded_good.pckl']
+
+
+def test_auto_pretrained_loading_does_not_swallow_checkpoint_errors(monkeypatch):
+    expected = CheckpointLoadError('checkpoint is corrupt')
+    download_called = False
+
+    def fail_load(_path):
+        raise expected
+
+    def unexpected_download(**_kwargs):
+        nonlocal download_called
+        download_called = True
+        return 'unused.pckl'
+
+    detector = object.__new__(DSRDetector)
+    monkeypatch.setattr(detector, '_load_vqvae_checkpoint', fail_load)
+    monkeypatch.setattr(
+        'baoiad.models.detectors.dsr._download_vqvae_weights',
+        unexpected_download,
+    )
+
+    with pytest.raises(CheckpointLoadError) as exc_info:
+        detector._try_load_discrete_latent_model_weights(
+            'corrupt.pckl', allow_auto_redownload=True)
+
+    assert exc_info.value is expected
+    assert not download_called

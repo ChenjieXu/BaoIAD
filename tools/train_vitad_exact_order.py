@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import copy
 import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -19,27 +18,6 @@ if '--cpu' in sys.argv:
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
     os.environ['PYTORCH_MPS_DISABLE'] = '1'
 
-import torch
-
-_original_torch_load = torch.load
-
-
-def _torch_load_compat(f, map_location=None, pickle_module=None, *, weights_only=None, **kwargs):
-    return _original_torch_load(
-        f,
-        map_location=map_location,
-        pickle_module=pickle_module,
-        weights_only=False,
-        **kwargs,
-    )
-
-
-torch.load = _torch_load_compat
-
-if '--cpu' in sys.argv:
-    torch.backends.mps.is_available = lambda: False
-    torch.backends.mps.is_built = lambda: False
-
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
 
@@ -48,8 +26,17 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train ViTAD with exact official order replay.')
     parser.add_argument('config', help='Train config file path')
     parser.add_argument('--work-dir', help='Working directory to save logs and models')
+    parser.add_argument(
+        '--order-file',
+        help='Verified per-epoch order JSON; BaoIAD does not generate or distribute it.',
+    )
     parser.add_argument('--resume', action='store_true', help='Resume from latest checkpoint')
     parser.add_argument('--cpu', action='store_true', help='Force CPU device')
+    parser.add_argument(
+        '--trusted-checkpoint',
+        action='store_true',
+        help='Allow legacy pickle checkpoints from a verified source (can execute code).',
+    )
     parser.add_argument(
         '--offline',
         action='store_true',
@@ -80,11 +67,11 @@ def _configured_classes(cfg: Config) -> list[str]:
     if classes:
         return list(classes)
 
-    import iadbench  # noqa: F401
+    import baoiad  # noqa: F401
     from mmengine.registry import init_default_scope
-    from iadbench.registry import DATASETS
+    from baoiad.registry import DATASETS
 
-    init_default_scope(cfg.get('default_scope', 'iadbench'))
+    init_default_scope(cfg.get('default_scope', 'baoiad'))
     dataset = DATASETS.build(cfg.train_dataloader.dataset)
     resolved = getattr(dataset, 'cls_names', None)
     if not resolved:
@@ -101,22 +88,26 @@ def _order_file_path(cfg: Config, classes: list[str], epochs: int) -> Path:
     return work_dir / f'official_order_{class_tag}_e{epochs}.json'
 
 
-def _dump_official_order(config_path: str, classes: list[str], epochs: int, output_path: Path) -> None:
-    if output_path.exists():
-        return
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    cmd = [
-        sys.executable,
-        str(ROOT / 'tools' / 'vitad_dump_official_order.py'),
-        str(Path(config_path).resolve()),
-        '--classes',
-        *classes,
-        '--epochs',
-        str(int(epochs)),
-        '--output',
-        str(output_path),
-    ]
-    subprocess.run(cmd, cwd=ROOT, env=dict(os.environ), check=True)
+def _resolve_order_file(
+    configured_path: str | None,
+    cfg: Config,
+    classes: list[str],
+    epochs: int,
+) -> Path:
+    order_file = (
+        Path(configured_path).expanduser()
+        if configured_path
+        else _order_file_path(cfg, classes, epochs)
+    )
+    order_file = order_file.resolve(strict=False)
+    if not order_file.is_file():
+        raise FileNotFoundError(
+            'ViTAD exact-order replay requires a verified per-epoch order JSON. '
+            f'No file was found at {order_file}. BaoIAD does not generate or distribute '
+            'the official order artifact; obtain it under its source terms and pass '
+            '--order-file PATH.'
+        )
+    return order_file
 
 
 def _apply_exact_order_overrides(cfg: Config, order_file: Path) -> None:
@@ -138,22 +129,24 @@ def main():
 
     configure_offline_mode(args.offline)
 
-    import iadbench  # noqa: F401
+    import baoiad  # noqa: F401
 
     cfg = _load_cfg(args)
     classes = _configured_classes(cfg)
     epochs = int(cfg.train_cfg.max_epochs)
-    order_file = _order_file_path(cfg, classes, epochs)
-    _dump_official_order(args.config, classes, epochs, order_file)
+    order_file = _resolve_order_file(args.order_file, cfg, classes, epochs)
     _apply_exact_order_overrides(cfg, order_file)
 
-    runner = Runner.from_cfg(cfg)
-    if args.resume:
-        resume_path = Path(cfg.work_dir) / 'last_checkpoint'
-        if resume_path.exists():
-            checkpoint_path = resume_path.read_text().strip()
-            runner.resume(checkpoint_path)
-    runner.train()
+    from baoiad.checkpoint import checkpoint_loading_policy
+
+    with checkpoint_loading_policy(args.trusted_checkpoint):
+        runner = Runner.from_cfg(cfg)
+        if args.resume:
+            resume_path = Path(cfg.work_dir) / 'last_checkpoint'
+            if resume_path.exists():
+                checkpoint_path = resume_path.read_text().strip()
+                runner.resume(checkpoint_path)
+        runner.train()
 
 
 if __name__ == '__main__':

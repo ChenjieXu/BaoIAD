@@ -22,15 +22,17 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from PIL import ImageFile
-ImageFile.LOAD_TRUNCATED_IMAGES = True
 from torch.utils.data import DataLoader
 from torchvision import transforms as T
 from torchvision.transforms import functional as TF
 from torchvision.datasets import ImageFolder
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.runtime import OfflineModeError
 from baoiad.models.base_ad_model import KnowledgeDistillationADModel
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 logger = logging.getLogger(__name__)
 
@@ -397,7 +399,8 @@ class EfficientADDetector(KnowledgeDistillationADModel):
                     )
                     return
             logger.info(f"Loading pretrained teacher weights from {weight_file}")
-            state_dict = torch.load(weight_file, map_location='cpu', weights_only=True)
+            state_dict = load_baoiad_checkpoint(
+                weight_file, map_location='cpu')
             try:
                 self.teacher.load_state_dict(state_dict)
             except RuntimeError as e:
@@ -409,7 +412,8 @@ class EfficientADDetector(KnowledgeDistillationADModel):
                     stacklevel=3,
                 )
         elif teacher_pretrained:
-            state_dict = torch.load(teacher_pretrained, map_location='cpu', weights_only=True)
+            state_dict = load_baoiad_checkpoint(
+                teacher_pretrained, map_location='cpu')
             self.teacher.load_state_dict(state_dict)
 
     def _setup_imagenet_loader(self, image_size=(256, 256)):

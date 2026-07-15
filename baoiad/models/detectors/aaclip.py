@@ -26,6 +26,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import VisionLanguageADModel
@@ -964,7 +965,8 @@ class AACLIPDetector(VisionLanguageADModel):
         return remapped
 
     def _load_adapter_weights(self, checkpoint_path: str, *, target: str) -> None:
-        checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
+        checkpoint = load_baoiad_checkpoint(
+            checkpoint_path, map_location='cpu')
         state_dict = self._extract_state_dict(checkpoint)
 
         if target == 'text':

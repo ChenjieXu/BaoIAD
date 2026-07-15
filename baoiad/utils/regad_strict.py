@@ -12,6 +12,12 @@ import torch
 from PIL import Image
 from sklearn.metrics import roc_auc_score
 
+from baoiad.checkpoint import (
+    CheckpointLoadError,
+    UnsafeCheckpointError,
+    load_checkpoint as load_baoiad_checkpoint,
+)
+
 _RESAMPLING = getattr(Image, 'Resampling', Image)
 _RGB_RESAMPLE = _RESAMPLING.LANCZOS
 SUPPORT_SET_ENV_VAR = 'REGAD_SUPPORT_SET_ROOT'
@@ -72,9 +78,13 @@ def load_or_sample_support_rounds(
             if support_file.stat().st_size == 0:
                 raise _corrupt_support_set_error(support_file, 'file size is 0 bytes')
             try:
-                raw_rounds = torch.load(str(support_file), map_location='cpu')
-            except EOFError as exc:
-                raise _corrupt_support_set_error(support_file, 'EOF while reading torch serialization') from exc
+                raw_rounds = load_baoiad_checkpoint(
+                    support_file, map_location='cpu')
+            except UnsafeCheckpointError:
+                raise
+            except CheckpointLoadError as exc:
+                raise _corrupt_support_set_error(
+                    support_file, str(exc)) from exc
             rounds = [_normalize_support_round_tensor(round_tensor) for round_tensor in raw_rounds]
             if not rounds:
                 raise _corrupt_support_set_error(support_file, 'no support rounds stored in file')

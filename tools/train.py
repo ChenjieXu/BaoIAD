@@ -14,20 +14,6 @@ if '--cpu' in sys.argv:
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
     os.environ['PYTORCH_MPS_DISABLE'] = '1'
 
-import torch
-
-# Monkey-patch torch.load for PyTorch 2.6+ compatibility with mmengine checkpoints
-# mmengine checkpoints contain classes not allowed by weights_only=True
-_original_torch_load = torch.load
-def _torch_load_compat(f, map_location=None, pickle_module=None, *, weights_only=None, **kwargs):
-    # Force weights_only=False for mmengine checkpoint compatibility
-    return _original_torch_load(f, map_location=map_location, pickle_module=pickle_module, weights_only=False, **kwargs)
-torch.load = _torch_load_compat
-
-if '--cpu' in sys.argv:
-    torch.backends.mps.is_available = lambda: False
-    torch.backends.mps.is_built = lambda: False
-
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
 
@@ -38,6 +24,11 @@ def parse_args():
     parser.add_argument('--work-dir', help='Working directory to save logs and models')
     parser.add_argument('--resume', action='store_true', help='Resume from latest checkpoint')
     parser.add_argument('--cpu', action='store_true', help='Force CPU device')
+    parser.add_argument(
+        '--trusted-checkpoint',
+        action='store_true',
+        help='Allow legacy pickle checkpoints from a verified source (can execute code).',
+    )
     parser.add_argument(
         '--offline',
         action='store_true',
@@ -93,15 +84,18 @@ def main():
         cfg.work_dir = args.work_dir
     _apply_runtime_overrides(cfg)
 
-    runner = Runner.from_cfg(cfg)
-    if args.resume:
-        # Resume from the latest checkpoint in work_dir
-        resume_path = os.path.join(cfg.work_dir, 'last_checkpoint')
-        if os.path.exists(resume_path):
-            with open(resume_path, 'r') as f:
-                checkpoint_path = f.read().strip()
-            runner.resume(checkpoint_path)
-    runner.train()
+    from baoiad.checkpoint import checkpoint_loading_policy
+
+    with checkpoint_loading_policy(args.trusted_checkpoint):
+        runner = Runner.from_cfg(cfg)
+        if args.resume:
+            # Resume from the latest checkpoint in work_dir
+            resume_path = os.path.join(cfg.work_dir, 'last_checkpoint')
+            if os.path.exists(resume_path):
+                with open(resume_path, 'r') as f:
+                    checkpoint_path = f.read().strip()
+                runner.resume(checkpoint_path)
+        runner.train()
 
 
 if __name__ == '__main__':

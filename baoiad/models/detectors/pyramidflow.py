@@ -26,6 +26,7 @@ from einops import rearrange
 
 from mmengine.dataset import Compose
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import FlowBasedADModel
@@ -56,7 +57,8 @@ def _build_pyramidflow_resnet18() -> nn.Module:
     """
     if _LEGACY_RESNET18_PATH.is_file():
         resnet = models.resnet18(weights=None)
-        state_dict = torch.load(_LEGACY_RESNET18_PATH, map_location='cpu', weights_only=False)
+        state_dict = load_baoiad_checkpoint(
+            _LEGACY_RESNET18_PATH, map_location='cpu')
         if isinstance(state_dict, dict):
             state_dict = state_dict.get('state_dict', state_dict)
         if isinstance(state_dict, dict) and state_dict:

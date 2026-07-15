@@ -288,6 +288,20 @@ def benchmark_one(method, data_root, device, warmup=10, runs=100):
     return result
 
 
+def _benchmark_methods(methods, data_root, device, warmup, runs):
+    """Run each method while the caller owns checkpoint policy scope."""
+    results = []
+    for method in methods:
+        try:
+            result = benchmark_one(method, data_root, device, warmup, runs)
+            if result:
+                results.append(result)
+        except Exception as exc:
+            print(f"  [ERROR] {method}: {exc}")
+            traceback.print_exc()
+    return results
+
+
 def main():
     parser = argparse.ArgumentParser(description='Benchmark BaoIAD inference speed')
     parser.add_argument('--methods', required=True, help='Comma-separated method names')
@@ -301,6 +315,11 @@ def main():
         action='store_true',
         help='Disable model-hub and BaoIAD-managed downloads for this process.',
     )
+    parser.add_argument(
+        '--trusted-checkpoint',
+        action='store_true',
+        help='Allow legacy pickle checkpoints from a verified source (can execute code).',
+    )
     args = parser.parse_args()
 
     from baoiad.runtime import configure_offline_mode
@@ -310,15 +329,12 @@ def main():
     device = torch.device(f'cuda:{args.gpu}')
     methods = [m.strip() for m in args.methods.split(',') if m.strip()]
 
-    results = []
-    for method in methods:
-        try:
-            r = benchmark_one(method, args.data_root, device, args.warmup, args.runs)
-            if r:
-                results.append(r)
-        except Exception as e:
-            print(f"  [ERROR] {method}: {e}")
-            traceback.print_exc()
+    from baoiad.checkpoint import checkpoint_loading_policy
+
+    with checkpoint_loading_policy(args.trusted_checkpoint):
+        results = _benchmark_methods(
+            methods, args.data_root, device, args.warmup, args.runs
+        )
 
     os.makedirs(os.path.dirname(os.path.abspath(args.output)), exist_ok=True)
     with open(args.output, 'w') as f:

@@ -27,6 +27,7 @@ Closely derived ADer fusion, decoder, backbone, loss, and metric structures plus
 
 - Redistribution is blocked pending written permission or a documented clean-room replacement.
 - The alignment table still records an open implementation-equivalence item that requires reconciliation.
+- The official per-epoch order artifact is not distributed; `train_vitad_exact_order.py` only replays a user-supplied, independently verified JSON and stops with an actionable error when it is absent.
 - The canonical path requests pretrained DINO weights through timm; when network and compatible local Hugging Face cache resolution both fail, the exception path may continue with randomly initialized encoder weights instead of failing closed.
 - Referenced raw validation artifacts are not distributed.
 

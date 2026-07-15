@@ -9,6 +9,7 @@ from typing import Sequence
 import torch
 from mmengine.model import BaseModule
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.registry import MODELS
 
 
@@ -207,12 +208,8 @@ class TIMMBackbone(BaseModule):
         return ''
 
     def _load_checkpoint(self, checkpoint_path: str, strict: bool) -> None:
-        if checkpoint_path.endswith('.safetensors'):
-            from safetensors.torch import load_file
-
-            checkpoint = load_file(checkpoint_path, device='cpu')
-        else:
-            checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
+        checkpoint = load_baoiad_checkpoint(
+            checkpoint_path, map_location='cpu')
         state_dict = checkpoint.get('state_dict', checkpoint) if isinstance(checkpoint, dict) else checkpoint
         if isinstance(state_dict, dict) and state_dict:
             first_key = next(iter(state_dict))

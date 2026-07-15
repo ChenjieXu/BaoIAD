@@ -20,6 +20,7 @@ except ImportError:  # timm<0.9 compatibility
 from timm.models.vision_transformer import Attention, LayerScale
 from torch.nn.init import trunc_normal_
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.registry import MODELS
 
 DINOV2_BASE_URL = "https://dl.fbaipublicfiles.com/dinov2"
@@ -248,7 +249,7 @@ def _download_and_load_weights(encoder, model_type, arch, patch_size, cache_dir=
         require_network('download DINOv2 weights', url=url)
         print(f"Downloading DINOv2 weights from {url}")
         torch.hub.download_url_to_file(url, str(weight_path))
-    state_dict = torch.load(weight_path, map_location="cpu", weights_only=True)
+    state_dict = load_baoiad_checkpoint(weight_path, map_location="cpu")
     encoder.load_state_dict(state_dict, strict=False)
 
 

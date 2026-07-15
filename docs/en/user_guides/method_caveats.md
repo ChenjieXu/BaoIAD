@@ -131,11 +131,15 @@ The benchmark runner passes category information via cfg-options (`model.target_
 
 ### ViTAD — `tools/train_vitad_exact_order.py`
 
-ViTAD requires a specific training sample order that matches the official ADer implementation for strict alignment. This script replays the official training order.
+ViTAD requires a specific training sample order for strict alignment. BaoIAD does not generate or distribute that artifact; this script only replays a user-supplied JSON whose origin must be verified separately.
 
 ```bash
-python tools/train_vitad_exact_order.py configs/vitad/vitad_256_mvtec_strict.py --work-dir runs/vitad/mvtec
+python tools/train_vitad_exact_order.py configs/vitad/vitad_256_mvtec_strict.py \
+    --order-file /path/to/verified_vitad_order.json \
+    --work-dir runs/vitad/mvtec
 ```
+
+The script stops with an actionable error when the order file is absent. A locally constructed order file is not evidence of official equivalence.
 
 ## Known Quirks
 

@@ -2,10 +2,10 @@
 
 ## Prerequisites
 
-- Python >= 3.9
-- PyTorch >= 2.0 (with CUDA toolkit for GPU support)
+- Python 3.10 or 3.12 (the release-verified versions)
+- PyTorch >= 2.0; validate the intended CUDA build separately before claiming GPU support
 - mmengine >= 0.10
-- mmcv >= 2.0
+- MMCV >= 2.0 (`mmcv-lite` in the core installation)
 
 ## Installation
 
@@ -31,15 +31,33 @@ pip install -e ".[all]"
 pip install -e ".[flow]"        # FrEIA (normalizing flow methods: FastFlow, CFlow, ...)
 pip install -e ".[vl]"          # open_clip_torch (vision-language methods: WinCLIP, ...)
 pip install -e ".[saa]"         # groundingdino, segment-anything (SAA+)
-pip install -e ".[mmpretrain]"  # mmpretrain (backbone variants)
 pip install -e ".[faiss-cpu]"   # faiss-cpu (fast nearest-neighbor search)
 pip install -e ".[geomloss]"    # geomloss (optimal transport losses)
-pip install -e ".[imgaug]"      # imgaug, openpyxl (augmentation-based methods)
-pip install -e ".[mamba]"       # mamba-ssm (Mamba-based methods)
+pip install -e ".[glass]"       # pandas, openpyxl (GLASS metadata/assets)
+pip install -e ".[visualization]"  # matplotlib (optional plotting)
 pip install -e ".[dev]"         # pytest, ruff, pre-commit (development)
 ```
 
-The `[all]` extra includes `flow`, `vl`, `saa`, `geomloss`, `imgaug`, `mmpretrain`, and `faiss-cpu`. The `mamba` and `faiss-gpu` extras are excluded from `[all]` because they require specific CUDA builds.
+The `[all]` extra includes `flow`, `vl`, `saa`, `geomloss`, `glass`, `visualization`, and `faiss-cpu`. Development tools are installed separately with `[dev]`.
+
+## Installation verification
+
+Run the lightweight local checks after installation:
+
+```bash
+python tools/check_install.py
+python tools/check_method_inventory.py
+```
+
+`check_install.py` reports the BaoIAD, Python, PyTorch, MMEngine, and MMCV versions; resolves the configured data root and cache directories; and reports which optional dependency groups are available. Missing optional groups are informational and do not fail a valid core installation.
+
+This is a CPU-only local release gate. It does not download models, inspect dataset contents, load checkpoints, start training, query CUDA/MPS, or perform GPU computation. A successful result therefore does **not** constitute GPU validation. Run an independent GPU smoke gate on the intended CUDA/PyTorch/MMCV stack with the selected method, assets, and dataset before claiming GPU support.
+
+Use `python tools/check_install.py --offline` to enable BaoIAD and supported model-hub offline environment variables for the self-check process. The self-check is network-free even without that flag. The same `--offline` option on `train.py`, `test.py`, and `benchmark.py` blocks supported download paths and requires all datasets and artifacts to be available locally.
+
+`--trusted-checkpoint` is not needed or accepted by `check_install.py` because it never loads a checkpoint. On `train.py`, `test.py`, and `benchmark.py`, use it only for a legacy pickle checkpoint obtained from and verified against a trusted source: deserialization may execute arbitrary code. Prefer safely loadable checkpoint formats and the default restricted policy whenever possible.
+
+Tensor-only `.pth` files and `.safetensors` use the restricted loader on every supported PyTorch version. PyTorch 2.6+ can also reconstruct BaoIAD's known MMEngine `HistoryBuffer` metadata through a narrow safe-globals allowlist. On PyTorch 2.0–2.5, a standard MMEngine resume/evaluation checkpoint containing that metadata is rejected by default; after independently verifying its origin and integrity, either move the run to PyTorch 2.6+ or use `--trusted-checkpoint` for that file.
 
 ## Dataset Setup
 

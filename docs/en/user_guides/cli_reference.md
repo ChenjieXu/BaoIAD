@@ -130,13 +130,13 @@ Arguments are identical to `tools/train.py`. Uses a custom training loop (not MM
 
 ### tools/train_vitad_exact_order.py
 
-ViTAD training with official per-epoch sample ordering.
+ViTAD replay with a user-supplied, verified per-epoch sample order.
 
 ```bash
-python tools/train_vitad_exact_order.py <config> [--work-dir DIR] [--resume] [--cpu] [--cfg-options KEY=VAL ...]
+python tools/train_vitad_exact_order.py <config> --order-file ORDER.json [--work-dir DIR] [--resume] [--cpu] [--cfg-options KEY=VAL ...]
 ```
 
-Arguments are identical to `tools/train.py`. Dumps the official sample order to JSON and uses a `PerEpochOrderSampler`. See [Training and Testing](train_test.md#tools-train_vitad_exact_order-py----vitad-official-sample-order) for details.
+BaoIAD does not generate or distribute the official order artifact. The script exits with an error when the verified JSON is absent, then replays the supplied file through `PerEpochOrderSampler`. See [Training and Testing](train_test.md#tools-train_vitad_exact_order-py----vitad-verified-sample-order-replay) for details.
 
 ## Utility Scripts
 

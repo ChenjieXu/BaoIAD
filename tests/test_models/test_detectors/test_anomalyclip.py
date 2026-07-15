@@ -1,9 +1,14 @@
 """Tests for AnomalyCLIPDetector."""
 
 import os
+import sys
+from types import SimpleNamespace
+
 import pytest
 import torch
 from unittest import TestCase
+from baoiad.checkpoint import CheckpointLoadError
+from baoiad.models.detectors.anomalyclip import AnomalyCLIPDetector
 from baoiad.structures import ADDataSample
 
 import baoiad  # noqa: F401
@@ -89,3 +94,23 @@ def test_official_detector_requires_checkpoint_when_configured():
     )
     with pytest.raises(FileNotFoundError):
         MODELS.build(cfg)
+
+
+def test_official_prompt_loader_does_not_swallow_checkpoint_errors(monkeypatch):
+    expected = CheckpointLoadError('checkpoint is corrupt')
+    monkeypatch.setattr(sys, 'path', list(sys.path))
+    monkeypatch.setitem(
+        sys.modules,
+        'prompt_ensemble',
+        SimpleNamespace(AnomalyCLIP_PromptLearner=object),
+    )
+    monkeypatch.setattr(
+        'baoiad.models.detectors.anomalyclip.load_baoiad_checkpoint',
+        lambda *args, **kwargs: (_ for _ in ()).throw(expected),
+    )
+    detector = object.__new__(AnomalyCLIPDetector)
+
+    with pytest.raises(CheckpointLoadError) as exc_info:
+        detector._init_official_prompt_learner('/tmp/corrupt.pth')
+
+    assert exc_info.value is expected

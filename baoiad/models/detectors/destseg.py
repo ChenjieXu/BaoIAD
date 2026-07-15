@@ -13,6 +13,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmengine.optim import OptimWrapperDict
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import ReconstructionADModel
@@ -165,7 +166,8 @@ class TeacherNet(nn.Module):
             out_indices=[1, 2, 3],
         )
         if checkpoint_path:
-            state_dict = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
+            state_dict = load_baoiad_checkpoint(
+                checkpoint_path, map_location='cpu')
             missing, unexpected = self.encoder.load_state_dict(state_dict, strict=False)
             if missing:
                 logger.warning('DeSTSeg teacher checkpoint missing keys: %s', missing[:10])

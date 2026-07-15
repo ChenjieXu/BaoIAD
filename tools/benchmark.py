@@ -638,6 +638,29 @@ def _prepare_subprocess_env(base_env=None, disable_compile=False):
         env_copy['TORCHDYNAMO_DISABLE'] = '1'
     return env_copy
 
+
+def _add_runtime_cli_flags(cmd, *, offline=False, trusted_checkpoint=False):
+    """Forward process-level safety policy to a BaoIAD child entry point."""
+    flags = []
+    if offline:
+        flags.append('--offline')
+    if trusted_checkpoint:
+        flags.append('--trusted-checkpoint')
+    cmd[2:2] = flags
+
+
+def _emit_trusted_checkpoint_banner(enabled, *, stream=None):
+    """Print a warning that cannot be hidden by child warning filters."""
+    if not enabled:
+        return
+    print(
+        'SECURITY WARNING: --trusted-checkpoint enables pickle deserialization and may '
+        'execute arbitrary code. Continue only with independently verified checkpoints.',
+        file=sys.stderr if stream is None else stream,
+        flush=True,
+    )
+
+
 _DIRECT_RUNNER_MODEL_TYPES = {'PatchCore', 'AnomalyDINODetector'}
 
 
@@ -737,8 +760,27 @@ def _move_data_samples_to_device(data_samples, device):
 
 def _run_direct_patchcore(config_path, data_root, category, device,
                           batch_size, work_dir, extra_cfg_options=None,
-                          offline=False):
-    """Benchmark PatchCore in-process without Runner.train()/val loop overhead."""
+                          offline=False, trusted_checkpoint=False):
+    """Benchmark directly under one scoped checkpoint loading policy."""
+    from baoiad.checkpoint import checkpoint_loading_policy
+
+    with checkpoint_loading_policy(trusted_checkpoint):
+        return _run_direct_patchcore_impl(
+            config_path=config_path,
+            data_root=data_root,
+            category=category,
+            device=device,
+            batch_size=batch_size,
+            work_dir=work_dir,
+            extra_cfg_options=extra_cfg_options,
+            offline=offline,
+        )
+
+
+def _run_direct_patchcore_impl(config_path, data_root, category, device,
+                               batch_size, work_dir, extra_cfg_options=None,
+                               offline=False):
+    """Implement the direct benchmark while the caller owns policy scope."""
     from baoiad.runtime import configure_offline_mode
 
     configure_offline_mode(offline)
@@ -842,7 +884,8 @@ def _find_benchmark_checkpoint(work_dir, source='last'):
 
 def run_method(config_path, data_root, category, device, epochs,
                batch_size, work_dir, timeout, multi_class=False,
-               extra_cfg_options=None, offline=False):
+               extra_cfg_options=None, offline=False,
+               trusted_checkpoint=False):
     """Run a method via tools/train.py using Runner."""
     timeout = benchmark_timeout(config_path, timeout)
 
@@ -856,6 +899,7 @@ def run_method(config_path, data_root, category, device, epochs,
             work_dir=work_dir,
             extra_cfg_options=extra_cfg_options,
             offline=offline,
+            trusted_checkpoint=trusted_checkpoint,
         )
 
     # Prefer the current interpreter so benchmark subprocesses run in the same
@@ -1007,8 +1051,11 @@ def run_method(config_path, data_root, category, device, epochs,
 
     if device == 'cpu':
         cmd.insert(2, '--cpu')
-    if offline:
-        cmd.insert(2, '--offline')
+    _add_runtime_cli_flags(
+        cmd,
+        offline=offline,
+        trusted_checkpoint=trusted_checkpoint,
+    )
 
     os.umask(0)  # NFS shared env: ensure work dirs are world-writable
 
@@ -1062,8 +1109,11 @@ def run_method(config_path, data_root, category, device, epochs,
                         '--cfg-options'] + cfg_options
             if device == 'cpu':
                 test_cmd.insert(2, '--cpu')
-            if offline:
-                test_cmd.insert(2, '--offline')
+            _add_runtime_cli_flags(
+                test_cmd,
+                offline=offline,
+                trusted_checkpoint=trusted_checkpoint,
+            )
 
             test_process = subprocess.Popen(
                 test_cmd,
@@ -1138,7 +1188,13 @@ def main():
         action='store_true',
         help='Disable model-hub and BaoIAD-managed downloads for each run.',
     )
+    parser.add_argument(
+        '--trusted-checkpoint',
+        action='store_true',
+        help='Allow legacy pickle checkpoints from a verified source (can execute code).',
+    )
     args = parser.parse_args()
+    _emit_trusted_checkpoint_banner(args.trusted_checkpoint)
 
     requested_all_categories = 'all' in args.categories
     if requested_all_categories:
@@ -1244,7 +1300,7 @@ def main():
             metrics, info = run_method(
                 config_path, args.data_root, cat, args.device,
                 args.epochs, args.batch_size, work_dir, args.timeout, is_multi_class,
-                args.cfg_options, args.offline,
+                args.cfg_options, args.offline, args.trusted_checkpoint,
             )
             elapsed = time.time() - t0
 

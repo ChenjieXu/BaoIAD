@@ -15,6 +15,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import FlowBasedADModel
@@ -84,7 +85,7 @@ def _generate_soft_permutation_matrix(n_feat: int, block_idx: int) -> torch.Tens
 
     cache_path = _cflow_soft_perm_cache_dir() / f'{n_feat}_{block_idx}.pt'
     if cache_path.is_file():
-        matrix = torch.load(cache_path, map_location='cpu')
+        matrix = load_baoiad_checkpoint(cache_path, map_location='cpu')
         _SOFT_PERM_CACHE[key] = matrix
         return matrix
 

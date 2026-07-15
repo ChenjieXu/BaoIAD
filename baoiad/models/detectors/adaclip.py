@@ -26,6 +26,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from sklearn.cluster import KMeans
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import VisionLanguageADModel
@@ -1356,7 +1357,8 @@ class AdaCLIPDetector(VisionLanguageADModel):
             logger.warning(f"{message}. Continuing without loading official weights.")
             return
 
-        checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+        checkpoint = load_baoiad_checkpoint(
+            checkpoint_path, map_location="cpu")
         if isinstance(checkpoint, dict) and "state_dict" in checkpoint:
             checkpoint = checkpoint["state_dict"]
 

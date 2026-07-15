@@ -14,29 +14,6 @@ if '--cpu' in sys.argv:
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
     os.environ['PYTORCH_MPS_DISABLE'] = '1'
 
-import torch
-
-if '--cpu' in sys.argv:
-    torch.backends.mps.is_available = lambda: False
-    torch.backends.mps.is_built = lambda: False
-
-# Match tools/train.py: force mmengine checkpoint loads to bypass
-# PyTorch 2.6's weights_only=True default.
-_original_torch_load = torch.load
-
-
-def _torch_load_compat(f, map_location=None, pickle_module=None, *, weights_only=None, **kwargs):
-    return _original_torch_load(
-        f,
-        map_location=map_location,
-        pickle_module=pickle_module,
-        weights_only=False,
-        **kwargs,
-    )
-
-
-torch.load = _torch_load_compat
-
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
 
@@ -47,6 +24,11 @@ def parse_args():
     parser.add_argument('checkpoint', nargs='?', default=None, help='Optional checkpoint file path')
     parser.add_argument('--work-dir', help='Working directory for results')
     parser.add_argument('--cpu', action='store_true', help='Force CPU device')
+    parser.add_argument(
+        '--trusted-checkpoint',
+        action='store_true',
+        help='Allow legacy pickle checkpoints from a verified source (can execute code).',
+    )
     parser.add_argument(
         '--offline',
         action='store_true',
@@ -104,8 +86,11 @@ def main():
         cfg.load_from = args.checkpoint
     _apply_runtime_overrides(cfg)
 
-    runner = Runner.from_cfg(cfg)
-    runner.test()
+    from baoiad.checkpoint import checkpoint_loading_policy
+
+    with checkpoint_loading_policy(args.trusted_checkpoint):
+        runner = Runner.from_cfg(cfg)
+        runner.test()
 
 
 if __name__ == '__main__':

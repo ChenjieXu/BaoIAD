@@ -18,6 +18,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.models.base_ad_model import BaseADModel
@@ -400,7 +401,8 @@ class ASTDetector(BaseADModel):
         if not os.path.exists(checkpoint_path):
             raise FileNotFoundError(f'Teacher checkpoint not found: {checkpoint_path}')
 
-        checkpoint = torch.load(checkpoint_path, map_location='cpu')
+        checkpoint = load_baoiad_checkpoint(
+            checkpoint_path, map_location='cpu')
         state_dict = checkpoint.get('state_dict', checkpoint)
 
         teacher_state = {

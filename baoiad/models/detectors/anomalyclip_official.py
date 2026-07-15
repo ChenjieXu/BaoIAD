@@ -24,6 +24,7 @@ from typing import Iterable, List, Optional, Sequence, Tuple
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.models.base_ad_model import VisionLanguageADModel
 
 from baoiad.models.predict_utils import build_predict_results
@@ -298,11 +299,8 @@ class AnomalyCLIPOfficialDetector(VisionLanguageADModel):
             visual.input_resolution = image_size
 
     def _load_prompt_checkpoint(self, checkpoint_path: str) -> None:
-        checkpoint = torch.load(
-            checkpoint_path,
-            map_location='cpu',
-            weights_only=False,
-        )
+        checkpoint = load_baoiad_checkpoint(
+            checkpoint_path, map_location='cpu')
         state_dict = checkpoint.get('prompt_learner', checkpoint)
         self.prompt_learner.load_state_dict(state_dict, strict=True)
 

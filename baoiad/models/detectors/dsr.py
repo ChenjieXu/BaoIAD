@@ -23,6 +23,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from torchvision.transforms import v2
+from baoiad.checkpoint import (
+    CheckpointError,
+    load_checkpoint as load_baoiad_checkpoint,
+)
 from baoiad.models.predict_utils import build_predict_results
 from baoiad.registry import MODELS
 from baoiad.runtime import OfflineModeError
@@ -823,8 +827,7 @@ class DSRDetector(ReconstructionADModel):
 
     @staticmethod
     def _load_vqvae_checkpoint(path: str):
-        weights_only = not path.endswith('.pckl')
-        checkpoint = torch.load(path, map_location='cpu', weights_only=weights_only)
+        checkpoint = load_baoiad_checkpoint(path, map_location='cpu')
         if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
             checkpoint = checkpoint['state_dict']
         return checkpoint
@@ -859,7 +862,7 @@ class DSRDetector(ReconstructionADModel):
 
         try:
             return _load_from(checkpoint_path)
-        except OfflineModeError:
+        except (CheckpointError, OfflineModeError):
             raise
         except Exception as error:
             if not allow_auto_redownload:
@@ -873,7 +876,7 @@ class DSRDetector(ReconstructionADModel):
             try:
                 redownloaded_path = _download_vqvae_weights(force_redownload=True)
                 return _load_from(redownloaded_path)
-            except OfflineModeError:
+            except (CheckpointError, OfflineModeError):
                 raise
             except Exception as retry_error:
                 warnings.warn(

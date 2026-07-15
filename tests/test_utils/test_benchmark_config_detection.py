@@ -2,6 +2,7 @@
 
 import importlib.util
 from functools import lru_cache
+from io import StringIO
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -55,3 +56,18 @@ def test_representative_methods_prefer_repo_configs():
     }
     for slug, filename in expected.items():
         assert benchmark.find_config(slug).endswith(filename)
+
+
+def test_trusted_checkpoint_banner_is_visible_despite_child_warning_filter():
+    benchmark = _load_benchmark_module()
+    child_env = benchmark._prepare_subprocess_env({
+        'PYTHONWARNINGS': 'ignore',
+    })
+    stream = StringIO()
+
+    benchmark._emit_trusted_checkpoint_banner(True, stream=stream)
+
+    assert child_env['PYTHONWARNINGS'] == 'ignore'
+    assert 'SECURITY WARNING' in stream.getvalue()
+    assert '--trusted-checkpoint' in stream.getvalue()
+    assert 'execute arbitrary code' in stream.getvalue()

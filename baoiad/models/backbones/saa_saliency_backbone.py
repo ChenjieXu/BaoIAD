@@ -16,6 +16,7 @@ import torch.nn.functional as F
 from mmengine.model import BaseModule
 from torchvision.transforms.functional import resize, to_pil_image
 
+from baoiad.checkpoint import load_checkpoint as load_baoiad_checkpoint
 from baoiad.registry import MODELS
 
 
@@ -92,7 +93,8 @@ class SAASaliencyBackbone(BaseModule):
             **kwargs,
         )
         if resolved_checkpoint and os.path.exists(resolved_checkpoint):
-            checkpoint = torch.load(resolved_checkpoint, map_location='cpu', weights_only=False)
+            checkpoint = load_baoiad_checkpoint(
+                resolved_checkpoint, map_location='cpu')
             if isinstance(checkpoint, dict):
                 state_dict = checkpoint.get('state_dict', checkpoint.get('model', checkpoint))
             else:

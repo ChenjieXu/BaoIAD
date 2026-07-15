@@ -21,25 +21,6 @@ if '--cpu' in sys.argv:
 import torch
 import numpy as np
 
-_original_torch_load = torch.load
-
-
-def _torch_load_compat(f, map_location=None, pickle_module=None, *, weights_only=None, **kwargs):
-    return _original_torch_load(
-        f,
-        map_location=map_location,
-        pickle_module=pickle_module,
-        weights_only=False,
-        **kwargs,
-    )
-
-
-torch.load = _torch_load_compat
-
-if '--cpu' in sys.argv:
-    torch.backends.mps.is_available = lambda: False
-    torch.backends.mps.is_built = lambda: False
-
 from mmengine.config import Config, DictAction
 from mmengine.registry import init_default_scope
 from mmengine.runner import Runner
@@ -51,6 +32,11 @@ def parse_args():
     parser.add_argument('--work-dir', help='Working directory to save logs and checkpoints')
     parser.add_argument('--resume', action='store_true', help='Resume from `last_checkpoint` if present')
     parser.add_argument('--cpu', action='store_true', help='Force CPU device')
+    parser.add_argument(
+        '--trusted-checkpoint',
+        action='store_true',
+        help='Allow legacy pickle checkpoints from a verified source (can execute code).',
+    )
     parser.add_argument(
         '--offline',
         action='store_true',
@@ -129,7 +115,9 @@ def _resume_if_needed(cfg: Config, args, model, optimizer, device: torch.device)
     if not checkpoint_path.is_file():
         return 1, {'image_auroc': float('-inf'), 'pixel_auroc': float('-inf')}, float('-inf')
 
-    state = torch.load(str(checkpoint_path), map_location=device)
+    from baoiad.checkpoint import load_checkpoint
+
+    state = load_checkpoint(checkpoint_path, map_location=device)
     model.load_state_dict(state['model'])
     optimizer.load_state_dict(state['optimizer'])
     best_metrics = state.get('best_metrics', {'image_auroc': float('-inf'), 'pixel_auroc': float('-inf')})
@@ -144,17 +132,20 @@ def main():
 
     configure_offline_mode(args.offline)
 
-    import iadbench  # noqa: F401
-    from iadbench.registry import MODELS
-    from iadbench.utils.alignment_probe import (
+    import baoiad  # noqa: F401
+    from baoiad.registry import MODELS
+    from baoiad.utils.alignment_probe import (
         move_data_samples_to_device,
         move_inputs_to_device,
         set_global_seed,
     )
-    from iadbench.utils.regad_strict import compute_regad_metrics, load_or_sample_support_rounds
+    from baoiad.utils.regad_strict import (
+        compute_regad_metrics,
+        load_or_sample_support_rounds,
+    )
 
     cfg = _load_cfg(args)
-    init_default_scope('iadbench')
+    init_default_scope('baoiad')
 
     work_dir = Path(cfg.work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
@@ -164,22 +155,27 @@ def main():
     set_global_seed(seed)
     print(f'[RegAD] device={device} seed={seed}', flush=True)
 
-    model = MODELS.build(cfg.model).to(device)
-    model.target_cls = cfg.model.get('target_cls', cfg.get('target_cls', None))
-    model.data_root = cfg.model.get('data_root', cfg.get('data_root', None))
+    from baoiad.checkpoint import checkpoint_loading_policy
 
-    optimizer_cfg = dict(cfg.optim_wrapper.optimizer)
-    optimizer_type = optimizer_cfg.pop('type')
-    if optimizer_type != 'SGD':
-        raise ValueError(f'RegAD strict only supports SGD optimizer, got {optimizer_type!r}')
-    base_lr = float(optimizer_cfg.pop('lr'))
-    optimizer = torch.optim.SGD(
-        [param for param in model.parameters() if param.requires_grad],
-        lr=base_lr,
-        **optimizer_cfg,
-    )
+    with checkpoint_loading_policy(args.trusted_checkpoint):
+        model = MODELS.build(cfg.model).to(device)
+        model.target_cls = cfg.model.get('target_cls', cfg.get('target_cls', None))
+        model.data_root = cfg.model.get('data_root', cfg.get('data_root', None))
 
-    start_epoch, best_metrics, best_score = _resume_if_needed(cfg, args, model, optimizer, device)
+        optimizer_cfg = dict(cfg.optim_wrapper.optimizer)
+        optimizer_type = optimizer_cfg.pop('type')
+        if optimizer_type != 'SGD':
+            raise ValueError(f'RegAD strict only supports SGD optimizer, got {optimizer_type!r}')
+        base_lr = float(optimizer_cfg.pop('lr'))
+        optimizer = torch.optim.SGD(
+            [param for param in model.parameters() if param.requires_grad],
+            lr=base_lr,
+            **optimizer_cfg,
+        )
+
+        start_epoch, best_metrics, best_score = _resume_if_needed(
+            cfg, args, model, optimizer, device
+        )
 
     max_epochs = int(cfg.train_cfg.max_epochs)
     target_cls = cfg.model.get('target_cls', cfg.test_dataloader.dataset.get('target_cls'))
