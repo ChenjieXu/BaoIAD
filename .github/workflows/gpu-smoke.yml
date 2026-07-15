@@ -28,7 +28,6 @@ jobs:
     timeout-minutes: 120
     env:
       BAOIAD_GPU_DATASET_ROOT: ${{ inputs.dataset_root }}
-      GPU_EVIDENCE_DIR: ${{ runner.temp }}/baoiad-gpu-evidence
     steps:
       - name: Check out the exact requested commit
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -39,6 +38,9 @@ jobs:
 
       - name: Initialize fail-closed evidence
         run: |
+          GPU_EVIDENCE_DIR="${RUNNER_TEMP}/baoiad-gpu-evidence"
+          export GPU_EVIDENCE_DIR
+          printf 'GPU_EVIDENCE_DIR=%s\n' "${GPU_EVIDENCE_DIR}" >> "${GITHUB_ENV}"
           mkdir -p "${GPU_EVIDENCE_DIR}"
           python - <<'PY'
           import json

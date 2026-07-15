@@ -99,6 +99,7 @@ def test_gpu_workflow_is_manual_self_hosted_and_fail_closed():
     assert workflow["permissions"] == {"contents": "read"}
     assert workflow["concurrency"]["cancel-in-progress"] == "true"
     assert set(job["runs-on"]) >= {"self-hosted", "linux", "gpu"}
+    assert "GPU_EVIDENCE_DIR" not in job["env"]
     assert "tools/run_gpu_smoke.py" in run_script
     assert "tools/check_gpu_evidence.py" in run_script
     assert "--require-validated" in run_script
@@ -107,6 +108,19 @@ def test_gpu_workflow_is_manual_self_hosted_and_fail_closed():
     assert "continue-on-error" not in text
     assert "pull_request_target" not in text
     assert "secrets." not in text
+
+    initialize = next(
+        step
+        for step in job["steps"]
+        if step.get("name") == "Initialize fail-closed evidence"
+    )
+    initialize_script = initialize["run"]
+    assert 'GPU_EVIDENCE_DIR="${RUNNER_TEMP}/baoiad-gpu-evidence"' in (
+        initialize_script
+    )
+    assert "export GPU_EVIDENCE_DIR" in initialize_script
+    assert '>> "${GITHUB_ENV}"' in initialize_script
+    assert "${{ runner.temp }}" not in initialize_script
 
     checkout = next(
         step for step in job["steps"] if step.get("uses") == CHECKOUT_ACTION
