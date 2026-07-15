@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "release_target": "BaoIAD WAIC public release",
+  "policy": "Pending entries are release blockers. Public files record only role names and opaque evidence references; they must not contain signatures, private email addresses, credentials, or legal documents.",
+  "approvals": [
+    {
+      "id": "APP-COMPANY-IDENTITY",
+      "subject": "Approved Chinese and English company or team name, public project attribution, copyright holder, and copyright years",
+      "status": "pending",
+      "owner_role": "Brand owner and Legal/OSS owner",
+      "evidence_required": "Approved public wording and an opaque internal approval reference covering the repository and WAIC release",
+      "evidence_reference": null,
+      "release_blocking": true,
+      "resolution_goal": "G007"
+    },
+    {
+      "id": "APP-BRAND-ASSETS",
+      "subject": "Exact-hash authorization for every bundled image and logo across repository, documentation, social-preview, WAIC, and press scopes",
+      "status": "pending",
+      "owner_role": "Technical owner, Brand owner, and Legal/OSS owner",
+      "evidence_required": "Per-asset approval bound to the SHA-256 and each intended public surface; MVTec-derived images also need dataset-rights confirmation",
+      "evidence_reference": null,
+      "release_blocking": true,
+      "resolution_goal": "G007"
+    },
+    {
+      "id": "APP-THIRD-PARTY",
+      "subject": "Disposition and reviewer sign-off for copied, ported, vendored, closely derived code, referenced weights, and bundled third-party content",
+      "status": "pending",
+      "owner_role": "Technical owner and Legal/OSS owner",
+      "evidence_required": "One approved disposition per provenance entry, including removal or clean-room replacement where redistribution terms are incompatible or absent",
+      "evidence_reference": null,
+      "release_blocking": true,
+      "resolution_goal": "G007"
+    },
+    {
+      "id": "APP-SECURITY-CHANNEL",
+      "subject": "Non-public vulnerability-reporting channel and accountable security owner",
+      "status": "pending",
+      "owner_role": "Security owner",
+      "evidence_required": "Approved public reporting instructions and a successful private receive-and-escalation test",
+      "evidence_reference": null,
+      "release_blocking": true,
+      "resolution_goal": "G007"
+    }
+  ]
+}

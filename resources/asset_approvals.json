@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "release_target": "BaoIAD WAIC public release",
+  "company_identity_approval_id": "APP-COMPANY-IDENTITY",
+  "policy": "A bundled asset may ship only when its exact SHA-256 is approved by the technical, brand, and legal-or-OSS roles for every intended public surface. Until then, omit or replace it before release.",
+  "assets": [
+    {
+      "id": "ASSET-HERO",
+      "path": "resources/baoiad-hero.png",
+      "sha256": "abbae3f88a0a3e120f3df1c31de5c444eeb87a7681d575eae426f05b53367edc",
+      "media_type": "image/png",
+      "dimensions": "1600x500",
+      "purpose": "English and Chinese README hero; possible social-preview candidate only after approval",
+      "origin": {
+        "kind": "unverified_project_artwork",
+        "creator_or_owner": null,
+        "source_url": null,
+        "source_revision": null,
+        "source_file": null,
+        "generator": null,
+        "embedded_third_party_content": "not established"
+      },
+      "rights": {
+        "status": "pending_external_review",
+        "license_or_basis": null,
+        "evidence_reference": null,
+        "required_attribution": null,
+        "restrictions": "Authorship, source design, icon and font rights, and canonical brand identity are not established by repository evidence."
+      },
+      "approvals": {
+        "technical": {"status": "pending_external_review", "evidence_reference": null},
+        "brand": {"status": "pending_external_review", "evidence_reference": null},
+        "legal_or_oss": {"status": "pending_external_review", "evidence_reference": null}
+      },
+      "scopes": {
+        "github_repository": null,
+        "readthedocs": null,
+        "github_social_preview": null,
+        "waic_event": null,
+        "press_marketing": null
+      },
+      "disposition": "omit_unless_approved",
+      "approval_id": "APP-BRAND-ASSETS",
+      "release_blocking": true
+    },
+    {
+      "id": "ASSET-LOGO",
+      "path": "resources/baoiad-logo.svg",
+      "sha256": "83fdac1470f5a6b58a7b3f1a7847ccb6a34337ef7b165e0e7b36b64f90d91652",
+      "media_type": "image/svg+xml",
+      "dimensions": "480x120",
+      "purpose": "Project logo candidate; currently not used by public documentation",
+      "origin": {
+        "kind": "unverified_project_artwork",
+        "creator_or_owner": null,
+        "source_url": null,
+        "source_revision": null,
+        "source_file": null,
+        "generator": null,
+        "embedded_third_party_content": "SVG references Helvetica Neue and Arial but bundles no font; mark differs from the hero icon."
+      },
+      "rights": {
+        "status": "pending_external_review",
+        "license_or_basis": null,
+        "evidence_reference": null,
+        "required_attribution": null,
+        "restrictions": "Brand owner must designate the canonical mark and confirm artwork and typography rights."
+      },
+      "approvals": {
+        "technical": {"status": "pending_external_review", "evidence_reference": null},
+        "brand": {"status": "pending_external_review", "evidence_reference": null},
+        "legal_or_oss": {"status": "pending_external_review", "evidence_reference": null}
+      },
+      "scopes": {
+        "github_repository": null,
+        "readthedocs": null,
+        "github_social_preview": null,
+        "waic_event": null,
+        "press_marketing": null
+      },
+      "disposition": "omit_unless_approved",
+      "approval_id": "APP-BRAND-ASSETS",
+      "release_blocking": true
+    },
+    {
+      "id": "ASSET-ARCH-EN",
+      "path": "resources/architecture.png",
+      "sha256": "70fa4e6d8a7fc5acc450867dfa919c43dc6c3b6d555e42b89ab61ab4e03e8fb3",
+      "media_type": "image/png",
+      "dimensions": "1600x941",
+      "purpose": "English architecture overview",
+      "origin": {
+        "kind": "unverified_project_diagram",
+        "creator_or_owner": null,
+        "source_url": null,
+        "source_revision": null,
+        "source_file": null,
+        "generator": null,
+        "embedded_third_party_content": "Icon and font sources are not recorded."
+      },
+      "rights": {
+        "status": "pending_external_review",
+        "license_or_basis": null,
+        "evidence_reference": null,
+        "required_attribution": null,
+        "restrictions": "Creator, editable source, icon/font sources, and brand authorization are not established."
+      },
+      "approvals": {
+        "technical": {"status": "pending_external_review", "evidence_reference": null},
+        "brand": {"status": "pending_external_review", "evidence_reference": null},
+        "legal_or_oss": {"status": "pending_external_review", "evidence_reference": null}
+      },
+      "scopes": {
+        "github_repository": null,
+        "readthedocs": null,
+        "github_social_preview": false,
+        "waic_event": null,
+        "press_marketing": null
+      },
+      "disposition": "omit_unless_approved",
+      "approval_id": "APP-BRAND-ASSETS",
+      "release_blocking": true
+    },
+    {
+      "id": "ASSET-ARCH-ZH",
+      "path": "resources/architecture_zh.png",
+      "sha256": "c79cd1c9569e52c89b0625935e6381fe9324a93ff3a093ba207a3a7d4f89d5ad",
+      "media_type": "image/png",
+      "dimensions": "1600x941",
+      "purpose": "Chinese architecture overview",
+      "origin": {
+        "kind": "unverified_project_diagram",
+        "creator_or_owner": null,
+        "source_url": null,
+        "source_revision": null,
+        "source_file": null,
+        "generator": null,
+        "embedded_third_party_content": "Icon and font sources are not recorded."
+      },
+      "rights": {
+        "status": "pending_external_review",
+        "license_or_basis": null,
+        "evidence_reference": null,
+        "required_attribution": null,
+        "restrictions": "Creator, editable source, icon/font sources, translation approval, and brand authorization are not established."
+      },
+      "approvals": {
+        "technical": {"status": "pending_external_review", "evidence_reference": null},
+        "brand": {"status": "pending_external_review", "evidence_reference": null},
+        "legal_or_oss": {"status": "pending_external_review", "evidence_reference": null}
+      },
+      "scopes": {
+        "github_repository": null,
+        "readthedocs": null,
+        "github_social_preview": false,
+        "waic_event": null,
+        "press_marketing": null
+      },
+      "disposition": "omit_unless_approved",
+      "approval_id": "APP-BRAND-ASSETS",
+      "release_blocking": true
+    },
+    {
+      "id": "ASSET-VIS-RESULTS",
+      "path": "resources/vis_examples/anomaly_detection_results.png",
+      "sha256": "ea0134cf17b023eb4499918ee9c225c8ce34435fb243a020cb2acf144293ac12",
+      "media_type": "image/png",
+      "dimensions": "1324x350",
+      "purpose": "Qualitative input, ground-truth, heatmap, and predicted-mask comparison",
+      "origin": {
+        "kind": "generated_from_third_party_dataset",
+        "creator_or_owner": null,
+        "source_url": "https://www.mvtec.com/company/research/datasets/mvtec-ad",
+        "source_revision": null,
+        "source_file": "scripts/gen_vis_multi_model.py",
+        "generator": "scripts/gen_vis_multi_model.py; exact environment and successful command are not recorded",
+        "embedded_third_party_content": "MVTec AD bottle, hazelnut, and tile samples and masks; labels include PatchCore, PaDiM, and non-inventory SPADE."
+      },
+      "rights": {
+        "status": "pending_external_review",
+        "license_or_basis": null,
+        "evidence_reference": null,
+        "required_attribution": null,
+        "restrictions": "Repository documentation describes MVTec AD as academic/non-commercial and agreement-gated. Legal must review the actual accepted terms and WAIC/marketing scope. The figure is qualitative, not a benchmark table."
+      },
+      "approvals": {
+        "technical": {"status": "pending_external_review", "evidence_reference": null},
+        "brand": {"status": "pending_external_review", "evidence_reference": null},
+        "legal_or_oss": {"status": "pending_external_review", "evidence_reference": null}
+      },
+      "scopes": {
+        "github_repository": null,
+        "readthedocs": null,
+        "github_social_preview": false,
+        "waic_event": null,
+        "press_marketing": null
+      },
+      "disposition": "omit_unless_approved",
+      "approval_id": "APP-BRAND-ASSETS",
+      "release_blocking": true
+    },
+    {
+      "id": "ASSET-NORMAL-SAMPLE",
+      "path": "resources/vis_examples/normal_sample.png",
+      "sha256": "c3d179dd0dfdc2e5bbd859088b4ed74b50939b0364c04e69b0f40cb2f33a56a3",
+      "media_type": "image/png",
+      "dimensions": "519x300",
+      "purpose": "Unused synthetic anomaly illustration derived from one normal MVTec bottle image",
+      "origin": {
+        "kind": "generated_from_third_party_dataset",
+        "creator_or_owner": null,
+        "source_url": "https://www.mvtec.com/company/research/datasets/mvtec-ad",
+        "source_revision": null,
+        "source_file": "scripts/gen_vis_examples.py",
+        "generator": "scripts/gen_vis_examples.py with an unseeded random synthetic map",
+        "embedded_third_party_content": "MVTec AD bottle good/000 image; heatmap is synthetic and not model output."
+      },
+      "rights": {
+        "status": "pending_external_review",
+        "license_or_basis": null,
+        "evidence_reference": null,
+        "required_attribution": null,
+        "restrictions": "Not used by current public docs and not reproducible bit-for-bit. Omit by default unless dataset rights and a truthful synthetic-illustration caption are approved."
+      },
+      "approvals": {
+        "technical": {"status": "pending_external_review", "evidence_reference": null},
+        "brand": {"status": "pending_external_review", "evidence_reference": null},
+        "legal_or_oss": {"status": "pending_external_review", "evidence_reference": null}
+      },
+      "scopes": {
+        "github_repository": null,
+        "readthedocs": null,
+        "github_social_preview": false,
+        "waic_event": null,
+        "press_marketing": null
+      },
+      "disposition": "omit_unless_approved",
+      "approval_id": "APP-BRAND-ASSETS",
+      "release_blocking": true
+    }
+  ]
+}

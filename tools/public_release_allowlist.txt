@@ -2,7 +2,17 @@
 # No glob syntax is allowed. Every expansion requires review.
 
 .gitignore
+LICENSE
+THIRD_PARTY_NOTICES.md
+docs/alignment/exceptions.json
+docs/alignment/method_status.json
+docs/release/external_approvals.json
+resources/README.md
+resources/asset_approvals.json
 tests/test_release/test_check_public_release.py
+tests/test_release/test_release_compliance.py
+third_party/provenance.json
+tools/check_release_compliance.py
 tools/check_public_release.py
 tools/public_release_allowlist.txt
 tools/public_release_policy.json
