@@ -5,6 +5,7 @@ type: software
 authors:
   - given-names: Chenjie
     family-names: Xu
+    orcid: "https://orcid.org/0009-0006-8268-7732"
   - given-names: Yang
     family-names: Zhang
   - given-names: Tianyun
@@ -13,8 +14,8 @@ authors:
     family-names: Hu
 repository-code: "https://github.com/Baosight-xVue/BaoIAD"
 license: Apache-2.0
-version: "1.0.0"
-date-released: "2026-05-07"
+version: "1.1.0"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.20067087"
+    description: "Zenodo concept DOI representing all versions of BaoIAD."

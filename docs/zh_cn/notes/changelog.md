@@ -1,5 +1,21 @@
-# BaoIAD 仓库指南
+# 更新日志
 
-BaoIAD 是一个以源码形式分发的工业异常检测基准代码仓库。仓库本地方法清单位于 [`baoiad/method_inventory.py`](../../../baoiad/method_inventory.py)，`python tools/benchmark.py --methods all` 会选择这 37 个方法 slug。数据集、权重和可选依赖需单独获取。
+## v1.1.0 — 未发布
 
-方法细节见 [`configs/`](../../../configs/) 下的配置 README；实现溯源与可复现性记录见 [`docs/alignment/`](../../alignment/)。
+该候选版本用于准备 BaoIAD 的组织账户公开发布。发布日期、源代码提交和 Zenodo 版本专属 DOI 只会在 v1.1.0 最终归档公开后填写。在此之前，引用元数据仅使用已验证、覆盖 BaoIAD 所有版本的 Zenodo 概念 DOI。
+
+历史 Git 标签 `v1.0.0` 解引用到提交 `697fc4304cc76876d397067e2706ed771f62e708`，该提交的包元数据版本是 `0.1.0`。因此，`1.1.0` 用于记录首个组织账户发布，而不重写或复用历史包身份。可机读的 [v1.0.0 兼容性约定](../../alignment/v1_0_0_compatibility.json) 锁定了保留路径和 CLI 表面，并记录有意引入的迁移。
+
+### 兼容性与迁移说明
+
+- 要求 Python 3.10 或更高版本；发布检查覆盖 Python 3.10 和 3.12。
+- 核心环境使用 `mmcv-lite>=2.0`，不依赖编译版 MMCV 算子。
+- RegAD 默认保留确定性回退。设置 `strict_require_official_support_set=True` 后，程序会强制要求官方 support set，缺失时直接失败而不再回退。
+- ViTAD 的精确顺序评估要求用户提供已验证的 `--order-file`；BaoIAD 不生成、也不再分发该上游文件。
+- 权重默认受限加载。`--trusted-checkpoint` 仅能用于已验证的旧式 pickle 权重，因为加载这类文件可能执行代码。
+- 旧元数据中未受支持的 `mamba`、`mmpretrain` 和 `faiss-gpu` 可选依赖已不再声明。请使用已支持的 CPU FAISS 可选依赖，或在跟随上游代码时显式安装方法专用依赖。
+- 发布测试覆盖的已打包路径改用本地 SciPy/torchvision 数据增强方案，因此不再声明旧的 `imgaug` 可选依赖。旧调用方应迁移到这些路径。
+
+## v1.0.0 — 首次发布
+
+BaoIAD 统一工业异常检测基准的首次发布，包含 37 个方法、10 个数据集适配器、统一评估流程和 MMEngine 架构。

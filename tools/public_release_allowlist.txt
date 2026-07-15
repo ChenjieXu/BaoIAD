@@ -45,6 +45,7 @@ baoiad/models/detectors/saa.py
 baoiad/optional.py
 baoiad/paths.py
 baoiad/registration.py
+baoiad/registry.py
 baoiad/runtime.py
 baoiad/utils/regad_strict.py
 baoiad/utils/dtd.py
@@ -128,6 +129,7 @@ docs/alignment/ganomaly.md
 docs/alignment/glass.md
 docs/alignment/memseg.md
 docs/alignment/method_status.json
+docs/alignment/v1_0_0_compatibility.json
 docs/alignment/musc.md
 docs/alignment/nsa.md
 docs/alignment/padim.md
@@ -145,6 +147,9 @@ docs/alignment/uninet.md
 docs/alignment/vitad.md
 docs/alignment/winclip.md
 docs/en/get_started.md
+docs/en/api.rst
+docs/en/conf.py
+docs/en/dataset_zoo.md
 docs/en/index.rst
 docs/en/notes/changelog.md
 docs/en/notes/contributing.md
@@ -154,7 +159,10 @@ docs/en/overview.md
 docs/en/user_guides/benchmark.md
 docs/en/user_guides/cli_reference.md
 docs/en/user_guides/config.md
+docs/en/user_guides/inference.md
 docs/en/user_guides/method_caveats.md
+docs/en/user_guides/new_model.md
+docs/en/user_guides/prepare_dataset.md
 docs/en/user_guides/speed_benchmark.md
 docs/en/user_guides/train_test.md
 docs/release/external_approvals.json
@@ -164,17 +172,22 @@ docs/zh_cn/advanced_guides/customize_losses.md
 docs/zh_cn/advanced_guides/memory_bank.md
 docs/zh_cn/api.rst
 docs/zh_cn/conf.py
+docs/zh_cn/dataset_zoo.md
 docs/zh_cn/get_started.md
 docs/zh_cn/index.rst
 docs/zh_cn/notes/changelog.md
 docs/zh_cn/notes/faq.md
 docs/zh_cn/overview.md
+docs/zh_cn/user_guides/inference.md
+docs/zh_cn/user_guides/new_model.md
 resources/README.md
 resources/asset_approvals.json
 tests/conftest.py
 tests/test_checkpoint_cli_policy.py
 tests/test_checkpoint_policy.py
 tests/test_configs/test_data_root.py
+tests/test_datasets/dataset_taxonomy.json
+tests/test_datasets/test_dataset_taxonomy.py
 tests/test_models/test_backbones/test_timm_backbone.py
 tests/test_models/test_detectors/test_anomalyclip.py
 tests/test_models/test_detectors/test_dsr.py
@@ -183,7 +196,9 @@ tests/test_offline_download_guards.py
 tests/test_registry.py
 tests/test_release/test_check_public_release.py
 tests/test_release/test_check_install.py
+tests/test_release/test_metadata_invariants.py
 tests/test_release/test_release_compliance.py
+tests/test_release/test_version_compatibility.py
 tests/test_runtime_policy.py
 tests/test_utils/test_benchmark_config_detection.py
 third_party/provenance.json
@@ -191,6 +206,7 @@ tools/benchmark.py
 tools/benchmark_speed.py
 tools/check_install.py
 tools/check_release_compliance.py
+tools/check_version_compatibility.py
 tools/check_public_release.py
 tools/env.sh
 tools/public_release_allowlist.txt

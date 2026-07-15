@@ -2,49 +2,49 @@
 
 import os
 import sys
+from importlib.util import find_spec
 
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Project information -----------------------------------------------------
 
-project = 'BaoIAD'
-copyright = '2025, BaoIAD Contributors'
-author = 'BaoIAD Contributors'
-release = '0.1.0'
+project = "BaoIAD"
+copyright = "2026, Baosight-xVue and BaoIAD Contributors"
+author = "Baosight-xVue and BaoIAD Contributors"
+release = "1.1.0"
 
 # -- General configuration ---------------------------------------------------
 
 extensions = [
-    'myst_parser',
-    'sphinx.ext.autodoc',
+    "myst_parser",
+    "sphinx.ext.autodoc",
 ]
 
 # NOTE: autodoc is enabled only so existing ``automodule`` directives parse.
 # Heavy torch/mmcv-style dependencies stay mocked below for Read the Docs.
 
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+templates_path = ["_templates"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
+    ".rst": "restructuredtext",
+    ".md": "markdown",
 }
 
-master_doc = 'index'
+master_doc = "index"
 
 # -- Language and locale -----------------------------------------------------
 
-language = 'zh_CN'
+language = "zh_CN"
 
 # -- Options for HTML output -------------------------------------------------
 
-try:
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-except ImportError:
-    html_theme = 'alabaster'
+if find_spec("sphinx_rtd_theme") is not None:
+    html_theme = "sphinx_rtd_theme"
+else:
+    html_theme = "alabaster"
 html_theme_options = {
-    'logo_only': False,
+    "logo_only": False,
 }
 
 # The Chinese documentation currently has no locale-specific static assets.
@@ -53,49 +53,49 @@ html_static_path = []
 # -- Options for autodoc -----------------------------------------------------
 
 autodoc_mock_imports = [
-    'matplotlib',
-    'torch',
-    'torchvision',
-    'mmcv',
-    'mmengine',
-    'timm',
-    'sklearn',
-    'scipy',
-    'faiss',
-    'FrEIA',
-    'open_clip',
-    'einops',
-    'cv2',
-    'numpy',
-    'PIL',
-    'geomloss',
-    'groundingdino',
-    'segment_anything',
-    'mmpretrain',
-    'imgaug',
+    "matplotlib",
+    "torch",
+    "torchvision",
+    "mmcv",
+    "mmengine",
+    "timm",
+    "sklearn",
+    "scipy",
+    "faiss",
+    "FrEIA",
+    "open_clip",
+    "einops",
+    "cv2",
+    "numpy",
+    "PIL",
+    "geomloss",
+    "groundingdino",
+    "segment_anything",
+    "mmpretrain",
+    "imgaug",
 ]
 
 autodoc_default_options = {
-    'members': True,
-    'undoc-members': True,
-    'show-inheritance': True,
+    "members": True,
+    "undoc-members": True,
+    "show-inheritance": True,
 }
 
 # -- Options for intersphinx -------------------------------------------------
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'torch': ('https://pytorch.org/docs/stable/', None),
-    'mmengine': ('https://mmengine.readthedocs.io/en/latest/', None),
+    "python": ("https://docs.python.org/3", None),
+    "torch": ("https://pytorch.org/docs/stable/", None),
+    "mmengine": ("https://mmengine.readthedocs.io/en/latest/", None),
 }
 
 # -- Options for MyST parser -------------------------------------------------
 
 myst_enable_extensions = [
-    'colon_fence',
-    'deflist',
-    'dollarmath',
-    'html_image',
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "html_image",
 ]
 
 myst_heading_anchors = 3
@@ -107,5 +107,5 @@ myst_all_links_external = True
 
 # -- Options for copybutton --------------------------------------------------
 
-copybutton_prompt_text = r'>>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: '
+copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
 copybutton_prompt_is_regexp = True

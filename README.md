@@ -67,18 +67,25 @@ BaoIAD keeps 37 method integrations in 9 families. Method names link to config R
 
 ## Dataset Configurations
 
-| Dataset | Categories | Config |
-|---------|-----------:|--------|
+The table counts BaoIAD **object entries** exposed by each dataset adapter. An
+object entry is a benchmark object/category selectable through the adapter; a
+**defect type** is an anomaly label within an object and is not counted here;
+and a **base config** is the adapter-level configuration file, not one config
+per object. See the [Dataset Zoo](docs/en/dataset_zoo.md) for the dataset-specific
+taxonomy and preparation contract.
+
+| Dataset | BaoIAD object entries | Base config |
+|---------|----------------------:|-------------|
 | MVTec AD | 15 | `configs/_base_/datasets/mvtec_ad.py` |
 | VisA | 12 | `configs/_base_/datasets/visa.py` |
 | BTech | 3 | `configs/_base_/datasets/btech.py` |
 | MVTec 3D AD | 10 | `configs/_base_/datasets/mvtec_3d_ad.py` |
 | MVTec LOCO | 5 | `configs/_base_/datasets/mvtec_loco_ad.py` |
 | MPDD | 6 | `configs/_base_/datasets/mpdd.py` |
-| MVTec AD 2 | 16 | `configs/_base_/datasets/mvtec_ad2.py` |
-| Kolektor | 3 | `configs/_base_/datasets/kolektor.py` |
-| VAD | 6 | `configs/_base_/datasets/vad.py` |
-| RealIAD | — | `configs/_base_/datasets/realiad.py` |
+| MVTec AD 2 | 8 | `configs/_base_/datasets/mvtec_ad2.py` |
+| Kolektor | 1 (adapter) | `configs/_base_/datasets/kolektor.py` |
+| VAD | 1 (adapter) | `configs/_base_/datasets/vad.py` |
+| RealIAD | 30 | `configs/_base_/datasets/realiad.py` |
 
 ## Evaluation Metrics
 
@@ -167,13 +174,14 @@ Contributions, issue reports, and reproducibility fixes are welcome. Please open
 
 ## Citation
 
-If you use this toolbox or benchmark in your research, please cite this GitHub repository.
+If you use this toolbox or benchmark in your research, please cite this GitHub repository. The DOI below is the verified Zenodo concept DOI for all BaoIAD versions. The version-specific DOI for v1.1.0 will be added after the release archive is published.
 
 ```bibtex
 @software{xu2026baoiad,
   title        = {BaoIAD: Towards Trustworthy and Reproducible Benchmarking for Industrial Anomaly Detection},
   author       = {Chenjie Xu and Yang Zhang and Tianyun Hu and Bing Hu},
   year         = {2026},
+  version      = {1.1.0},
   doi          = {10.5281/zenodo.20067087},
   url          = {https://github.com/Baosight-xVue/BaoIAD}
 }

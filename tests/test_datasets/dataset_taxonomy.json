@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "definitions": {
+    "object_categories": "Object or product entries exposed by the primary BaoIAD dataset class through ALL_CATEGORIES. An adapter-synthetic entry is a loader selector, not a claim about an upstream dataset's official taxonomy.",
+    "defect_categories": "Named abnormal subtypes. A null count means the primary BaoIAD loader discovers labels from dataset files or reduces them to a binary adapter label and therefore does not encode an exhaustive static taxonomy.",
+    "baoiad_entries": "The number of unique public base-config and primary dataset-class pairs representing the dataset in configs/_base_/datasets."
+  },
+  "datasets": [
+    {
+      "key": "mvtec_ad",
+      "display_name": "MVTec AD",
+      "dataset_module": "baoiad/datasets/mvtec_ad.py",
+      "dataset_class": "MVTecADDataset",
+      "base_config": "configs/_base_/datasets/mvtec_ad.py",
+      "object_categories": {
+        "count": 15,
+        "representation": "named-object-taxonomy",
+        "source": "baoiad/datasets/mvtec_ad.py::MVTecADDataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "runtime-discovered",
+        "source": "baoiad/datasets/mvtec_ad.py::MVTecADDataset.load_data_list"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/mvtec_ad.py::MVTecADDataset"
+      }
+    },
+    {
+      "key": "visa",
+      "display_name": "VisA",
+      "dataset_module": "baoiad/datasets/visa.py",
+      "dataset_class": "VisADataset",
+      "base_config": "configs/_base_/datasets/visa.py",
+      "object_categories": {
+        "count": 12,
+        "representation": "named-object-taxonomy",
+        "source": "baoiad/datasets/visa.py::VisADataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "binary-adapter-label",
+        "source": "baoiad/datasets/visa.py::VisADataset._load_from_official_csv"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/visa.py::VisADataset"
+      }
+    },
+    {
+      "key": "btech",
+      "display_name": "BTech",
+      "dataset_module": "baoiad/datasets/btech.py",
+      "dataset_class": "BTechDataset",
+      "base_config": "configs/_base_/datasets/btech.py",
+      "object_categories": {
+        "count": 3,
+        "representation": "named-object-taxonomy",
+        "source": "baoiad/datasets/btech.py::BTechDataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "runtime-discovered",
+        "source": "baoiad/datasets/btech.py::BTechDataset.load_data_list"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/btech.py::BTechDataset"
+      }
+    },
+    {
+      "key": "mvtec_3d_ad",
+      "display_name": "MVTec 3D AD",
+      "dataset_module": "baoiad/datasets/mvtec_3d.py",
+      "dataset_class": "MVTec3DDataset",
+      "base_config": "configs/_base_/datasets/mvtec_3d_ad.py",
+      "object_categories": {
+        "count": 10,
+        "representation": "named-object-taxonomy",
+        "source": "baoiad/datasets/mvtec_3d.py::MVTec3DDataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "runtime-discovered",
+        "source": "baoiad/datasets/mvtec_3d.py::MVTec3DDataset.load_data_list"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/mvtec_3d_ad.py::MVTec3DDataset"
+      }
+    },
+    {
+      "key": "mvtec_loco_ad",
+      "display_name": "MVTec LOCO AD",
+      "dataset_module": "baoiad/datasets/mvtec_loco.py",
+      "dataset_class": "MVTecLOCODataset",
+      "base_config": "configs/_base_/datasets/mvtec_loco_ad.py",
+      "object_categories": {
+        "count": 5,
+        "representation": "named-object-taxonomy",
+        "source": "baoiad/datasets/mvtec_loco.py::MVTecLOCODataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "runtime-discovered",
+        "source": "baoiad/datasets/mvtec_loco.py::MVTecLOCODataset.load_data_list"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/mvtec_loco_ad.py::MVTecLOCODataset"
+      }
+    },
+    {
+      "key": "mpdd",
+      "display_name": "MPDD",
+      "dataset_module": "baoiad/datasets/mpdd.py",
+      "dataset_class": "MPDDDataset",
+      "base_config": "configs/_base_/datasets/mpdd.py",
+      "object_categories": {
+        "count": 6,
+        "representation": "named-object-taxonomy",
+        "source": "baoiad/datasets/mpdd.py::MPDDDataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "runtime-discovered",
+        "source": "baoiad/datasets/mpdd.py::MPDDDataset.load_data_list"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/mpdd.py::MPDDDataset"
+      }
+    },
+    {
+      "key": "mvtec_ad2",
+      "display_name": "MVTec AD 2",
+      "dataset_module": "baoiad/datasets/mvtec_ad2.py",
+      "dataset_class": "MVTecAD2Dataset",
+      "base_config": "configs/_base_/datasets/mvtec_ad2.py",
+      "object_categories": {
+        "count": 8,
+        "representation": "named-object-taxonomy",
+        "source": "baoiad/datasets/mvtec_ad2.py::MVTecAD2Dataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "binary-adapter-label",
+        "source": "baoiad/datasets/mvtec_ad2.py::MVTecAD2Dataset._load_public_test_samples"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/mvtec_ad2.py::MVTecAD2Dataset"
+      }
+    },
+    {
+      "key": "kolektor",
+      "display_name": "Kolektor",
+      "dataset_module": "baoiad/datasets/kolektor.py",
+      "dataset_class": "KolektorDataset",
+      "base_config": "configs/_base_/datasets/kolektor.py",
+      "object_categories": {
+        "count": 1,
+        "representation": "adapter-synthetic",
+        "source": "baoiad/datasets/kolektor.py::KolektorDataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "binary-adapter-label",
+        "source": "baoiad/datasets/kolektor.py::KolektorDataset.load_data_list"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/kolektor.py::KolektorDataset"
+      }
+    },
+    {
+      "key": "vad",
+      "display_name": "VAD",
+      "dataset_module": "baoiad/datasets/vad.py",
+      "dataset_class": "VADDataset",
+      "base_config": "configs/_base_/datasets/vad.py",
+      "object_categories": {
+        "count": 1,
+        "representation": "adapter-synthetic",
+        "source": "baoiad/datasets/vad.py::VADDataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "runtime-discovered",
+        "source": "baoiad/datasets/vad.py::VADDataset.load_data_list"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/vad.py::VADDataset"
+      }
+    },
+    {
+      "key": "realiad",
+      "display_name": "RealIAD",
+      "dataset_module": "baoiad/datasets/realiad.py",
+      "dataset_class": "RealIADDataset",
+      "base_config": "configs/_base_/datasets/realiad.py",
+      "object_categories": {
+        "count": 30,
+        "representation": "named-object-taxonomy",
+        "source": "baoiad/datasets/realiad.py::RealIADDataset.ALL_CATEGORIES"
+      },
+      "defect_categories": {
+        "count": null,
+        "representation": "metadata-discovered",
+        "source": "baoiad/datasets/realiad.py::RealIADDataset.load_data_list"
+      },
+      "baoiad_entries": {
+        "count": 1,
+        "source": "configs/_base_/datasets/realiad.py::RealIADDataset"
+      }
+    }
+  ]
+}

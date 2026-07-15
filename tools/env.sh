@@ -13,8 +13,9 @@ unset _BAOIAD_ENV_FILE _BAOIAD_REPO_ROOT
 export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
 export TORCH_HOME="${TORCH_HOME:-$HOME/.cache/torch}"
 
-# Optional: use HF mirror (set to 1 to enable)
-# export BAOIAD_USE_MIRROR=1
+# Optional: choose a Hugging Face endpoint explicitly before launching a tool.
+# BaoIAD does not select or mutate this endpoint implicitly.
+# export HF_ENDPOINT="https://your-approved-huggingface-endpoint.example"
 
 # Optional: cache dir for model weights
 # export BAOIAD_CACHE_DIR="/dev/shm/baoiad-cache"

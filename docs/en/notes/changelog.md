@@ -1,5 +1,38 @@
 # Changelog
 
+## v1.1.0 — Unreleased
+
+This release candidate prepares BaoIAD for its public organization release.
+The release date, source commit, and version-specific Zenodo DOI will be added
+only after the final v1.1.0 archive is published. Until then, citation metadata
+uses the verified Zenodo concept DOI for all BaoIAD versions.
+
+The historical Git tag `v1.0.0` peels to commit
+`697fc4304cc76876d397067e2706ed771f62e708`, whose package metadata reports
+version `0.1.0`. Version `1.1.0` therefore records the first organization
+release without rewriting or reusing that historical package identity. The
+machine-readable [v1.0.0 compatibility contract](../../alignment/v1_0_0_compatibility.json)
+locks the retained paths and CLI surface and documents intentional migrations.
+
+### Compatibility and migration
+
+- Python 3.10 or newer is required; release checks target Python 3.10 and 3.12.
+- The core environment uses `mmcv-lite>=2.0` and does not require compiled MMCV
+  operators.
+- RegAD's deterministic fallback remains available by default. Set
+  `strict_require_official_support_set=True` to require the official support
+  set and fail instead of falling back.
+- ViTAD exact-order evaluation requires a user-provided, verified
+  `--order-file`; BaoIAD does not generate or redistribute that upstream file.
+- Checkpoint loading is restricted by default. Use `--trusted-checkpoint` only
+  for a verified legacy pickle checkpoint, because loading it may execute code.
+- Unsupported public extras from older metadata (`mamba`, `mmpretrain`, and
+  `faiss-gpu`) are no longer declared. Use the supported CPU FAISS extra or
+  install method-specific dependencies explicitly when following upstream code.
+- The legacy `imgaug` extra is no longer declared because release-tested
+  packaged paths use local SciPy/torchvision augmentation alternatives. Legacy
+  callers should migrate to those paths instead of relying on the old extra.
+
 ## v1.0.0 — Initial Release
 
 Release of the BaoIAD unified industrial anomaly detection benchmark.

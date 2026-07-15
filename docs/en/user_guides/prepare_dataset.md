@@ -4,7 +4,11 @@ This guide explains how to download, organize, and configure each dataset suppor
 
 ## Set the Data Root
 
-BaoIAD reads datasets from a root directory configured via the `BAOIAD_DATA_ROOT` environment variable. All dataset configs use relative paths like `data/mvtec_ad`, which resolve against this root.
+BaoIAD reads datasets from a top-level directory configured via the
+`BAOIAD_DATA_ROOT` environment variable. Each base config appends its dataset
+name to that directory. For example, MVTec AD resolves to
+`$BAOIAD_DATA_ROOT/mvtec_ad`. Without the environment variable, it resolves to
+`<repo>/data/mvtec_ad`.
 
 ```bash
 # Option 1: Source the provided script (defaults to <repo>/data/)
@@ -14,7 +18,9 @@ source tools/env.sh
 export BAOIAD_DATA_ROOT=/path/to/your/datasets
 ```
 
-When `BAOIAD_DATA_ROOT` is set, the full path becomes `$BAOIAD_DATA_ROOT/data/mvtec_ad/`. Without it, the path resolves relative to the repository root.
+Relative `BAOIAD_DATA_ROOT` values are resolved against the repository root,
+not the process's current working directory. A command-line `data_root`
+override is the final dataset path and takes precedence over the environment.
 
 ## Dataset Config Files
 
@@ -33,6 +39,18 @@ Each dataset has a base config in [`configs/_base_/datasets/`](../../../configs/
 | VAD | `configs/_base_/datasets/vad.py` |
 | RealIAD | `configs/_base_/datasets/realiad.py` |
 
+## Taxonomy Terms
+
+- **BaoIAD object entries** are the values exposed through the primary dataset
+  class's `ALL_CATEGORIES` selector. Kolektor and VAD use one synthetic adapter
+  entry each; those values are not claims about an upstream official taxonomy.
+- **Defect categories** are abnormal subtypes. The current primary loaders do
+  not contain exhaustive static defect lists: they discover labels from files
+  or metadata, or map them to a binary adapter label. BaoIAD therefore does not
+  publish a static defect-category count for these datasets.
+- **Base config entries** count unique public base-config and primary
+  dataset-class pairs. Each row above contributes one entry, for 10 total.
+
 You can override the `data_root` for any dataset from the command line:
 
 ```bash
@@ -47,7 +65,7 @@ python tools/train.py <config> --cfg-options \
 
 - **Source**: [https://www.mvtec.com/company/research/datasets/mvtec-ad](https://www.mvtec.com/company/research/datasets/mvtec-ad)
 - **License**: Academic / non-commercial (requires agreement)
-- **Categories**: 15 (bottle, cable, capsule, carpet, grid, hazelnut, leather, metal_nut, pill, screw, tile, toothbrush, transistor, wood, zipper)
+- **BaoIAD object entries**: 15 (bottle, cable, capsule, carpet, grid, hazelnut, leather, metal_nut, pill, screw, tile, toothbrush, transistor, wood, zipper)
 - **Expected layout**:
 
 ```
@@ -74,7 +92,7 @@ Ground truth masks for test anomalies are stored as `<stem>_mask.png` alongside 
 ### VisA
 
 - **Source**: [https://github.com/amazon-science/spot-diff](https://github.com/amazon-science/spot-diff)
-- **Categories**: 12 (candle, capsules, cashew, chewinggum, fryum, macaroni1, macaroni2, pcb1, pcb2, pcb3, pcb4, pipe_fryum)
+- **BaoIAD object entries**: 12 (candle, capsules, cashew, chewinggum, fryum, macaroni1, macaroni2, pcb1, pcb2, pcb3, pcb4, pipe_fryum)
 - **Expected layout**:
 
 ```
@@ -96,14 +114,14 @@ data/visa/
 ### BTech
 
 - **Source**: [https://avires.dimi.uniud.it/papers/btad/btad.zip](https://avires.dimi.uniud.it/papers/btad/btad.zip)
-- **Categories**: 3 (01, 02, 03)
+- **BaoIAD object entries**: 3 (01, 02, 03)
 - **Expected layout**: Same structure as MVTec AD (train/good + test/defect_types).
 - **`data_root`**: `data/btech`
 
 ### MVTec 3D AD
 
 - **Source**: [https://www.mvtec.com/company/research/datasets/mvtec-3d-ad](https://www.mvtec.com/company/research/datasets/mvtec-3d-ad)
-- **Categories**: 10
+- **BaoIAD object entries**: 10
 - **Modality**: RGB + 3D (point clouds / organized depth maps)
 - **`data_root`**: `data/mvtec_3d_ad`
 - **Note**: BaoIAD's base config uses the RGB modality. The 3D data is available in the dataset but may require method-specific pipeline changes.
@@ -111,39 +129,39 @@ data/visa/
 ### MVTec LOCO AD
 
 - **Source**: [https://www.mvtec.com/company/research/datasets/mvtec-loco](https://www.mvtec.com/company/research/datasets/mvtec-loco)
-- **Categories**: 5 (breakfast_box, juice_bottle, pushpins, screw_bag, splicing_connectors)
+- **BaoIAD object entries**: 5 (breakfast_box, juice_bottle, pushpins, screw_bag, splicing_connectors)
 - **`data_root`**: `data/mvtec_loco_ad`
 - **Note**: Contains both logical and structural anomalies.
 
 ### MPDD
 
 - **Source**: [https://github.com/stepanje/MPDD](https://github.com/stepanje/MPDD)
-- **Categories**: 6
+- **BaoIAD object entries**: 6
 - **`data_root`**: `data/mpdd`
 
 ### MVTec AD 2
 
 - **Source**: [https://www.mvtec.com/company/research/datasets/mvtec-ad-2](https://www.mvtec.com/company/research/datasets/mvtec-ad-2)
-- **Categories**: 25+
+- **BaoIAD object entries**: 8 (can, fabric, fruit_jelly, rice, sheet_metal, vial, wallplugs, walnuts)
 - **`data_root`**: `data/mvtec_ad_2`
 - **Note**: This dataset has separate `train`, `val`, and `test` splits. The base config uses `test_type='public'`.
 
 ### Kolektor
 
 - **Source**: [https://www.vicos.si/resources/kolektorsdd/](https://www.vicos.si/resources/kolektorsdd/)
-- **Categories**: 3
+- **BaoIAD object entries**: 1 synthetic adapter entry (`kolektor`)
 - **`data_root`**: `data/kolektor`
 
 ### VAD
 
 - **Source**: [https://github.com/hq-deng/RD4AD](https://github.com/hq-deng/RD4AD) (via the VAD subset)
-- **Categories**: 5
+- **BaoIAD object entries**: 1 synthetic adapter entry (`vad`)
 - **`data_root`**: `data/vad`
 
 ### RealIAD
 
 - **Source**: [https://github.com/TencentYoutuResearch/AnomalyDetection-RealIAD](https://github.com/TencentYoutuResearch/AnomalyDetection-RealIAD)
-- **Categories**: 30
+- **BaoIAD object entries**: 30
 - **`data_root`**: `data/Real-IAD`
 - **Note**: Requires additional JSON annotation files. Set `json_path='realiad_jsons/realiad_jsons'` (already configured in the base config). The `resolution` field selects image resolution (`'256'` by default).
 

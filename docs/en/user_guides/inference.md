@@ -18,10 +18,15 @@ For single-image or batch inference outside of the test runner, use the Python A
 
 ```python
 import torch
-import baoiad  # trigger registry
+from baoiad import register_all_modules
 from mmengine.config import Config
 from baoiad.registry import MODELS
 from mmengine.runner import Runner
+
+# Explicit registration is recommended for application entry points. BaoIAD's
+# registries also have lazy import locations, so Registry.get/build remains
+# compatible with older programmatic callers that did not call this function.
+register_all_modules()
 
 # Load config and build model
 cfg = Config.fromfile('configs/patchcore/patchcore_wrn50_256_mvtec_strict.py')

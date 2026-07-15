@@ -4,18 +4,30 @@ BaoIAD supports 10 industrial anomaly detection datasets. Each dataset has a bas
 
 ## Supported Datasets
 
-| Dataset | Config | Dataset Class | `data_root` | Default Batch Size | Categories | Modality |
-|---------|--------|---------------|-------------|--------------------|------------|----------|
-| MVTec AD | [`mvtec_ad.py`](../../configs/_base_/datasets/mvtec_ad.py) | `MVTecADDataset` | `data/mvtec_ad` | 32 | 15 | RGB |
-| VisA | [`visa.py`](../../configs/_base_/datasets/visa.py) | `VisADataset` | `data/visa` | 8 | 12 | RGB |
-| BTech | [`btech.py`](../../configs/_base_/datasets/btech.py) | `BTechDataset` | `data/btech` | 8 | 3 | RGB |
-| MVTec 3D AD | [`mvtec_3d_ad.py`](../../configs/_base_/datasets/mvtec_3d_ad.py) | `MVTec3DDataset` | `data/mvtec_3d_ad` | 8 | 10 | RGB + 3D |
-| MVTec LOCO AD | [`mvtec_loco_ad.py`](../../configs/_base_/datasets/mvtec_loco_ad.py) | `MVTecLOCODataset` | `data/mvtec_loco_ad` | 8 | 5 | RGB |
-| MPDD | [`mpdd.py`](../../configs/_base_/datasets/mpdd.py) | `MPDDDataset` | `data/mpdd` | 32 | 6 | RGB |
-| MVTec AD 2 | [`mvtec_ad2.py`](../../configs/_base_/datasets/mvtec_ad2.py) | `MVTecAD2Dataset` | `data/mvtec_ad_2` | 32 | 25+ | RGB |
-| Kolektor | [`kolektor.py`](../../configs/_base_/datasets/kolektor.py) | `KolektorDataset` | `data/kolektor` | 32 | 3 | RGB |
-| VAD | [`vad.py`](../../configs/_base_/datasets/vad.py) | `VADDataset` | `data/vad` | 32 | 5 | RGB |
-| RealIAD | [`realiad.py`](../../configs/_base_/datasets/realiad.py) | `RealIADDataset` | `data/Real-IAD` | 32 | 30 | RGB |
+The taxonomy columns use three deliberately separate scopes:
+
+- **BaoIAD object entries** mirror the primary dataset class's
+  `ALL_CATEGORIES` selector. Kolektor and VAD each expose one synthetic adapter
+  entry; that value is not an upstream claim about an official object taxonomy.
+- **Defect taxonomy** counts named abnormal subtypes only when the primary
+  loader contains an exhaustive static list. The current loaders discover
+  those labels from directories or metadata, or reduce them to a binary
+  adapter label, so no static defect count is claimed.
+- **Base config entries** count unique public base-config and primary
+  dataset-class pairs. There are 10 such entries in this release.
+
+| Dataset | Config | Dataset Class | `data_root` | Default Batch Size | BaoIAD object entries | Base config entries | Defect taxonomy | Modality |
+|---------|--------|---------------|-------------|--------------------|-----------------------|---------------------|-----------------|----------|
+| MVTec AD | [`mvtec_ad.py`](../../configs/_base_/datasets/mvtec_ad.py) | `MVTecADDataset` | `data/mvtec_ad` | 32 | 15 | 1 | Not statically enumerated | RGB |
+| VisA | [`visa.py`](../../configs/_base_/datasets/visa.py) | `VisADataset` | `data/visa` | 8 | 12 | 1 | Not statically enumerated | RGB |
+| BTech | [`btech.py`](../../configs/_base_/datasets/btech.py) | `BTechDataset` | `data/btech` | 8 | 3 | 1 | Not statically enumerated | RGB |
+| MVTec 3D AD | [`mvtec_3d_ad.py`](../../configs/_base_/datasets/mvtec_3d_ad.py) | `MVTec3DDataset` | `data/mvtec_3d_ad` | 8 | 10 | 1 | Not statically enumerated | RGB (base config) |
+| MVTec LOCO AD | [`mvtec_loco_ad.py`](../../configs/_base_/datasets/mvtec_loco_ad.py) | `MVTecLOCODataset` | `data/mvtec_loco_ad` | 8 | 5 | 1 | Not statically enumerated | RGB |
+| MPDD | [`mpdd.py`](../../configs/_base_/datasets/mpdd.py) | `MPDDDataset` | `data/mpdd` | 32 | 6 | 1 | Not statically enumerated | RGB |
+| MVTec AD 2 | [`mvtec_ad2.py`](../../configs/_base_/datasets/mvtec_ad2.py) | `MVTecAD2Dataset` | `data/mvtec_ad_2` | 32 | 8 | 1 | Not statically enumerated | RGB |
+| Kolektor | [`kolektor.py`](../../configs/_base_/datasets/kolektor.py) | `KolektorDataset` | `data/kolektor` | 32 | 1 (adapter) | 1 | Not statically enumerated | RGB |
+| VAD | [`vad.py`](../../configs/_base_/datasets/vad.py) | `VADDataset` | `data/vad` | 32 | 1 (adapter) | 1 | Not statically enumerated | RGB |
+| RealIAD | [`realiad.py`](../../configs/_base_/datasets/realiad.py) | `RealIADDataset` | `data/Real-IAD` | 32 | 30 | 1 | Not statically enumerated | RGB |
 
 All datasets default to `img_size = 256` and use the same data pipeline (`LoadImage → LoadMask → ResizeAD → NormalizeAD → PackADInputs`).
 

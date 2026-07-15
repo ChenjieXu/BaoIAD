@@ -67,18 +67,20 @@ BaoIAD 当前保留 37 个方法集成，按 9 个家族组织。方法名链接
 
 ## 数据集配置
 
-| 数据集 | 类别数 | 配置 |
-|---------|------:|--------|
+下表统计每个数据集适配器对外提供的 BaoIAD **对象入口**。“对象入口”是可通过适配器选择的基准对象/类别；“**缺陷类型**”是对象内部的异常标签，不在此计数；“**基础配置**”是适配器级配置文件，不代表每个对象各有一份配置。数据集的具体分类与准备约定见[数据集模型库](docs/zh_cn/dataset_zoo.md)。
+
+| 数据集 | BaoIAD 对象入口 | 基础配置 |
+|---------|------------------:|----------|
 | MVTec AD | 15 | `configs/_base_/datasets/mvtec_ad.py` |
 | VisA | 12 | `configs/_base_/datasets/visa.py` |
 | BTech | 3 | `configs/_base_/datasets/btech.py` |
 | MVTec 3D AD | 10 | `configs/_base_/datasets/mvtec_3d_ad.py` |
 | MVTec LOCO | 5 | `configs/_base_/datasets/mvtec_loco_ad.py` |
 | MPDD | 6 | `configs/_base_/datasets/mpdd.py` |
-| MVTec AD 2 | 16 | `configs/_base_/datasets/mvtec_ad2.py` |
-| Kolektor | 3 | `configs/_base_/datasets/kolektor.py` |
-| VAD | 6 | `configs/_base_/datasets/vad.py` |
-| RealIAD | — | `configs/_base_/datasets/realiad.py` |
+| MVTec AD 2 | 8 | `configs/_base_/datasets/mvtec_ad2.py` |
+| Kolektor | 1（适配器） | `configs/_base_/datasets/kolektor.py` |
+| VAD | 1（适配器） | `configs/_base_/datasets/vad.py` |
+| RealIAD | 30 | `configs/_base_/datasets/realiad.py` |
 
 ## 评价指标
 
@@ -167,13 +169,14 @@ python tools/benchmark.py --methods all --help
 
 ## 引用
 
-如果您在研究中使用了本工具箱或基准评测，请引用本 GitHub 仓库。
+如果您在研究中使用了本工具箱或基准评测，请引用本 GitHub 仓库。下方 DOI 是已验证的 Zenodo 概念 DOI，用于代表 BaoIAD 的所有版本。v1.1.0 的版本专属 DOI 将在发布归档公开后补充。
 
 ```bibtex
 @software{xu2026baoiad,
   title        = {BaoIAD: Towards Trustworthy and Reproducible Benchmarking for Industrial Anomaly Detection},
   author       = {Chenjie Xu and Yang Zhang and Tianyun Hu and Bing Hu},
   year         = {2026},
+  version      = {1.1.0},
   doi          = {10.5281/zenodo.20067087},
   url          = {https://github.com/Baosight-xVue/BaoIAD}
 }

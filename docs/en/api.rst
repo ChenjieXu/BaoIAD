@@ -361,4 +361,4 @@ Environment
 ~~~~~~~~~~~
 
 - ``BAOIAD_DATA_ROOT`` — Top-level package variable (``str``). Resolved from the ``BAOIAD_DATA_ROOT`` environment variable, falling back to ``data/`` relative to the repo root.
-- ``BAOIAD_USE_MIRROR`` — Set ``BAOIAD_USE_MIRROR=1`` to redirect Hugging Face downloads to ``hf-mirror.com``.
+- ``HF_ENDPOINT`` — Optional Hugging Face endpoint selected explicitly by the user or deployment environment. BaoIAD does not set or rewrite it implicitly.

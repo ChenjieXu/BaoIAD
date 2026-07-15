@@ -10,9 +10,13 @@ python tools/test.py configs/patchcore/patchcore_wrn50_256_mvtec_strict.py \
 ## 编程式推理
 
 ```python
-import baoiad  # 必须首先导入以触发注册器
+from baoiad import register_all_modules
 from mmengine.config import Config
 from mmengine.runner import Runner
+
+# 应用入口建议显式注册。Registry.get/build 仍支持懒加载，
+# 因此未显式调用该函数的旧编程式用法仍可按需解析组件。
+register_all_modules()
 
 cfg = Config.fromfile('configs/patchcore/patchcore_wrn50_256_mvtec_strict.py')
 runner = Runner.from_cfg(cfg)

@@ -33,8 +33,7 @@ DATASET_CONFIGS = {
 
 def _load_tool_module(filename: str):
     path = REPOSITORY_ROOT / "tools" / filename
-    spec = importlib.util.spec_from_file_location(
-        f"_data_root_{path.stem}", path)
+    spec = importlib.util.spec_from_file_location(f"_data_root_{path.stem}", path)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -177,6 +176,7 @@ def test_specialized_trainers_apply_environment_root_outside_repo_cwd(
 def test_top_level_import_does_not_require_runtime_dependencies() -> None:
     code = """
 import importlib.abc
+import os
 import sys
 
 blocked = {'numpy', 'torch', 'mmcv', 'mmengine', 'FrEIA', 'open_clip'}
@@ -187,8 +187,11 @@ class BlockRuntimeDependencies(importlib.abc.MetaPathFinder):
             raise ModuleNotFoundError(fullname, name=fullname)
         return None
 
+os.environ['BAOIAD_USE_MIRROR'] = '1'
+os.environ.pop('HF_ENDPOINT', None)
 sys.meta_path.insert(0, BlockRuntimeDependencies())
 import baoiad
+assert 'HF_ENDPOINT' not in os.environ
 print(baoiad.__version__)
 """
     result = subprocess.run(
@@ -224,3 +227,28 @@ def test_env_script_uses_its_own_location_when_sourced(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert result.stdout == str(REPOSITORY_ROOT / "data")
+
+
+def test_env_script_preserves_explicit_hf_endpoint(tmp_path: Path) -> None:
+    bash = shutil.which("bash")
+    if bash is None:
+        pytest.skip("bash is unavailable")
+    env_script = REPOSITORY_ROOT / "tools" / "env.sh"
+    endpoint = "https://huggingface.example.invalid"
+    result = subprocess.run(
+        [
+            bash,
+            "-c",
+            'cd "$1"; export HF_ENDPOINT="$3"; source "$2"; printf %s "$HF_ENDPOINT"',
+            "bash",
+            str(tmp_path),
+            str(env_script),
+            endpoint,
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == endpoint

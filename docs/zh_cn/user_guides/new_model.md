@@ -7,7 +7,7 @@
 3. 在 `baoiad/models/detectors/__init__.py` 中添加导入
 4. 在 `configs/my_method/` 中创建配置文件，继承 `_base_` 配置
 5. 在 `tests/test_models/test_detectors/` 中添加测试
-6. 在测试文件顶部始终 `import baoiad` 以触发注册器
+6. 在应用或测试入口显式调用 `baoiad.register_all_modules()`；Registry 也会在 `get/build` 时懒加载对应模块
 
 ## 选择基类
 

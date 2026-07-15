@@ -8,10 +8,10 @@
 
 ```bash
 pip install torch torchvision
-pip install mmcv>=2.0
+pip install "mmcv-lite>=2.0"
 ```
 
-BaoIAD requires PyTorch >= 2.0 and mmcv >= 2.0. If you have a CUDA GPU, make sure the torch version matches your CUDA toolkit. See the [PyTorch install page](https://pytorch.org/get-started/locally/) for guidance.
+BaoIAD requires PyTorch >= 2.0 and uses `mmcv-lite>=2.0` in the core installation. Do not install `mmcv` and `mmcv-lite` in the same environment. If you have a CUDA GPU, make sure the torch version matches your CUDA toolkit. See the [PyTorch install page](https://pytorch.org/get-started/locally/) for guidance.
 
 ## Missing `open_clip` errors (vision-language methods)
 
@@ -45,11 +45,9 @@ This installs `FrEIA>=0.2`. Alternatively: `pip install "FrEIA>=0.2"`.
 
 ```bash
 pip install -e ".[faiss-cpu]"   # CPU version
-# or
-pip install -e ".[faiss-gpu]"   # GPU version (requires compatible CUDA)
 ```
 
-Note: the GPU variant pins `numpy<2` and `faiss-gpu==1.7.2`.
+The former `faiss-gpu` extra is no longer declared because GPU FAISS packages are platform- and CUDA-specific. Install a compatible GPU build outside BaoIAD only after validating it against your target CUDA environment; BaoIAD's core release gate covers the `faiss-cpu` extra.
 
 ## Missing `geomloss`, `imgaug`, or `mmpretrain` errors
 
@@ -59,9 +57,11 @@ Note: the GPU variant pins `numpy<2` and `faiss-gpu==1.7.2`.
 
 ```bash
 pip install -e ".[geomloss]"    # for methods using geomloss
-pip install -e ".[imgaug]"      # for DRAEM and other synthesis methods
-pip install -e ".[mmpretrain]"  # for methods using mmpretrain backbones
+pip install imgaug               # legacy augmentation paths that still require it
+pip install "mmpretrain>=1.0"   # only for an external config that imports it
 ```
+
+The former `imgaug` and `mmpretrain` extra names are not part of the current package metadata; use the explicit package commands above. The former `mamba` extra has no current BaoIAD runtime consumer and has no replacement extra.
 
 Or install everything at once:
 

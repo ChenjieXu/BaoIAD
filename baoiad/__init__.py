@@ -7,7 +7,7 @@ loaded explicitly through :func:`register_all_modules` or by importing
 
 from baoiad.paths import get_data_root
 
-__version__ = "0.1.0"
+__version__ = "1.1.0"
 BAOIAD_DATA_ROOT = str(get_data_root())
 
 _MODULES_REGISTERED = False

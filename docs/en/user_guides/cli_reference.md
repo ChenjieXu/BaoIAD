@@ -165,7 +165,7 @@ Sets the following environment variables:
 | `BAOIAD_DATA_ROOT` | `<repo>/data` | Root directory for datasets. |
 | `HF_HOME` | `~/.cache/huggingface` | HuggingFace cache directory. |
 | `TORCH_HOME` | `~/.cache/torch` | PyTorch model cache directory. |
-| `BAOIAD_USE_MIRROR` | unset | Set to `1` to use HuggingFace mirror. |
+| `HF_ENDPOINT` | unset | Optional user-selected endpoint. `tools/env.sh` does not set or rewrite it. |
 | `BAOIAD_CACHE_DIR` | unset | Custom cache directory for model weights. |
 
 Override variables by setting them before sourcing:

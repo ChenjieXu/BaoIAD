@@ -147,11 +147,14 @@ Create `tests/test_models/test_detectors/test_my_method.py`:
 ```python
 """Tests for MyMethod detector."""
 
-import baoiad  # Must import first to trigger registry
 import pytest
 import torch
 
+import baoiad
+from baoiad import register_all_modules
 from baoiad.registry import MODELS
+
+register_all_modules()
 
 
 def test_my_method_forward():

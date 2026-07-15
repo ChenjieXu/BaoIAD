@@ -1,14 +1,31 @@
 [build-system]
-requires = ["setuptools>=68.0", "wheel"]
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "baoiad"
-version = "0.1.0"
+version = "1.1.0"
 description = "BaoIAD: Unified Industrial Anomaly Detection Benchmark (OpenMMLab style)"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+    {name = "Chenjie Xu"},
+    {name = "Yang Zhang"},
+    {name = "Tianyun Hu"},
+    {name = "Bing Hu"},
+]
 requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
     "mmengine>=0.10",
     "mmcv-lite>=2.0",
@@ -35,6 +52,13 @@ faiss-cpu = ["faiss-cpu"]
 all = [
     "baoiad[flow,vl,saa,geomloss,glass,visualization,faiss-cpu]",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Baosight-xVue/BaoIAD"
+Repository = "https://github.com/Baosight-xVue/BaoIAD"
+Documentation = "https://baoiad.readthedocs.io/en/latest/"
+Issues = "https://github.com/Baosight-xVue/BaoIAD/issues"
+Changelog = "https://github.com/Baosight-xVue/BaoIAD/blob/master/docs/en/notes/changelog.md"
 
 [tool.setuptools.packages.find]
 include = ["baoiad*"]

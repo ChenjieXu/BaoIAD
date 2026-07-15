@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "artifact": "BaoIAD v1.0.0 to v1.1.0 compatibility contract",
+  "baseline": {
+    "git_tag": "v1.0.0",
+    "peeled_commit": "697fc4304cc76876d397067e2706ed771f62e708",
+    "package_version": "0.1.0",
+    "requires_python": ">=3.9",
+    "core_dependency": "mmcv>=2.0",
+    "optional_extras": [
+      "all",
+      "dev",
+      "faiss-cpu",
+      "faiss-gpu",
+      "flow",
+      "geomloss",
+      "imgaug",
+      "mamba",
+      "mmpretrain",
+      "saa",
+      "vl"
+    ]
+  },
+  "current": {
+    "package_version": "1.1.0",
+    "requires_python": ">=3.10",
+    "core_dependency": "mmcv-lite>=2.0",
+    "optional_extras": [
+      "all",
+      "dev",
+      "faiss-cpu",
+      "flow",
+      "geomloss",
+      "glass",
+      "saa",
+      "visualization",
+      "vl"
+    ],
+    "removed_legacy_extras": [
+      "faiss-gpu",
+      "imgaug",
+      "mamba",
+      "mmpretrain"
+    ]
+  },
+  "retained_surface": {
+    "roots": [
+      "baoiad",
+      "configs",
+      "tools"
+    ],
+    "cli": [
+      {
+        "path": "tools/train.py",
+        "positionals": [
+          "config"
+        ],
+        "flags": [
+          "--cfg-options",
+          "--cpu",
+          "--resume",
+          "--work-dir"
+        ]
+      },
+      {
+        "path": "tools/test.py",
+        "positionals": [
+          "checkpoint",
+          "config"
+        ],
+        "flags": [
+          "--cfg-options",
+          "--cpu",
+          "--work-dir"
+        ]
+      },
+      {
+        "path": "tools/benchmark.py",
+        "positionals": [],
+        "flags": [
+          "--batch_size",
+          "--categories",
+          "--cfg-options",
+          "--config",
+          "--data_root",
+          "--device",
+          "--epochs",
+          "--methods",
+          "--output",
+          "--timeout",
+          "--work-dir-root"
+        ]
+      }
+    ],
+    "registry": {
+      "mode": "lazy",
+      "registry_module": "baoiad/registry.py",
+      "explicit_registration_entrypoint": "baoiad/registration.py",
+      "contract": "Registry definitions retain MMEngine locations for lazy discovery; importing baoiad stays lightweight and explicit registration remains available."
+    }
+  },
+  "migrations": [
+    {
+      "area": "data_root",
+      "from": "Repository-local data paths embedded in base configurations.",
+      "to": "BAOIAD_DATA_ROOT with the repository data directory as the fallback.",
+      "compatibility": "Existing repository-relative layouts continue to resolve through the fallback.",
+      "evidence": {
+        "path": "baoiad/paths.py",
+        "contains": "BAOIAD_DATA_ROOT"
+      }
+    },
+    {
+      "area": "checkpoint",
+      "from": "Legacy pickle checkpoints were loaded without an explicit trust boundary.",
+      "to": "Restricted loading is the default and verified legacy pickle files require --trusted-checkpoint.",
+      "compatibility": "Trusted legacy checkpoints remain loadable through an explicit opt-in.",
+      "evidence": {
+        "path": "tools/test.py",
+        "contains": "--trusted-checkpoint"
+      }
+    },
+    {
+      "area": "regad",
+      "from": "RegAD could rely on a locally reconstructed support set.",
+      "to": "strict_require_official_support_set=True makes the official support set mandatory.",
+      "compatibility": "The deterministic fallback remains the default unless strict mode is selected.",
+      "evidence": {
+        "path": "configs/regad/regad_wrn50_256_mvtec_strict.py",
+        "contains": "strict_require_official_support_set = True"
+      }
+    },
+    {
+      "area": "vitad",
+      "from": "Exact upstream sample order was not represented as a verified external input.",
+      "to": "Exact-order runs require a user-provided --order-file.",
+      "compatibility": "Standard ViTAD configuration paths remain available; exact-order mode is explicit.",
+      "evidence": {
+        "path": "tools/train_vitad_exact_order.py",
+        "contains": "--order-file"
+      }
+    }
+  ],
+  "known_breaks": [
+    {
+      "area": "python",
+      "impact": "Python 3.9 is no longer supported.",
+      "rationale": "The organization release is verified on Python 3.10 and 3.12."
+    },
+    {
+      "area": "mmcv",
+      "impact": "The core dependency changes from mmcv to mmcv-lite.",
+      "rationale": "The packaged core does not require compiled MMCV operators."
+    },
+    {
+      "area": "optional_extras",
+      "impact": "faiss-gpu, imgaug, mamba, and mmpretrain extras are no longer declared.",
+      "rationale": "Only release-tested dependency groups remain in public package metadata."
+    },
+    {
+      "area": "legacy_checkpoints",
+      "impact": "Unverified pickle checkpoints no longer load implicitly.",
+      "rationale": "Explicit trust is required because pickle deserialization can execute code."
+    },
+    {
+      "area": "strict_reproduction",
+      "impact": "Strict RegAD and exact-order ViTAD runs require verified external artifacts.",
+      "rationale": "BaoIAD does not fabricate or redistribute missing upstream support/order assets."
+    }
+  ],
+  "release_rationale": [
+    "Version 1.1.0 does not rewrite the historical v1.0.0 tag whose package metadata is 0.1.0.",
+    "The retained source roots and legacy CLI flags preserve the primary integration surface.",
+    "Intentional breaks are limited to security, clean-install portability, and strict reproducibility boundaries."
+  ]
+}
