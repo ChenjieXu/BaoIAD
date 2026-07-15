@@ -1,4 +1,6 @@
 os = __import__('os')
+resolve_data_root = __import__(
+    'baoiad.paths', fromlist=['resolve_data_root']).resolve_data_root
 
 _base_ = [
     '../_base_/default_runtime.py',
@@ -10,7 +12,7 @@ inferences = 10
 official_seed = 668
 support_set_root = os.environ.get(
     'REGAD_SUPPORT_SET_ROOT',
-    'data/regad_official/support_set',
+    str(resolve_data_root('regad_official') / 'support_set'),
 )
 strict_require_official_support_set = True
 

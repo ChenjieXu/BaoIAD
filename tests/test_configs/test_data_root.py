@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import importlib.util
 import os
 import runpy
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -27,6 +29,16 @@ DATASET_CONFIGS = {
     "vad.py": "vad",
     "visa.py": "visa",
 }
+
+
+def _load_tool_module(filename: str):
+    path = REPOSITORY_ROOT / "tools" / filename
+    spec = importlib.util.spec_from_file_location(
+        f"_data_root_{path.stem}", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_default_root_is_repository_local_and_cwd_independent(
@@ -125,6 +137,41 @@ def test_all_base_dataset_configs_use_environment_root(
     for filename, dataset_name in DATASET_CONFIGS.items():
         namespace = runpy.run_path(str(config_dir / filename))
         assert Path(namespace["data_root"]) == tmp_path / dataset_name
+
+
+@pytest.mark.parametrize(
+    ("script_name", "config_name"),
+    [
+        ("train_regad_strict.py", "regad/regad_wrn50_256_mvtec_strict.py"),
+        ("train_vitad_exact_order.py", "vitad/vitad_256_mvtec_strict.py"),
+    ],
+)
+def test_specialized_trainers_apply_environment_root_outside_repo_cwd(
+    script_name: str,
+    config_name: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    resolved_root = tmp_path / "shared-data"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("BAOIAD_DATA_ROOT", str(resolved_root))
+    module = _load_tool_module(script_name)
+    args = SimpleNamespace(
+        config=str(REPOSITORY_ROOT / "configs" / config_name),
+        cfg_options=None,
+        work_dir=None,
+    )
+
+    cfg = module._load_cfg(args)
+
+    expected_dataset = str(resolved_root / "mvtec_ad")
+    assert cfg.train_dataloader.dataset.data_root == expected_dataset
+    assert cfg.test_dataloader.dataset.data_root == expected_dataset
+    if script_name == "train_regad_strict.py":
+        assert cfg.model.data_root == expected_dataset
+        assert cfg.support_set_root == str(
+            resolved_root / "regad_official" / "support_set"
+        )
 
 
 def test_top_level_import_does_not_require_runtime_dependencies() -> None:

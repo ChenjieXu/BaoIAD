@@ -101,6 +101,55 @@ def test_vitad_cached_url_guard_runs_before_torch_hub(monkeypatch, tmp_path):
         )
 
 
+@pytest.mark.parametrize(
+    ("offline", "error_type"),
+    [(False, RuntimeError), (True, OfflineModeError)],
+)
+def test_vitad_timm_pretrained_failure_never_uses_random_weights(
+    monkeypatch,
+    tmp_path,
+    offline,
+    error_type,
+):
+    from types import SimpleNamespace
+
+    from baoiad.models.backbones import vitad_backbone
+
+    monkeypatch.setenv('HF_HOME', str(tmp_path / 'empty-hf-cache'))
+    if offline:
+        monkeypatch.setenv('BAOIAD_OFFLINE', '1')
+    else:
+        for name in (
+            'BAOIAD_OFFLINE',
+            'HF_HUB_OFFLINE',
+            'TRANSFORMERS_OFFLINE',
+            'HF_DATASETS_OFFLINE',
+        ):
+            monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(
+        vitad_backbone.timm,
+        'create_model',
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            RuntimeError('pretrained source unavailable')
+        ),
+    )
+    fake_backbone = SimpleNamespace(
+        load_state_dict=lambda *args, **kwargs: pytest.fail(
+            'random or missing weights must not be accepted'
+        )
+    )
+
+    with pytest.raises(error_type, match='randomly initialized encoder') as exc_info:
+        vitad_backbone.ViTEncoderBackbone._load_timm_pretrained(
+            fake_backbone,
+            'vit_small_patch16_224.dino',
+            224,
+        )
+
+    assert isinstance(exc_info.value.__cause__, RuntimeError)
+    assert 'empty-hf-cache' in str(exc_info.value)
+
+
 def test_musc_torch_hub_repo_is_rejected_before_network(monkeypatch, tmp_path):
     from baoiad.models.backbones.musc_clip_backbone import MuScDINOv2Backbone
 

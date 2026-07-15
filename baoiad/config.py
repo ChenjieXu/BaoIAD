@@ -23,22 +23,27 @@ def _resolved_config_data_root(value: Any, *, top_level_root: Path) -> Any:
 
 
 def apply_data_root_overrides(
-    config: MutableMapping[str, Any],
+    config: Any,
     *,
     environ: Mapping[str, str] | None = None,
     repository_root: str | os.PathLike[str] | None = None,
 ) -> None:
-    """Resolve every repository-relative ``data_root`` in a loaded config.
+    """Resolve repository-relative roots in a dict or MMEngine ``Config``.
 
     Call this immediately after loading a config and before applying explicit
     CLI ``--cfg-options`` so command-line paths keep the highest precedence.
     """
     top_level_root = get_data_root(environ=environ, repository_root=repository_root)
+    target = getattr(config, "_cfg_dict", config)
+    if not isinstance(target, MutableMapping):
+        raise TypeError(
+            "config must be a mutable mapping or expose MMEngine _cfg_dict"
+        )
 
     def visit(value: Any) -> None:
         if isinstance(value, MutableMapping):
             for key, item in list(value.items()):
-                if key == "data_root":
+                if key in {"data_root", "support_set_root"}:
                     value[key] = _resolved_config_data_root(
                         item, top_level_root=top_level_root
                     )
@@ -48,7 +53,7 @@ def apply_data_root_overrides(
             for item in value:
                 visit(item)
 
-    visit(config)
+    visit(target)
 
 
 __all__ = ["apply_data_root_overrides"]

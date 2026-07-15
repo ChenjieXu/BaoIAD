@@ -179,32 +179,53 @@ class ViTEncoderBackbone(VisionTransformer):
         self.neck = list(neck)
 
         if pretrained and timm_model:
-            # Use timm variant weights directly, keeping interpolation behavior consistent.
-            try:
-                with torch.random.fork_rng(devices=[]):
-                    ref = timm.create_model(timm_model, pretrained=True, img_size=img_size)
-                self.load_state_dict(ref.state_dict(), strict=False)
-                del ref
-            except Exception:
-                # Fallback: load from local HF cache (no internet needed)
-                import os
-                from safetensors.torch import load_file
-                hf_home = os.environ.get('HF_HOME', os.path.expanduser('~/.cache/huggingface'))
-                cache_dir = os.path.join(hf_home, 'hub',
-                                         f'models--timm--{timm_model.replace(".", "-")}')
-                # Try both dot and underscore variants of the repo name
-                alt_cache_dir = os.path.join(hf_home, 'hub',
-                                             f'models--timm--{timm_model}')
-                for cdir in [cache_dir, alt_cache_dir]:
-                    snapshot_dir = os.path.join(cdir, 'snapshots')
-                    if os.path.isdir(snapshot_dir):
-                        for snap in os.listdir(snapshot_dir):
-                            st_file = os.path.join(snapshot_dir, snap, 'model.safetensors')
-                            if os.path.isfile(st_file):
-                                sd = load_file(st_file)
-                                self.load_state_dict(sd, strict=False)
-                                break
-                        break
+            self._load_timm_pretrained(timm_model, img_size)
+
+    def _load_timm_pretrained(self, timm_model: str, img_size: int) -> None:
+        """Load timm weights or fail before a random encoder can be used."""
+        try:
+            with torch.random.fork_rng(devices=[]):
+                ref = timm.create_model(
+                    timm_model, pretrained=True, img_size=img_size)
+            self.load_state_dict(ref.state_dict(), strict=False)
+            del ref
+            return
+        except Exception as pretrained_error:
+            from safetensors.torch import load_file
+
+            hf_home = os.environ.get(
+                'HF_HOME', os.path.expanduser('~/.cache/huggingface'))
+            cache_dirs = [
+                os.path.join(
+                    hf_home,
+                    'hub',
+                    f'models--timm--{timm_model.replace(".", "-")}',
+                ),
+                os.path.join(hf_home, 'hub', f'models--timm--{timm_model}'),
+            ]
+            for cache_dir in cache_dirs:
+                snapshot_dir = os.path.join(cache_dir, 'snapshots')
+                if not os.path.isdir(snapshot_dir):
+                    continue
+                for snapshot in sorted(os.listdir(snapshot_dir)):
+                    safetensors_path = os.path.join(
+                        snapshot_dir, snapshot, 'model.safetensors')
+                    if not os.path.isfile(safetensors_path):
+                        continue
+                    state_dict = load_file(safetensors_path, device='cpu')
+                    self.load_state_dict(state_dict, strict=False)
+                    return
+
+            from baoiad.runtime import OfflineModeError, is_offline_mode
+
+            offline = is_offline_mode()
+            message = (
+                f'ViTAD pretrained weights for {timm_model!r} could not be loaded. '
+                f'offline={offline}; checked cache directories: {cache_dirs}. '
+                'Refusing to continue with a randomly initialized encoder.'
+            )
+            error_type = OfflineModeError if offline else RuntimeError
+            raise error_type(message) from pretrained_error
 
     def forward(self, x):
         x = self.patch_embed(x)

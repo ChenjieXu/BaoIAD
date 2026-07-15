@@ -53,6 +53,9 @@ def parse_args():
 
 def _load_cfg(args) -> Config:
     cfg = Config.fromfile(args.config)
+    from baoiad.config import apply_data_root_overrides
+
+    apply_data_root_overrides(cfg)
     if args.cfg_options:
         cfg.merge_from_dict(args.cfg_options)
     if args.work_dir:
