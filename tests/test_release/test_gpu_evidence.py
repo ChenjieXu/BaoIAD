@@ -23,6 +23,10 @@ ROOT = Path(__file__).resolve().parents[2]
 CHECKER = ROOT / "tools" / "check_gpu_evidence.py"
 SCHEMA = ROOT / "docs" / "release" / "gpu_smoke_evidence.schema.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "gpu-smoke.yml"
+CHECKOUT_ACTION = "actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5"
+UPLOAD_ARTIFACT_ACTION = (
+    "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+)
 
 
 def _commit() -> str:
@@ -105,7 +109,7 @@ def test_gpu_workflow_is_manual_self_hosted_and_fail_closed():
     assert "secrets." not in text
 
     checkout = next(
-        step for step in job["steps"] if step.get("uses") == "actions/checkout@v4"
+        step for step in job["steps"] if step.get("uses") == CHECKOUT_ACTION
     )
     assert checkout["with"]["ref"] == "${{ github.sha }}"
     assert checkout["with"]["persist-credentials"] == "false"
@@ -116,9 +120,7 @@ def test_gpu_workflow_is_manual_self_hosted_and_fail_closed():
     )
     assert checker["if"] == "always()"
     upload = next(
-        step
-        for step in job["steps"]
-        if step.get("uses") == "actions/upload-artifact@v4"
+        step for step in job["steps"] if step.get("uses") == UPLOAD_ARTIFACT_ACTION
     )
     assert upload["if"] == "always()"
     assert job["steps"].index(checker) < job["steps"].index(upload)

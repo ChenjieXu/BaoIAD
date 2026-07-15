@@ -31,7 +31,7 @@ jobs:
       GPU_EVIDENCE_DIR: ${{ runner.temp }}/baoiad-gpu-evidence
     steps:
       - name: Check out the exact requested commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
@@ -92,7 +92,7 @@ jobs:
 
       - name: Upload evidence and logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: baoiad-gpu-smoke-${{ github.sha }}
           path: |

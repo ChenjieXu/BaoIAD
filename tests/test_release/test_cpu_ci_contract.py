@@ -15,6 +15,8 @@ except ModuleNotFoundError:  # pragma: no cover - Python 3.10
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ci.yml"
 CONSTRAINTS_PATH = ROOT / "constraints" / "ci-cpu.txt"
+CHECKOUT_ACTION = "actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5"
+SETUP_PYTHON_ACTION = "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
 P0_CONTEXTS = {
     "lint",
     "release-policy",
@@ -137,7 +139,7 @@ def test_cpu_framework_constraints_are_exact_and_platform_neutral() -> None:
     assert "download.pytorch.org/whl/cpu" in WORKFLOW_PATH.read_text(encoding="utf-8")
 
 
-def test_actions_are_major_version_pinned() -> None:
+def test_actions_are_commit_sha_pinned() -> None:
     actions = [
         step["uses"]
         for job in _workflow()["jobs"].values()
@@ -145,12 +147,12 @@ def test_actions_are_major_version_pinned() -> None:
         if "uses" in step
     ]
     assert actions
-    assert set(actions) <= {"actions/checkout@v4", "actions/setup-python@v5"}
+    assert set(actions) == {CHECKOUT_ACTION, SETUP_PYTHON_ACTION}
     checkout_steps = [
         step
         for job in _workflow()["jobs"].values()
         for step in job["steps"]
-        if step.get("uses") == "actions/checkout@v4"
+        if step.get("uses") == CHECKOUT_ACTION
     ]
     assert checkout_steps
     assert all(

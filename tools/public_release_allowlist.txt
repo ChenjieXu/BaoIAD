@@ -252,3 +252,16 @@ tests/test_utils/test_merge_benchmark_jsons.py
 tools/check_gpu_evidence.py
 tools/check_release_candidate.py
 tools/run_gpu_smoke.py
+
+# G007 public release materials.
+docs/release/support_hotfix_runbook.md
+docs/release/v1_1_0_release_notes.md
+docs/release/waic_go_no_go.md
+docs/en/notes/gpu_validation.md
+docs/en/notes/support_hotfix_runbook.md
+docs/en/notes/v1_1_0_release_notes.md
+docs/en/notes/waic_go_no_go.md
+docs/zh_cn/notes/gpu_validation.md
+docs/zh_cn/notes/support_hotfix_runbook.md
+docs/zh_cn/notes/v1_1_0_release_notes.md
+docs/zh_cn/notes/waic_go_no_go.md

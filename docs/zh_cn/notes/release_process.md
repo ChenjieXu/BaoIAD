@@ -70,8 +70,8 @@ CPU 发布检查不能验证 CUDA。真实 GPU 证据必须记录：
 只有公开发布范围明确排除 GPU 验证，且 go/no-go owner 接受该限制时，
 Release owner 才可在其他门禁全部通过后继续。
 
-[真实 GPU 发布验证](../../release/gpu_validation.md)说明了手动 workflow、
-证据合同和 G007 必需门禁。
+{doc}`真实 GPU 发布验证 <gpu_validation>` 说明了手动 workflow、证据合同和
+G007 必需门禁。
 
 ## Exact-commit pre-tag 门禁
 
@@ -87,7 +87,7 @@ tag 候选的 exact merged commit 必须完成：
    ReadTheDocs 和 Zenodo 权限 preflight 通过。
 7. release notes、兼容边界、支持范围、值守与热修复流程已准备。
 
-[外部审批表](../../release/external_approvals.json)中的 pending release blocker 必须保持发布阻断。
+[外部审批表](https://github.com/Baosight-xVue/BaoIAD/blob/master/docs/release/external_approvals.json)中的 pending release blocker 必须保持发布阻断。
 特别是 `APP-SECURITY-CHANNEL` 未通过时，公开发布的安全门禁不得通过。
 任一 yellow/red 状态都不得打 tag；修复后在新 exact commit 上重跑全部门禁。
 
@@ -101,5 +101,11 @@ Zenodo 和 GitHub Release 只能由已批准 owner 操作。
 派生最小修复分支，通过同样 P0 gate 后发布新 patch tag（例如 `v1.1.1`）。
 禁止 force push、删除/移动已发布 tag 或重定向旧 Release。
 
-安全修复遵循 [SECURITY.md](../../../SECURITY.md)，贡献者检查见
-[CONTRIBUTING.md](../../../CONTRIBUTING.md)。
+安全修复遵循 [SECURITY.md](https://github.com/Baosight-xVue/BaoIAD/blob/master/SECURITY.md)，贡献者检查见
+[CONTRIBUTING.md](https://github.com/Baosight-xVue/BaoIAD/blob/master/CONTRIBUTING.md)。
+
+## 发布材料
+
+- {doc}`v1.1.0 发布说明草案 <v1_1_0_release_notes>`
+- {doc}`WAIC go/no-go 检查表 <waic_go_no_go>`
+- {doc}`发布值守与热修复手册 <support_hotfix_runbook>`

@@ -80,8 +80,8 @@ CUDA operators, peak VRAM, or 37-method end-to-end execution. A Release owner
 may only proceed with that state when the public release scope explicitly
 excludes GPU validation and all other go/no-go owners accept the limitation.
 
-See [Real-GPU release validation](../../release/gpu_validation.md) for the
-manual workflow, evidence contract, and G007 required gate.
+See {doc}`Real-GPU release validation <gpu_validation>` for the manual workflow,
+evidence contract, and G007 required gate.
 
 ## Exact-commit pre-tag gate
 
@@ -101,7 +101,7 @@ Run the complete gate on the exact merged commit intended for the tag:
    and hotfix instructions are ready.
 
 Pending entries in the
-[external approval register](../../release/external_approvals.json) fail
+[external approval register](https://github.com/Baosight-xVue/BaoIAD/blob/master/docs/release/external_approvals.json) fail
 safely by blocking release. In particular, a public release cannot pass the security gate while
 `APP-SECURITY-CHANNEL` remains pending. Any yellow/red item produces no tag;
 after a fix, rerun the entire gate on the new exact commit.
@@ -130,7 +130,13 @@ After a recorded go decision:
   as `v1.1.1`.
 - Roll back `master` with a reviewed revert when needed; never force-push,
   delete a published tag, or retarget an existing release.
-- Security hotfixes follow [SECURITY.md](../../../SECURITY.md) and require the
+- Security hotfixes follow [SECURITY.md](https://github.com/Baosight-xVue/BaoIAD/blob/master/SECURITY.md) and require the
   approved private process before public disclosure.
 
-See [CONTRIBUTING.md](../../../CONTRIBUTING.md) for contributor-facing checks.
+See {doc}`the contribution guide <contributing>` for contributor-facing checks.
+
+## Release materials
+
+- {doc}`Draft v1.1.0 release notes <v1_1_0_release_notes>`
+- {doc}`WAIC go/no-go checklist <waic_go_no_go>`
+- {doc}`Support and hotfix runbook <support_hotfix_runbook>`
