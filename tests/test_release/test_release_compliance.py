@@ -756,6 +756,7 @@ def test_release_gate_stays_closed_while_approvals_are_pending(capsys):
 
     output = capsys.readouterr().out
     assert "FAIL public release gate" in output
+    assert "external approval APP-COMMUNITY-CONDUCT: pending" in output
 
 
 def test_default_cli_accepts_truthfully_recorded_blockers(capsys):
@@ -765,4 +766,5 @@ def test_default_cli_accepts_truthfully_recorded_blockers(capsys):
 
     output = capsys.readouterr().out
     assert "PASS release compliance inventory validation" in output
+    assert "open release blockers: 113" in output
     assert "method records: 37" in output

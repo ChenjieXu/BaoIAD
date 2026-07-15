@@ -1,0 +1,102 @@
+name: Real GPU smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      dataset_root:
+        description: Absolute path to the MVTec AD root on the self-hosted runner
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gpu-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BAOIAD_OFFLINE: "1"
+  HF_DATASETS_OFFLINE: "1"
+  HF_HUB_OFFLINE: "1"
+  TRANSFORMERS_OFFLINE: "1"
+
+jobs:
+  gpu-smoke:
+    name: Real CUDA train and inference smoke
+    runs-on: [self-hosted, linux, x64, gpu]
+    timeout-minutes: 120
+    env:
+      BAOIAD_GPU_DATASET_ROOT: ${{ inputs.dataset_root }}
+      GPU_EVIDENCE_DIR: ${{ runner.temp }}/baoiad-gpu-evidence
+    steps:
+      - name: Check out the exact requested commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Initialize fail-closed evidence
+        run: |
+          mkdir -p "${GPU_EVIDENCE_DIR}"
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          commit = subprocess.check_output(
+              ["git", "rev-parse", "HEAD"], text=True
+          ).strip()
+          evidence = {
+              "schema_version": 1,
+              "status": "not_validated",
+              "reason": "The real-GPU workflow has not completed validation.",
+              "commit_sha": commit,
+              "generated_at": datetime.now(timezone.utc).isoformat(),
+          }
+          path = Path(os.environ["GPU_EVIDENCE_DIR"]) / "gpu-evidence.json"
+          path.write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
+          PY
+
+      - name: Verify CUDA runtime and install core dependencies
+        run: |
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          nvidia-smi --query-gpu=driver_version --format=csv,noheader
+          python - <<'PY'
+          import torch
+          import torchvision
+
+          assert torch.cuda.is_available(), "self-hosted runner has no real CUDA device"
+          print(torch.__version__, torch.version.cuda, torchvision.__version__)
+          PY
+          python -m pip install --editable .
+          python -m pip check
+
+      - name: Run key-method GPU smoke
+        run: |
+          python tools/run_gpu_smoke.py \
+            --dataset-root "${BAOIAD_GPU_DATASET_ROOT}" \
+            --output-dir "${GPU_EVIDENCE_DIR}" \
+            --device-index 0
+
+      - name: Require validated real-GPU evidence
+        if: always()
+        run: |
+          python tools/check_gpu_evidence.py \
+            --repo-root . \
+            --evidence "${GPU_EVIDENCE_DIR}/gpu-evidence.json" \
+            --require-validated
+
+      - name: Upload evidence and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: baoiad-gpu-smoke-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/baoiad-gpu-evidence/gpu-evidence.json
+            ${{ runner.temp }}/baoiad-gpu-evidence/logs/
+          if-no-files-found: error
+          retention-days: 14

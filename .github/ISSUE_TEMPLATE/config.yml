@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security reporting status
+    url: https://github.com/Baosight-xVue/BaoIAD/security/policy
+    about: Read the security policy before sharing sensitive information. Do not use a public Issue for vulnerabilities.

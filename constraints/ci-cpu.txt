@@ -1,0 +1,9 @@
+# Reproducible framework baseline for the public CPU CI lane.
+#
+# GitHub Actions installs the matching PyTorch wheels from the official CPU
+# index before resolving BaoIAD. Keep this file platform-neutral so the same
+# constraints can also validate macOS and local clean environments.
+torch==2.7.1
+torchvision==0.22.1
+mmengine==0.10.7
+mmcv-lite==2.2.0

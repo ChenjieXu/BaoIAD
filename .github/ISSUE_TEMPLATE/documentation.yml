@@ -1,0 +1,39 @@
+name: Documentation report
+description: Report unclear, incorrect, missing, or inconsistent documentation.
+title: "[Docs] "
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Page or file
+      placeholder: docs/en/get_started.md or a public documentation URL
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - English
+        - Chinese
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is incorrect or unclear?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested correction
+      description: Include public source evidence where a technical claim changes.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Checklist
+      options:
+        - label: This report contains no credentials, internal links, private data, or restricted assets.
+          required: true

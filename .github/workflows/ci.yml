@@ -1,0 +1,299 @@
+name: CPU CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - codex/waic-release
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cpu-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BAOIAD_OFFLINE: "1"
+  HF_DATASETS_OFFLINE: "1"
+  HF_HUB_OFFLINE: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  TRANSFORMERS_OFFLINE: "1"
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the clean candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run fail-fast quality checks
+        run: |
+          python -m pip install "ruff==0.12.3"
+          python -m ruff check --select E9,F63,F7,F82 baoiad tests tools
+
+  release-policy:
+    name: release-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the clean candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bind the audited release base
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            BASE_SHA="${PR_BASE_SHA}"
+          elif [ "${GITHUB_REF}" = "refs/heads/master" ]; then
+            BASE_SHA="${PUSH_BEFORE_SHA}"
+          else
+            BASE_SHA="$(git rev-parse refs/remotes/origin/master)"
+          fi
+          test -n "${BASE_SHA}"
+          git cat-file -e "${BASE_SHA}^{commit}"
+          git update-ref refs/remotes/upstream/master "${BASE_SHA}"
+      - name: Verify the public release contract
+        run: |
+          python tools/check_public_release.py
+          python tools/check_release_candidate.py --static-only
+          python tools/check_release_compliance.py
+          python tools/check_method_inventory.py
+
+  core:
+    name: core-offline (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - name: Check out the clean candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            constraints/ci-cpu.txt
+            pyproject.toml
+      - name: Install the constrained CPU environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            --constraint constraints/ci-cpu.txt \
+            --index-url https://download.pytorch.org/whl/cpu \
+            torch torchvision
+          python -m pip install --constraint constraints/ci-cpu.txt --editable ".[dev]"
+      - name: Verify core import and offline installation
+        run: |
+          python - <<'PY'
+          import torch
+          import baoiad
+
+          assert baoiad.__version__ == "1.1.0"
+          assert torch.cuda.is_available() is False
+          PY
+          python tools/check_install.py --offline --json
+          python tools/check_method_inventory.py
+          python tools/check_version_compatibility.py --json
+          python - <<'PY'
+          from mmengine import Config
+
+          cfg = Config.fromfile(
+              "configs/patchcore/patchcore_wrn50_256_mvtec_strict.py"
+          )
+          assert cfg.model.type == "PatchCore"
+          PY
+      - name: Run network-free core and release tests
+        run: |
+          python -m pytest -q \
+            -m "not optional and not network and not gpu and not slow" \
+            tests/method_inventory \
+            tests/test_checkpoint_cli_policy.py \
+            tests/test_checkpoint_policy.py \
+            tests/test_configs.py \
+            tests/test_configs/test_data_root.py \
+            tests/test_datasets/test_dataset_taxonomy.py \
+            tests/test_offline_download_guards.py \
+            tests/test_registry.py \
+            tests/test_release \
+            tests/test_runtime_policy.py
+
+  optional-extras:
+    name: Optional extra / ${{ matrix.extra }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - extra: flow
+            modules: FrEIA networkx mpmath skimage
+          - extra: vl
+            modules: open_clip
+          - extra: saa
+            modules: groundingdino segment_anything
+          - extra: geomloss
+            modules: geomloss
+          - extra: glass
+            modules: pandas openpyxl
+          - extra: visualization
+            modules: matplotlib
+          - extra: faiss-cpu
+            modules: faiss
+          - extra: all
+            modules: FrEIA networkx mpmath skimage open_clip groundingdino segment_anything geomloss pandas openpyxl matplotlib faiss
+    steps:
+      - name: Check out the clean candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            constraints/ci-cpu.txt
+            pyproject.toml
+      - name: Install one public optional group
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            --constraint constraints/ci-cpu.txt \
+            --index-url https://download.pytorch.org/whl/cpu \
+            torch torchvision
+          python -m pip install \
+            --constraint constraints/ci-cpu.txt \
+            --editable ".[${{ matrix.extra }}]"
+      - name: Import the optional dependency boundary
+        env:
+          EXTRA_MODULES: ${{ matrix.modules }}
+          EXTRA_NAME: ${{ matrix.extra }}
+        run: |
+          python - <<'PY'
+          import importlib
+          import json
+          import os
+          import subprocess
+          import sys
+
+          for module in os.environ["EXTRA_MODULES"].split():
+              importlib.import_module(module)
+          report = json.loads(
+              subprocess.check_output(
+                  [sys.executable, "tools/check_install.py", "--offline", "--json"],
+                  text=True,
+              )
+          )
+          group = next(
+              item
+              for item in report["optional_groups"]
+              if item["group"] == os.environ["EXTRA_NAME"]
+          )
+          assert group["available"], group
+          PY
+          python tools/check_method_inventory.py
+
+  docs:
+    name: ${{ matrix.check-name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - check-name: docs-en
+            language: English
+            source: docs/en
+          - check-name: docs-zh
+            language: Chinese
+            source: docs/zh_cn
+    steps:
+      - name: Check out the clean candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+      - name: Install documentation dependencies
+        run: python -m pip install --requirement docs/requirements.txt
+      - name: Build with warnings as errors
+        run: |
+          python -m sphinx \
+            -E -W --keep-going -b html \
+            "${{ matrix.source }}" \
+            "${{ runner.temp }}/sphinx-${{ matrix.language }}"
+
+  package:
+    name: Package / Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - name: Check out the clean candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            constraints/ci-cpu.txt
+            pyproject.toml
+      - name: Build wheel and source distribution
+        run: |
+          python -m pip install --upgrade build pip
+          python -m build
+          test "$(find dist -maxdepth 1 -name '*.whl' | wc -l)" -eq 1
+          test "$(find dist -maxdepth 1 -name '*.tar.gz' | wc -l)" -eq 1
+      - name: Validate wheel and source distribution in isolation
+        run: |
+          python -m venv "${{ runner.temp }}/package-env"
+          PACKAGE_PYTHON="${{ runner.temp }}/package-env/bin/python"
+          "$PACKAGE_PYTHON" -m pip install --upgrade pip
+          "$PACKAGE_PYTHON" -m pip install \
+            --constraint constraints/ci-cpu.txt \
+            --index-url https://download.pytorch.org/whl/cpu \
+            torch torchvision
+          "$PACKAGE_PYTHON" -m pip install \
+            --constraint constraints/ci-cpu.txt \
+            dist/*.whl
+          cd "${{ runner.temp }}"
+          "$PACKAGE_PYTHON" -c \
+            'import baoiad; assert baoiad.__version__ == "1.1.0"'
+          "$PACKAGE_PYTHON" -m pip uninstall --yes baoiad
+          "$PACKAGE_PYTHON" -m pip install --no-deps "$GITHUB_WORKSPACE"/dist/*.tar.gz
+          "$PACKAGE_PYTHON" -c \
+            'import baoiad; assert baoiad.__version__ == "1.1.0"'

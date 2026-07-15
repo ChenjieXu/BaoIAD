@@ -7,4 +7,5 @@ Notes
    faq.md
    troubleshooting.md
    contributing.md
+   release_process.md
    changelog.md

@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Baosight-xVue/BaoIAD/blob/master/docs/release/gpu_smoke_evidence.schema.json",
+  "title": "BaoIAD real-GPU smoke evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "commit_sha",
+    "generated_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "status": {
+      "enum": [
+        "validated",
+        "not_validated"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "runner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repository_clean": {
+      "const": true
+    },
+    "environment": {
+      "$ref": "#/$defs/environment"
+    },
+    "compiled_cuda_ops": {
+      "$ref": "#/$defs/compiledCudaOps"
+    },
+    "peak_vram_bytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "methods": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "$ref": "#/$defs/method"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "validated"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "runner",
+          "repository_clean",
+          "environment",
+          "compiled_cuda_ops",
+          "peak_vram_bytes",
+          "methods"
+        ]
+      },
+      "else": {
+        "required": [
+          "reason"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cuda_available",
+        "python_version",
+        "torch_version",
+        "torchvision_version",
+        "cuda_runtime",
+        "mmcv",
+        "driver_version",
+        "device"
+      ],
+      "properties": {
+        "cuda_available": {
+          "const": true
+        },
+        "python_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "torch_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "torchvision_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cuda_runtime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mmcv": {
+          "$ref": "#/$defs/mmcvPackage"
+        },
+        "driver_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "index",
+            "name",
+            "compute_capability",
+            "total_memory_bytes"
+          ],
+          "properties": {
+            "index": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "compute_capability": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+$"
+            },
+            "total_memory_bytes": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    "mmcvPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "version"
+      ],
+      "properties": {
+        "package": {
+          "enum": [
+            "mmcv",
+            "mmcv-lite"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "compiledCudaOps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "checks"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "not_required"
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "required",
+              "available",
+              "detail"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "available": {
+                "type": "boolean"
+              },
+              "detail": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "command",
+        "duration_seconds",
+        "peak_vram_bytes",
+        "log_path",
+        "log_sha256"
+      ],
+      "properties": {
+        "status": {
+          "const": "passed"
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duration_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "peak_vram_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "log_path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*\\.\\.).+$"
+        },
+        "log_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "config",
+        "dataset",
+        "category",
+        "train",
+        "inference"
+      ],
+      "properties": {
+        "name": {
+          "enum": [
+            "patchcore",
+            "rd",
+            "fastflow"
+          ]
+        },
+        "config": {
+          "type": "string",
+          "pattern": "^configs/.+\\.py$"
+        },
+        "dataset": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "train": {
+          "$ref": "#/$defs/phase"
+        },
+        "inference": {
+          "$ref": "#/$defs/phase"
+        }
+      }
+    }
+  }
+}

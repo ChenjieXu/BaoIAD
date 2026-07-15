@@ -1,0 +1,42 @@
+name: Feature request
+description: Propose a focused, maintainable BaoIAD improvement.
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or user need
+      description: Describe the workflow that is blocked, not only the desired implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope, dependencies, and compatibility
+      description: Identify methods/configs, new dependencies, migration needs, and hardware requirements.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Reference or validation plan
+      description: Link public upstream evidence and explain CPU/GPU validation needs.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Checklist
+      options:
+        - label: This request contains no vulnerability details, credentials, private data, or restricted assets.
+          required: true

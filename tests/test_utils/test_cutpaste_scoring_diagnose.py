@@ -4,14 +4,23 @@ import importlib.util
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 
 ROOT = Path(__file__).resolve().parents[2]
+TOOL = ROOT / "tools" / "cutpaste_scoring_diagnose.py"
+pytestmark = pytest.mark.optional
+if not TOOL.is_file():
+    pytest.skip(
+        "legacy research-only diagnostic tool is excluded from the public release",
+        allow_module_level=True,
+    )
 
 
 def _load_module():
-    path = ROOT / 'tools' / 'cutpaste_scoring_diagnose.py'
-    spec = importlib.util.spec_from_file_location('baoiad_cutpaste_scoring_diagnose', path)
+    spec = importlib.util.spec_from_file_location(
+        "baoiad_cutpaste_scoring_diagnose", TOOL
+    )
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     spec.loader.exec_module(module)
@@ -25,10 +34,10 @@ def test_rank_samples_splits_normals_and_anomalies():
 
     ranked = module._rank_samples(labels, scores, top_k=2)
 
-    assert ranked['hardest_normals'] == [4, 1]
-    assert ranked['easiest_normals'] == [0, 4]
-    assert ranked['hardest_anomalies'] == [3, 5]
-    assert ranked['easiest_anomalies'] == [5, 2]
+    assert ranked["hardest_normals"] == [4, 1]
+    assert ranked["easiest_normals"] == [0, 4]
+    assert ranked["hardest_anomalies"] == [3, 5]
+    assert ranked["easiest_anomalies"] == [5, 2]
 
 
 def test_constant_score_maps_match_mask_shape():
@@ -47,7 +56,7 @@ def test_safe_probability_metric_returns_none_on_invalid_scores():
     module = _load_module()
 
     def _raise(_):
-        raise ValueError('bad')
+        raise ValueError("bad")
 
     result = module._safe_probability_metric(_raise, np.array([1.2], dtype=np.float32))
 

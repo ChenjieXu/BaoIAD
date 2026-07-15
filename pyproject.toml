@@ -41,7 +41,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff", "pre-commit"]
+dev = [
+    "pytest",
+    "ruff",
+    "pre-commit",
+    "tomli>=2.0; python_version < '3.11'",
+]
 flow = ["FrEIA>=0.2", "networkx", "mpmath", "scikit-image"]
 vl = ["open_clip_torch"]
 saa = ["groundingdino-py==0.4.0", "segment-anything==1.0"]
@@ -62,3 +67,14 @@ Changelog = "https://github.com/Baosight-xVue/BaoIAD/blob/master/docs/en/notes/c
 
 [tool.setuptools.packages.find]
 include = ["baoiad*"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+testpaths = ["tests"]
+markers = [
+    "offline: network-free tests that require no datasets, checkpoints, or accelerators",
+    "network: tests that require external network access",
+    "gpu: tests that require a real GPU or accelerator runtime",
+    "slow: tests intentionally excluded from the fail-fast pull-request lane",
+    "optional: tests that require an optional dependency group or release-excluded research tool",
+]
