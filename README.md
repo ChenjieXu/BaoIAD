@@ -136,6 +136,10 @@ python tools/test.py <config> <checkpoint> \
     --cfg-options default_hooks.visualization.enable=True
 ```
 
+<div align="center">
+  <img src="resources/vis_examples/anomaly_detection_results.png" width="100%" alt="Anomaly detection visualization">
+</div>
+
 ## Documentation Map
 
 - [English docs](docs/en/index.rst)
