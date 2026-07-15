@@ -11,6 +11,9 @@
 <p align="center">
   <a href="https://baoiad.readthedocs.io/en/latest/"><img src="https://img.shields.io/badge/docs-latest-blue" alt="documentation"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="Apache 2.0 license"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="Python 3.10 or newer"></a>
+  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/pytorch-2.0%2B-orange" alt="PyTorch 2.0 or newer"></a>
+  <a href="docs/alignment/README.md"><img src="https://img.shields.io/badge/methods-37-purple" alt="37 methods"></a>
 </p>
 
 BaoIAD is an MMEngine-based industrial anomaly detection benchmark with 37 repository-local method integrations across 9 families.

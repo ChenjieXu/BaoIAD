@@ -11,6 +11,9 @@
 <p align="center">
   <a href="https://baoiad.readthedocs.io/en/latest/"><img src="https://img.shields.io/badge/docs-latest-blue" alt="在线文档"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="Apache 2.0 许可证"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="Python 3.10 及以上"></a>
+  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/pytorch-2.0%2B-orange" alt="PyTorch 2.0 及以上"></a>
+  <a href="docs/alignment/README.md"><img src="https://img.shields.io/badge/methods-37-purple" alt="37 个方法"></a>
 </p>
 
 BaoIAD 是基于 MMEngine 的工业异常检测基准，在 9 个方法家族中提供 37 个仓库内方法集成。
